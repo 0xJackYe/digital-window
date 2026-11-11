@@ -1,0 +1,21 @@
+{
+  "name": "digital-window",
+  "version": "1.2.0",
+  "description": "一扇跟随世界日光变化的数字窗户",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.cjs",
+  "author": "Digital Window",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --windowed",
+    "test": "node --test tests/*.test.js",
+    "smoke": "electron . --smoke-test",
+    "package": "node scripts/package.cjs"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "electron": "^45.3.0"
+  }
+}

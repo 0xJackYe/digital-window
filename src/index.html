@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="theme-color" content="#17191d">
+  <title>数字窗户 · Digital Window</title>
+  <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main id="window-view" aria-label="数字窗户景观">
+    <div id="scene-base" class="scene-base"></div>
+    <canvas id="atmosphere" aria-hidden="true"></canvas>
+    <div id="window-frame" class="window-frame" hidden aria-hidden="true"><i></i><i></i></div>
+    <div id="drag-region" class="drag-region" aria-hidden="true"></div>
+    <button id="menu-button" class="menu-button" type="button" aria-label="打开设置菜单" aria-expanded="false" aria-controls="main-menu" title="设置菜单">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+    </button>
+  </main>
+
+  <nav id="main-menu" class="main-menu glass" aria-label="窗户菜单" hidden>
+    <button type="button" data-panel="landscapes"><span class="menu-symbol" aria-hidden="true">▧</span><span>窗外景观</span><span class="menu-key">L</span></button>
+    <button type="button" data-panel="daylight"><span class="menu-symbol" aria-hidden="true">☼</span><span>时区与日光</span><span class="menu-key">T</span></button>
+    <button type="button" data-panel="preferences"><span class="menu-symbol" aria-hidden="true">⚙</span><span>显示设置</span></button>
+    <div class="menu-divider"></div>
+    <button id="menu-fullscreen" type="button"><span class="menu-symbol" aria-hidden="true">⛶</span><span id="fullscreen-label">进入全屏</span><span class="menu-key">F11</span></button>
+    <button id="quit-button" class="quit-button" type="button"><span class="menu-symbol" aria-hidden="true">⏻</span><span>退出数字窗户</span><span class="menu-key">Alt F4</span></button>
+  </nav>
+
+  <div id="panel-backdrop" class="panel-backdrop" hidden></div>
+  <aside id="settings-panel" class="settings-panel glass" role="dialog" aria-modal="true" aria-labelledby="panel-title" hidden>
+    <header class="panel-head">
+      <h1 id="panel-title">窗外景观</h1>
+      <button id="close-panel" class="close-button" type="button" aria-label="关闭设置"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m6 6 8 8m0-8-8 8"/></svg></button>
+    </header>
+    <div class="panel-tabs" role="tablist" aria-label="设置分类">
+      <button id="tab-landscapes" type="button" data-tab="landscapes" role="tab" aria-controls="panel-landscapes" aria-selected="true">景观</button>
+      <button id="tab-daylight" type="button" data-tab="daylight" role="tab" aria-controls="panel-daylight" aria-selected="false">日光</button>
+      <button id="tab-preferences" type="button" data-tab="preferences" role="tab" aria-controls="panel-preferences" aria-selected="false">显示</button>
+    </div>
+    <div class="panel-content">
+      <section id="panel-landscapes" role="tabpanel" aria-labelledby="tab-landscapes">
+        <p class="section-intro">选一扇窗，望向远方。</p>
+        <div id="landscape-grid" class="landscape-grid"></div>
+        <button id="import-button" class="import-button" type="button"><span class="import-plus" aria-hidden="true">＋</span><span>导入自己的景观<small>本地图片或视频</small></span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
+        <input id="media-input" type="file" accept="image/jpeg,image/png,image/webp,image/avif,video/mp4,video/webm" hidden>
+        <p class="subtle-note">景观与偏好保存在这台电脑，内置景观可离线使用。</p>
+      </section>
+
+      <section id="panel-daylight" role="tabpanel" aria-labelledby="tab-daylight" hidden>
+        <p class="section-intro">让窗外，跟随远方的日升月落。</p>
+        <div class="setting-row location-row"><div><label for="scene-timezone-toggle">跟随景观所在地</label><p id="scene-location-label">使用景观当地的时区与日照</p></div><input id="scene-timezone-toggle" class="switch" type="checkbox" checked></div>
+        <div class="city-field"><label class="field-label" for="city-select">窗外时区</label><div class="select-wrap"><select id="city-select"></select><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg></div><p id="city-coordinates" class="subtle-note coordinates"></p></div>
+        <div class="sun-card">
+          <div id="phase-orb" class="phase-orb" aria-hidden="true"></div>
+          <div class="sun-card-content"><strong id="solar-phase">日光同步中</strong><p id="daylight-description">正在读取景观所在地的日光。</p><span id="sync-status" class="sync-status">实时同步</span></div>
+        </div>
+        <div class="setting-row"><div><label for="realtime-toggle">跟随实时日光</label><p>随当地时间自动变化</p></div><input id="realtime-toggle" class="switch" type="checkbox" checked></div>
+        <div id="time-preview" class="time-preview">
+          <div class="range-label"><label for="time-slider">预览一天的光影</label><output id="preview-phase" for="time-slider">正午</output></div>
+          <input id="time-slider" type="range" min="0" max="1439" step="1" value="720" aria-label="预览当地一天的光影">
+          <div class="range-hints" aria-hidden="true"><span>夜</span><span>黎明</span><span>正午</span><span>傍晚</span><span>夜</span></div>
+          <div id="phase-presets" class="phase-presets" aria-label="选择预览时段"><button type="button" data-preview-phase="dawn" aria-pressed="false">黎明</button><button type="button" data-preview-phase="morning" aria-pressed="false">早晨</button><button type="button" data-preview-phase="noon" aria-pressed="false">中午</button><button type="button" data-preview-phase="evening" aria-pressed="false">傍晚</button><button type="button" data-preview-phase="night" aria-pressed="false">晚上</button></div>
+          <p class="subtle-note">拖动滑块预览，开启实时日光即可回到此刻。</p>
+        </div>
+        <div class="brightness-setting"><div class="range-label"><label for="view-azimuth">窗外朝向</label><output id="view-azimuth-value">0°</output></div><input id="view-azimuth" type="range" min="0" max="359" step="1" value="0" aria-label="窗外朝向"><p class="subtle-note">北为 0°，东为 90°。朝向决定日光与月光从哪一侧照入。</p></div>
+        <details class="custom-location"><summary>自定义时区与位置</summary><form id="custom-location-form"><label class="field-label" for="custom-zone">时区</label><input id="custom-zone" placeholder="Europe/London" autocomplete="off" spellcheck="false" required><div class="coordinate-inputs"><label for="custom-lat">纬度<input id="custom-lat" type="number" min="-90" max="90" step="any" value="51.5074" required></label><label for="custom-lon">经度<input id="custom-lon" type="number" min="-180" max="180" step="any" value="-0.1278" required></label></div><button class="primary-button" type="submit">使用这个位置</button><p id="location-error" class="error-message" role="alert"></p></form></details>
+      </section>
+
+      <section id="panel-preferences" role="tabpanel" aria-labelledby="tab-preferences" hidden>
+        <p class="section-intro">把画面，调到舒服的样子。</p>
+        <div class="setting-row"><div><label for="motion-toggle">景观动态</label><p>云雾与水纹；关闭后日月照明仍实时变化</p></div><input id="motion-toggle" class="switch" type="checkbox" checked></div>
+        <div class="setting-row"><div><label for="frame-toggle">极简窗框</label><p>为风景添一道细致的边界</p></div><input id="frame-toggle" class="switch" type="checkbox"></div>
+        <div class="brightness-setting"><div class="range-label"><label for="brightness-slider">景观亮度</label><output id="brightness-value" for="brightness-slider">100%</output></div><input id="brightness-slider" type="range" min="50" max="130" value="100" step="5"></div>
+        <div class="keyboard-help"><span class="field-label">快捷键</span><div><kbd>Esc</kbd><p>退出全屏</p></div><div><kbd>F11</kbd><p>切换全屏</p></div><div><kbd>Alt F4</kbd><p>退出应用</p></div></div>
+      </section>
+    </div>
+    <footer class="panel-footer">设置自动保存</footer>
+  </aside>
+  <div id="toast" class="toast glass" role="status" hidden></div>
+  <script type="module" src="./renderer.js"></script>
+</body>
+</html>

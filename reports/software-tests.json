@@ -1,0 +1,5536 @@
+{
+  "passed": true,
+  "version": "1.2.0",
+  "generatedAt": "2026-11-11T10:28:33.874Z",
+  "testedEnvironment": "Windows 11 x64, build 26200; Node.js v22.12.0",
+  "unitTests": 48,
+  "source": {
+    "passed": true,
+    "generatedAt": "2026-11-10T23:55:57.663Z",
+    "version": "1.2.0",
+    "target": "source",
+    "selectedSuites": "all",
+    "platform": "win32",
+    "architecture": "x64",
+    "nodeVersion": "v22.12.0",
+    "elapsedMs": 85683,
+    "results": [
+      {
+        "name": "all-javascript-syntax",
+        "passed": true,
+        "files": 19,
+        "failures": []
+      },
+      {
+        "name": "unit-tests",
+        "passed": true,
+        "code": 0,
+        "signal": null,
+        "timedOut": false,
+        "elapsedMs": 1076
+      },
+      {
+        "name": "source-smoke",
+        "passed": true,
+        "code": 0,
+        "signal": null,
+        "timedOut": false,
+        "elapsedMs": 30129,
+        "details": {
+          "passed": true,
+          "state": {
+            "fullscreen": true,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "displayBounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "platform": "win32"
+          },
+          "finalState": {
+            "fullscreen": true,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "displayBounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "platform": "win32"
+          },
+          "renderer": {
+            "title": "数字窗户 · Digital Window",
+            "ready": "complete",
+            "bridge": true,
+            "bridgeUsable": true,
+            "isolated": true,
+            "width": 1235,
+            "height": 823,
+            "images": 12,
+            "controls": true
+          },
+          "ui": {
+            "ready": true,
+            "sceneId": "manhattan",
+            "timeZone": "America/New_York",
+            "sceneCount": 8,
+            "hasSolar": true,
+            "canvasReady": true,
+            "phase": "night",
+            "weights": {
+              "dawn": 0,
+              "morning": 0,
+              "noon": 0,
+              "evening": 0,
+              "night": 1
+            },
+            "lighting": {
+              "sun": {
+                "altitude": -25.22819029997886,
+                "azimuth": 268.3196244131236,
+                "relativeAzimuth": -156.68037558687638,
+                "direction": [
+                  -0.35810191681183395,
+                  -0.42622442718316267,
+                  -0.8307200219376414
+                ],
+                "screenX": 0.8041501039146417,
+                "screenY": -0.05323379719808152,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.47,
+                  0.24
+                ],
+                "colorTemperature": 2200,
+                "transmission": 0.021067999523041434,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              },
+              "moon": {
+                "altitude": -17.550535460246326,
+                "azimuth": 249.21084079599814,
+                "relativeAzimuth": -175.78915920400186,
+                "direction": [
+                  -0.07000897274051088,
+                  -0.3015468704795443,
+                  -0.9508776097057976
+                ],
+                "screenX": 0.5519475518724015,
+                "screenY": 0.15423661988978082,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "illumination": 0.029571168143610493,
+                "phase": 0.053224293154471525,
+                "phaseBrightness": 0.004329286081819936,
+                "geometricAltitude": -17.550535460246326,
+                "brightLimbAngle": -66.54444206938724,
+                "parallacticAngle": 52.61190499366491,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  0.66,
+                  0.75,
+                  0.94
+                ],
+                "colorTemperature": 8500,
+                "transmission": 0.008229747049020023,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2474774552199554
+              },
+              "ambient": {
+                "color": [
+                  0.272228332170174,
+                  0.342370057098844,
+                  0.49236548492585663
+                ],
+                "intensity": 0.09741672548944927
+              },
+              "sky": {
+                "color": [
+                  0.026684378066988135,
+                  0.047654030761890454,
+                  0.10882968868898064
+                ],
+                "intensity": 0.027034488294689442,
+                "colorTemperature": 9491.859260209168,
+                "horizonGlow": 0.00010391302243904394
+              },
+              "shadow": {
+                "source": "none",
+                "direction": [
+                  0,
+                  0
+                ],
+                "angle": 0,
+                "length": 0,
+                "physicalLength": 0,
+                "strength": 0
+              },
+              "nightFactor": 1,
+              "daylight": 0.004932092835610763,
+              "camera": {
+                "viewAzimuth": 65,
+                "fieldOfView": 70.64686212109497,
+                "verticalFieldOfView": 50.557528965527,
+                "horizon": 0.49,
+                "exposure": 1,
+                "maxShadowLength": 14
+              },
+              "exposure": 0.8806904929969855,
+              "colorTemperature": 9463.99572230004,
+              "utcMillis": 1794354875472
+            },
+            "celestial": {
+              "sun": {
+                "altitude": -25.22819029997886,
+                "azimuth": 268.3196244131236,
+                "hourAngle": 108.67275851394675,
+                "declination": -17.356093971888416,
+                "equationOfTime": 16.042634055787403,
+                "geometricAltitude": -25.22819029997886,
+                "apparentAltitude": -25.22819029997886,
+                "direction": [
+                  -0.9042284343383709,
+                  -0.026526895905166197,
+                  -0.42622442718316267
+                ],
+                "visible": false
+              },
+              "moon": {
+                "altitude": -17.550535460246326,
+                "geometricAltitude": -17.550535460246326,
+                "geocentricAltitude": -16.685199104366472,
+                "geocentricAzimuth": 249.20790130774185,
+                "azimuth": 249.2108407959982,
+                "refraction": 0,
+                "distance": 402242.6881846108,
+                "topocentricDistance": 404110.219846249,
+                "parallacticAngle": 52.61190499366491,
+                "angularRadius": 0.2463337701193609,
+                "direction": [
+                  -0.891374852561008,
+                  -0.3384085653848529,
+                  -0.3015468704795443
+                ],
+                "geometricDirection": [
+                  -0.891374852561008,
+                  -0.3384085653848529,
+                  -0.3015468704795443
+                ],
+                "visible": false,
+                "illumination": 0.029571168143610493,
+                "fraction": 0.029571168143610493,
+                "phase": 0.053224293154471525,
+                "waxing": true,
+                "brightLimbAngle": -66.54444206938724,
+                "angle": -66.54444206938724,
+                "elongation": 19.75171249319489,
+                "tiltAngle": -119.15634706305215
+              },
+              "nightFactor": 1,
+              "timestamp": 1794354875472
+            },
+            "relighting": {
+              "ready": true,
+              "renderer": "webgl",
+              "sceneId": "manhattan",
+              "frameCount": 4,
+              "drawCount": 4,
+              "utcMillis": 1794354875472,
+              "width": 1544,
+              "height": 1029,
+              "contextLost": false,
+              "fallbackReason": null,
+              "pixelHash": "c5a0dc47",
+              "pixels": [
+                13,
+                19,
+                37,
+                255,
+                12,
+                18,
+                36,
+                255,
+                11,
+                17,
+                36,
+                255,
+                58,
+                34,
+                15,
+                255,
+                215,
+                174,
+                100,
+                255,
+                75,
+                51,
+                38,
+                255,
+                80,
+                69,
+                69,
+                255,
+                147,
+                126,
+                116,
+                255
+              ],
+              "geometryVersion": "authored-2.5d-1.0"
+            },
+            "atmosphere": {
+              "scene": "manhattan",
+              "time": 0.5172,
+              "sunDrawn": false,
+              "moonDrawn": false,
+              "glintSources": [],
+              "terrainLight": []
+            },
+            "locationSource": "scene",
+            "visibleMainButtons": [
+              "menu-button"
+            ],
+            "imageLoaded": true,
+            "layerImages": [
+              {
+                "phase": "dawn",
+                "loaded": true,
+                "opacity": 1,
+                "weight": 0
+              },
+              {
+                "phase": "morning",
+                "loaded": true,
+                "opacity": 0,
+                "weight": 0
+              },
+              {
+                "phase": "noon",
+                "loaded": true,
+                "opacity": 0,
+                "weight": 0
+              },
+              {
+                "phase": "evening",
+                "loaded": true,
+                "opacity": 0,
+                "weight": 0
+              },
+              {
+                "phase": "night",
+                "loaded": true,
+                "opacity": 1,
+                "weight": 1
+              }
+            ],
+            "transitioning": true,
+            "phaseAnimating": false
+          },
+          "coverage": true,
+          "integration": [
+            {
+              "name": "scenery shows only the three-dot control",
+              "passed": true,
+              "visibleMainButtons": [
+                "menu-button"
+              ]
+            },
+            {
+              "name": "three-dot menu opens",
+              "passed": true
+            },
+            {
+              "name": "settings opens while dots remain available",
+              "passed": true
+            },
+            {
+              "name": "manhattan follows its own time zone",
+              "passed": true,
+              "timeZone": "America/New_York"
+            },
+            {
+              "name": "manhattan decodes all five lighting images",
+              "passed": true,
+              "images": [
+                {
+                  "phase": "dawn",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 0
+                },
+                {
+                  "phase": "morning",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "noon",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "evening",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "night",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "name": "manhattan dawn preset changes actual layer",
+              "passed": true,
+              "weight": 0.9999415049102057,
+              "opacity": 1,
+              "phase": "dawn"
+            },
+            {
+              "name": "manhattan morning preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "morning"
+            },
+            {
+              "name": "manhattan noon preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "noon"
+            },
+            {
+              "name": "manhattan evening preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "evening"
+            },
+            {
+              "name": "manhattan night preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "night"
+            },
+            {
+              "name": "manhattan returns to live solar lighting",
+              "passed": true
+            },
+            {
+              "name": "medieval follows its own time zone",
+              "passed": true,
+              "timeZone": "Europe/Prague"
+            },
+            {
+              "name": "medieval decodes all five lighting images",
+              "passed": true,
+              "images": [
+                {
+                  "phase": "dawn",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 0
+                },
+                {
+                  "phase": "morning",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "noon",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "evening",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "night",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "name": "medieval dawn preset changes actual layer",
+              "passed": true,
+              "weight": 0.9991527070448148,
+              "opacity": 1,
+              "phase": "dawn"
+            },
+            {
+              "name": "medieval morning preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "morning"
+            },
+            {
+              "name": "medieval noon preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "noon"
+            },
+            {
+              "name": "medieval evening preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "evening"
+            },
+            {
+              "name": "medieval night preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "night"
+            },
+            {
+              "name": "medieval returns to live solar lighting",
+              "passed": true
+            },
+            {
+              "name": "kyoto follows its own time zone",
+              "passed": true,
+              "timeZone": "Asia/Tokyo"
+            },
+            {
+              "name": "kyoto decodes all five lighting images",
+              "passed": true,
+              "images": [
+                {
+                  "phase": "dawn",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 0
+                },
+                {
+                  "phase": "morning",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 0.5830918850810437
+                },
+                {
+                  "phase": "noon",
+                  "loaded": true,
+                  "opacity": 0.0058503,
+                  "weight": 0.003431334866613612
+                },
+                {
+                  "phase": "evening",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "night",
+                  "loaded": true,
+                  "opacity": 0.413477,
+                  "weight": 0.41347678005234273
+                }
+              ]
+            },
+            {
+              "name": "kyoto dawn preset changes actual layer",
+              "passed": true,
+              "weight": 0.9989071336313331,
+              "opacity": 1,
+              "phase": "dawn"
+            },
+            {
+              "name": "kyoto morning preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "morning"
+            },
+            {
+              "name": "kyoto noon preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "noon"
+            },
+            {
+              "name": "kyoto evening preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "evening"
+            },
+            {
+              "name": "kyoto night preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "night"
+            },
+            {
+              "name": "kyoto returns to live solar lighting",
+              "passed": true
+            },
+            {
+              "name": "fuji follows its own time zone",
+              "passed": true,
+              "timeZone": "Asia/Tokyo"
+            },
+            {
+              "name": "fuji decodes all five lighting images",
+              "passed": true,
+              "images": [
+                {
+                  "phase": "dawn",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 0
+                },
+                {
+                  "phase": "morning",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 0.291735097940065
+                },
+                {
+                  "phase": "noon",
+                  "loaded": true,
+                  "opacity": 0.0423342,
+                  "weight": 0.012896328484182207
+                },
+                {
+                  "phase": "evening",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "night",
+                  "loaded": true,
+                  "opacity": 0.695369,
+                  "weight": 0.6953685735757528
+                }
+              ]
+            },
+            {
+              "name": "fuji dawn preset changes actual layer",
+              "passed": true,
+              "weight": 0.9991460731505212,
+              "opacity": 1,
+              "phase": "dawn"
+            },
+            {
+              "name": "fuji morning preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "morning"
+            },
+            {
+              "name": "fuji noon preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "noon"
+            },
+            {
+              "name": "fuji evening preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "evening"
+            },
+            {
+              "name": "fuji night preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "night"
+            },
+            {
+              "name": "fuji returns to live solar lighting",
+              "passed": true
+            },
+            {
+              "name": "London overrides the scene time zone",
+              "passed": true,
+              "timeZone": "Europe/London"
+            },
+            {
+              "name": "manual slider changes noon versus night assets",
+              "passed": true,
+              "noon": {
+                "dawn": 0,
+                "morning": 0,
+                "noon": 1,
+                "evening": 0,
+                "night": 0
+              },
+              "midnight": {
+                "dawn": 0,
+                "morning": 0,
+                "noon": 0,
+                "evening": 0,
+                "night": 1
+              }
+            },
+            {
+              "name": "realtime preference restores and saves",
+              "passed": true
+            },
+            {
+              "name": "scene time zone can be restored",
+              "passed": true
+            },
+            {
+              "name": "procedural scene renders",
+              "passed": true
+            },
+            {
+              "name": "static forest loads",
+              "passed": true
+            },
+            {
+              "name": "motion switch disables animation and saves",
+              "passed": true
+            },
+            {
+              "name": "brightness control changes scenery",
+              "passed": true
+            },
+            {
+              "name": "native Escape leaves fullscreen with settings open",
+              "passed": true,
+              "state": {
+                "fullscreen": false,
+                "bounds": {
+                  "x": 50,
+                  "y": 50,
+                  "width": 1136,
+                  "height": 677
+                },
+                "displayBounds": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 1235,
+                  "height": 823
+                },
+                "platform": "win32"
+              }
+            },
+            {
+              "name": "F11 leaves native fullscreen",
+              "passed": true,
+              "state": {
+                "fullscreen": false,
+                "bounds": {
+                  "x": 50,
+                  "y": 50,
+                  "width": 1136,
+                  "height": 677
+                },
+                "displayBounds": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 1235,
+                  "height": 823
+                },
+                "platform": "win32"
+              }
+            },
+            {
+              "name": "F11 restores full display coverage",
+              "passed": true,
+              "state": {
+                "fullscreen": true,
+                "bounds": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 1235,
+                  "height": 823
+                },
+                "displayBounds": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 1235,
+                  "height": 823
+                },
+                "platform": "win32"
+              }
+            },
+            {
+              "name": "local image import decodes and saves",
+              "passed": true,
+              "sceneId": "custom",
+              "imageLoaded": true,
+              "storedScene": "custom"
+            },
+            {
+              "name": "imported image survives reload through IndexedDB",
+              "passed": true,
+              "ui": {
+                "ready": true,
+                "sceneId": "custom",
+                "timeZone": "Asia/Shanghai",
+                "sceneCount": 9,
+                "hasSolar": true,
+                "canvasReady": true,
+                "phase": "morning",
+                "weights": {
+                  "dawn": 0,
+                  "morning": 1,
+                  "noon": 0,
+                  "evening": 0,
+                  "night": 0
+                },
+                "lighting": {
+                  "sun": {
+                    "altitude": 9.533988115531184,
+                    "azimuth": 122.32829850639865,
+                    "relativeAzimuth": 122.3282985063986,
+                    "direction": [
+                      0.8333262978650555,
+                      0.16563264586630647,
+                      -0.5273832647229597
+                    ],
+                    "screenX": -0.44155396626551047,
+                    "screenY": 0.7808298006239016,
+                    "inFront": false,
+                    "inFrame": false,
+                    "aboveHorizon": true,
+                    "strength": 0.18771545019811994,
+                    "diffuse": 0.18771545019811994,
+                    "specular": 0,
+                    "color": [
+                      1,
+                      0.6855713965018805,
+                      0.5303614728392676
+                    ],
+                    "colorTemperature": 4089.37429495568,
+                    "transmission": 0.49398802683715776,
+                    "visibility": 0,
+                    "visible": false,
+                    "angularRadius": 0.2666
+                  },
+                  "moon": {
+                    "altitude": -10.308030942951556,
+                    "azimuth": 116.70086928608652,
+                    "relativeAzimuth": 116.70086928608657,
+                    "direction": [
+                      0.8789456368309972,
+                      -0.17894012097984974,
+                      -0.4420803101241556
+                    ],
+                    "screenX": -0.6847243548283868,
+                    "screenY": 0.13806535965772831,
+                    "inFront": false,
+                    "inFrame": false,
+                    "aboveHorizon": false,
+                    "illumination": 0.029581364725711823,
+                    "phase": 0.053234214631004306,
+                    "phaseBrightness": 0.00433152996796616,
+                    "geometricAltitude": -10.308030942951556,
+                    "brightLimbAngle": -66.54887128847396,
+                    "parallacticAngle": -50.27464823151693,
+                    "strength": 0,
+                    "diffuse": 0,
+                    "specular": 0,
+                    "color": [
+                      0.66,
+                      0.75,
+                      0.94
+                    ],
+                    "colorTemperature": 8500,
+                    "transmission": 0.008229747049020023,
+                    "visibility": 0,
+                    "visible": false,
+                    "angularRadius": 0.24747701413494871
+                  },
+                  "ambient": {
+                    "color": [
+                      0.7050483070600957,
+                      0.7924425409523798,
+                      0.9346718197132959
+                    ],
+                    "intensity": 0.5689205406138077
+                  },
+                  "sky": {
+                    "color": [
+                      0.38368331722501803,
+                      0.5567296646326793,
+                      0.8209070498850896
+                    ],
+                    "intensity": 0.5568120809250542,
+                    "colorTemperature": 7528.646835047556,
+                    "horizonGlow": 0.17660730088826967
+                  },
+                  "shadow": {
+                    "source": "sun",
+                    "direction": [
+                      -0.8449978123834258,
+                      -0.5347697608010618
+                    ],
+                    "angle": -147.6717014936014,
+                    "length": 4.8498801232334205,
+                    "physicalLength": 5.954064887787587,
+                    "strength": 0.18771545019811994
+                  },
+                  "nightFactor": 0,
+                  "daylight": 0.967184776762873,
+                  "camera": {
+                    "viewAzimuth": 0,
+                    "fieldOfView": 80,
+                    "verticalFieldOfView": 58.42550824228087,
+                    "horizon": 0.5,
+                    "exposure": 1,
+                    "maxShadowLength": 14
+                  },
+                  "exposure": 1.0154058687468022,
+                  "colorTemperature": 4266.925185319247,
+                  "utcMillis": 1794354903253
+                },
+                "celestial": {
+                  "sun": {
+                    "altitude": 9.533988115531184,
+                    "azimuth": 122.32829850639865,
+                    "hourAngle": -60.81839590031586,
+                    "declination": -17.356183041148018,
+                    "equationOfTime": 16.042599732069903,
+                    "geometricAltitude": 9.533988115531184,
+                    "apparentAltitude": 9.62811804337501,
+                    "direction": [
+                      0.8333262978650549,
+                      -0.5273832647229608,
+                      0.16563264586630647
+                    ],
+                    "visible": true
+                  },
+                  "moon": {
+                    "altitude": -10.308030942951556,
+                    "geometricAltitude": -10.308030942951556,
+                    "geocentricAltitude": -9.415143748517409,
+                    "geocentricAzimuth": 116.70358334145732,
+                    "azimuth": 116.70086928608652,
+                    "refraction": 0,
+                    "distance": 402243.4051082252,
+                    "topocentricDistance": 403324.9917537625,
+                    "parallacticAngle": -50.27464823151693,
+                    "angularRadius": 0.24681335704222984,
+                    "direction": [
+                      0.8789456368309976,
+                      -0.44208031012415483,
+                      -0.17894012097984974
+                    ],
+                    "geometricDirection": [
+                      0.8789456368309976,
+                      -0.44208031012415483,
+                      -0.17894012097984974
+                    ],
+                    "visible": false,
+                    "illumination": 0.029581364725711823,
+                    "fraction": 0.029581364725711823,
+                    "phase": 0.053234214631004306,
+                    "waxing": true,
+                    "brightLimbAngle": -66.54887128847396,
+                    "angle": -66.54887128847396,
+                    "elongation": 19.75515213380649,
+                    "tiltAngle": -16.274223056957034
+                  },
+                  "nightFactor": 0,
+                  "timestamp": 1794354903253
+                },
+                "relighting": {
+                  "ready": true,
+                  "renderer": "webgl",
+                  "sceneId": "custom",
+                  "frameCount": 4,
+                  "drawCount": 4,
+                  "utcMillis": 1794354903253,
+                  "width": 1544,
+                  "height": 1029,
+                  "contextLost": false,
+                  "fallbackReason": null,
+                  "pixelHash": "bd3865b5",
+                  "pixels": [
+                    100,
+                    160,
+                    159,
+                    255,
+                    100,
+                    160,
+                    159,
+                    255,
+                    100,
+                    160,
+                    159,
+                    255,
+                    100,
+                    160,
+                    159,
+                    255,
+                    100,
+                    160,
+                    159,
+                    255,
+                    100,
+                    160,
+                    159,
+                    255,
+                    100,
+                    160,
+                    159,
+                    255,
+                    100,
+                    160,
+                    159,
+                    255
+                  ],
+                  "geometryVersion": "authored-2.5d-1.0"
+                },
+                "atmosphere": {
+                  "scene": "custom",
+                  "time": 0,
+                  "sunDrawn": false,
+                  "moonDrawn": false,
+                  "glintSources": [],
+                  "terrainLight": []
+                },
+                "locationSource": "scene",
+                "visibleMainButtons": [
+                  "menu-button"
+                ],
+                "imageLoaded": true,
+                "layerImages": [],
+                "transitioning": true,
+                "phaseAnimating": false
+              }
+            },
+            {
+              "name": "default scene and time zone restored",
+              "passed": true,
+              "ui": {
+                "ready": true,
+                "sceneId": "manhattan",
+                "timeZone": "America/New_York",
+                "sceneCount": 8,
+                "hasSolar": true,
+                "canvasReady": true,
+                "phase": "night",
+                "weights": {
+                  "dawn": 0,
+                  "morning": 0,
+                  "noon": 0,
+                  "evening": 0,
+                  "night": 1
+                },
+                "lighting": {
+                  "sun": {
+                    "altitude": -25.317754880624204,
+                    "azimuth": 268.39548631040964,
+                    "relativeAzimuth": -156.60451368959036,
+                    "direction": [
+                      -0.35893650966564045,
+                      -0.4276380009816634,
+                      -0.8296326428880764
+                    ],
+                    "screenX": 0.805258527711778,
+                    "screenY": -0.055749797208810126,
+                    "inFront": false,
+                    "inFrame": false,
+                    "aboveHorizon": false,
+                    "strength": 0,
+                    "diffuse": 0,
+                    "specular": 0,
+                    "color": [
+                      1,
+                      0.47,
+                      0.24
+                    ],
+                    "colorTemperature": 2200,
+                    "transmission": 0.021067999523041434,
+                    "visibility": 0,
+                    "visible": false,
+                    "angularRadius": 0.2666
+                  },
+                  "moon": {
+                    "altitude": -17.6313795999497,
+                    "azimuth": 249.2756539500009,
+                    "relativeAzimuth": -175.7243460499991,
+                    "direction": [
+                      -0.07105277073533267,
+                      -0.3028918863030204,
+                      -0.9503725632522386
+                    ],
+                    "screenX": 0.5527500808443805,
+                    "screenY": 0.1525597581232106,
+                    "inFront": false,
+                    "inFrame": false,
+                    "aboveHorizon": false,
+                    "illumination": 0.02958158092825469,
+                    "phase": 0.05323442498109898,
+                    "phaseBrightness": 0.004331577550284874,
+                    "geometricAltitude": -17.6313795999497,
+                    "brightLimbAngle": -66.54896518549336,
+                    "parallacticAngle": 52.644047757872315,
+                    "strength": 0,
+                    "diffuse": 0,
+                    "specular": 0,
+                    "color": [
+                      0.66,
+                      0.75,
+                      0.94
+                    ],
+                    "colorTemperature": 8500,
+                    "transmission": 0.008229747049020023,
+                    "visibility": 0,
+                    "visible": false,
+                    "angularRadius": 0.24747700478366672
+                  },
+                  "ambient": {
+                    "color": [
+                      0.2721788426297856,
+                      0.34231771689370794,
+                      0.4923134450260387
+                    ],
+                    "intensity": 0.09736347168050707
+                  },
+                  "sky": {
+                    "color": [
+                      0.026645860953545944,
+                      0.047594879339323354,
+                      0.108744983016419
+                    ],
+                    "intensity": 0.026989657282059532,
+                    "colorTemperature": 9492.049530487631,
+                    "horizonGlow": 0.00009708790157272541
+                  },
+                  "shadow": {
+                    "source": "none",
+                    "direction": [
+                      0,
+                      0
+                    ],
+                    "angle": 0,
+                    "length": 0,
+                    "physicalLength": 0,
+                    "strength": 0
+                  },
+                  "nightFactor": 1,
+                  "daylight": 0.004823411592871593,
+                  "camera": {
+                    "viewAzimuth": 65,
+                    "fieldOfView": 70.64686212109497,
+                    "verticalFieldOfView": 50.557528965527,
+                    "horizon": 0.49,
+                    "exposure": 1,
+                    "maxShadowLength": 14
+                  },
+                  "exposure": 0.880675277623002,
+                  "colorTemperature": 9464.789095372038,
+                  "utcMillis": 1794354903842
+                },
+                "celestial": {
+                  "sun": {
+                    "altitude": -25.317754880624204,
+                    "azimuth": 268.39548631040964,
+                    "hourAngle": 108.79095808441787,
+                    "declination": -17.356184929548274,
+                    "equationOfTime": 16.04259900433817,
+                    "geometricAltitude": -25.317754880624204,
+                    "apparentAltitude": -25.317754880624204,
+                    "direction": [
+                      -0.9035956484194265,
+                      -0.02531095165897573,
+                      -0.4276380009816634
+                    ],
+                    "visible": false
+                  },
+                  "moon": {
+                    "altitude": -17.6313795999497,
+                    "geometricAltitude": -17.6313795999497,
+                    "geocentricAltitude": -16.766431251957805,
+                    "geocentricAzimuth": 249.27271195352535,
+                    "azimuth": 249.2756539500009,
+                    "refraction": 0,
+                    "distance": 402243.42030748836,
+                    "topocentricDistance": 404119.58398269163,
+                    "parallacticAngle": 52.644047757872315,
+                    "angularRadius": 0.24632806211277708,
+                    "direction": [
+                      -0.8913582531215116,
+                      -0.33724912127975243,
+                      -0.3028918863030204
+                    ],
+                    "geometricDirection": [
+                      -0.8913582531215116,
+                      -0.33724912127975243,
+                      -0.3028918863030204
+                    ],
+                    "visible": false,
+                    "illumination": 0.02958158092825469,
+                    "fraction": 0.02958158092825469,
+                    "phase": 0.05323442498109898,
+                    "waxing": true,
+                    "brightLimbAngle": -66.54896518549336,
+                    "angle": -66.54896518549336,
+                    "elongation": 19.755225059773654,
+                    "tiltAngle": -119.19301294336567
+                  },
+                  "nightFactor": 1,
+                  "timestamp": 1794354903842
+                },
+                "relighting": {
+                  "ready": true,
+                  "renderer": "webgl",
+                  "sceneId": "manhattan",
+                  "frameCount": 4,
+                  "drawCount": 4,
+                  "utcMillis": 1794354903842,
+                  "width": 1544,
+                  "height": 1029,
+                  "contextLost": false,
+                  "fallbackReason": null,
+                  "pixelHash": "c5a0dc47",
+                  "pixels": [
+                    13,
+                    19,
+                    37,
+                    255,
+                    12,
+                    18,
+                    36,
+                    255,
+                    11,
+                    17,
+                    36,
+                    255,
+                    58,
+                    34,
+                    15,
+                    255,
+                    215,
+                    174,
+                    100,
+                    255,
+                    75,
+                    51,
+                    38,
+                    255,
+                    80,
+                    69,
+                    69,
+                    255,
+                    147,
+                    126,
+                    116,
+                    255
+                  ],
+                  "geometryVersion": "authored-2.5d-1.0"
+                },
+                "atmosphere": {
+                  "scene": "manhattan",
+                  "time": 0.207,
+                  "sunDrawn": false,
+                  "moonDrawn": false,
+                  "glintSources": [],
+                  "terrainLight": []
+                },
+                "locationSource": "scene",
+                "visibleMainButtons": [
+                  "menu-button"
+                ],
+                "imageLoaded": true,
+                "layerImages": [
+                  {
+                    "phase": "dawn",
+                    "loaded": true,
+                    "opacity": 1,
+                    "weight": 0
+                  },
+                  {
+                    "phase": "morning",
+                    "loaded": true,
+                    "opacity": 0,
+                    "weight": 0
+                  },
+                  {
+                    "phase": "noon",
+                    "loaded": true,
+                    "opacity": 0,
+                    "weight": 0
+                  },
+                  {
+                    "phase": "evening",
+                    "loaded": true,
+                    "opacity": 0,
+                    "weight": 0
+                  },
+                  {
+                    "phase": "night",
+                    "loaded": true,
+                    "opacity": 1,
+                    "weight": 1
+                  }
+                ],
+                "transitioning": true,
+                "phaseAnimating": false
+              }
+            }
+          ],
+          "rendererErrors": []
+        }
+      },
+      {
+        "name": "source-lighting",
+        "passed": true,
+        "code": 0,
+        "signal": null,
+        "timedOut": false,
+        "elapsedMs": 15331,
+        "details": {
+          "passed": true,
+          "checks": [
+            {
+              "name": "photographic relighting initializes a real rendering path",
+              "passed": true,
+              "relighting": {
+                "ready": true,
+                "renderer": "webgl",
+                "sceneId": "manhattan",
+                "frameCount": 6,
+                "drawCount": 6,
+                "utcMillis": 1794354906541,
+                "width": 1544,
+                "height": 1029,
+                "contextLost": false,
+                "fallbackReason": null,
+                "pixelHash": "c5a0dc47",
+                "pixels": [
+                  13,
+                  19,
+                  37,
+                  255,
+                  12,
+                  18,
+                  36,
+                  255,
+                  11,
+                  17,
+                  36,
+                  255,
+                  58,
+                  34,
+                  15,
+                  255,
+                  215,
+                  174,
+                  100,
+                  255,
+                  75,
+                  51,
+                  38,
+                  255,
+                  80,
+                  69,
+                  69,
+                  255,
+                  147,
+                  126,
+                  116,
+                  255
+                ],
+                "geometryVersion": "authored-2.5d-1.0"
+              }
+            },
+            {
+              "name": "solar ephemeris and normalized light direction are finite",
+              "passed": true,
+              "sun": {
+                "altitude": -25.326275845511223,
+                "azimuth": 268.40270614660017,
+                "relativeAzimuth": -156.59729385339983,
+                "direction": [
+                  -0.3590157842736975,
+                  -0.4277724307064664,
+                  -0.8295290315412857
+                ],
+                "screenX": 0.8053640833949567,
+                "screenY": -0.05598954351564034,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.47,
+                  0.24
+                ],
+                "colorTemperature": 2200,
+                "transmission": 0.021067999523041434,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "lunar ephemeris and illuminated fraction are finite",
+              "passed": true,
+              "moon": {
+                "altitude": -17.63907245207137,
+                "azimuth": 249.28181894426893,
+                "relativeAzimuth": -175.71818105573107,
+                "direction": [
+                  -0.07115199288266054,
+                  -0.30301984203414645,
+                  -0.9503243494946484
+                ],
+                "screenX": 0.5528264240301074,
+                "screenY": 0.1524000806210844,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "illumination": 0.029582571652325584,
+                "phase": 0.053235388877112655,
+                "phaseBrightness": 0.004331795593206909,
+                "geometricAltitude": -17.63907245207137,
+                "brightLimbAngle": -66.54939544877983,
+                "parallacticAngle": 52.64710138412027,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  0.66,
+                  0.75,
+                  0.94
+                ],
+                "colorTemperature": 8500,
+                "transmission": 0.008229747049020023,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.24747696193311525
+              }
+            },
+            {
+              "name": "manual morning to afternoon changes the actual Sun direction",
+              "passed": true,
+              "morning": {
+                "altitude": 12.830603498378917,
+                "azimuth": 126.67192700312984,
+                "relativeAzimuth": 61.671927003129895,
+                "direction": [
+                  0.8582660177845249,
+                  0.22206932428015672,
+                  0.462671220122938
+                ],
+                "screenX": 1.8088366066760808,
+                "screenY": -0.018181919475640518,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.23269707225660663,
+                "diffuse": 0.23269707225660663,
+                "specular": 0.051193355896453456,
+                "color": [
+                  1,
+                  0.7347608433560602,
+                  0.5966166461530606
+                ],
+                "colorTemperature": 4495.681178819417,
+                "transmission": 0.6123607164647543,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              },
+              "afternoon": {
+                "altitude": 6.371362749617862,
+                "azimuth": 240.54917086759724,
+                "relativeAzimuth": 175.54917086759724,
+                "direction": [
+                  0.07712420147707517,
+                  0.11097221887902234,
+                  -0.9908264349438755
+                ],
+                "screenX": 0.44508018103042146,
+                "screenY": 0.6085822833758137,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.12379094847714821,
+                "diffuse": 0.12379094847714821,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.6277118131654924,
+                  0.45242815650862245
+                ],
+                "colorTemperature": 3598.006841522517,
+                "transmission": 0.3257656538872321,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "Sun below the horizon contributes no direct light",
+              "passed": true,
+              "sun": {
+                "altitude": -65.98989145155306,
+                "azimuth": 11.918468111808806,
+                "relativeAzimuth": -53.08153188819119,
+                "direction": [
+                  -0.32531117214025335,
+                  -0.9134736839151919,
+                  0.24441454554740094
+                ],
+                "screenX": -0.4390915482146912,
+                "screenY": 4.447055269058586,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.47,
+                  0.24
+                ],
+                "colorTemperature": 2200,
+                "transmission": 0.021067999523041434,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "local noon produces direct daylight even outside the camera view",
+              "passed": true,
+              "sun": {
+                "altitude": 31.787301774456218,
+                "azimuth": 185.65532208942204,
+                "relativeAzimuth": 120.65532208942204,
+                "direction": [
+                  0.7312207388679488,
+                  0.5267674243705508,
+                  -0.43339625248890556
+                ],
+                "screenX": -0.6904176298342437,
+                "screenY": 1.7768765355125988,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.33509005389499474,
+                "diffuse": 0.33509005389499474,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.8824657785644423,
+                  0.7955661507194529
+                ],
+                "colorTemperature": 5625.7843696342,
+                "transmission": 0.8818159313026177,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "ground shadows point away from the direct Sun",
+              "passed": true,
+              "shadow": {
+                "source": "sun",
+                "direction": [
+                  -0.8602501195816414,
+                  -0.5098722700439511
+                ],
+                "angle": -149.34467791057799,
+                "length": 1.5241121687824675,
+                "physicalLength": 1.613633303449789,
+                "strength": 0.33509005389499474
+              }
+            },
+            {
+              "name": "camera bearing changes projected sunlight",
+              "passed": true,
+              "east": {
+                "altitude": 31.787301774456218,
+                "azimuth": 185.65532208942204,
+                "relativeAzimuth": 95.65532208942204,
+                "direction": [
+                  0.8458722205505093,
+                  0.5267674243705508,
+                  -0.08376316089407504
+                ],
+                "screenX": -6.625046554250457,
+                "screenY": 7.148386120508939,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.33509005389499474,
+                "diffuse": 0.33509005389499474,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.8824657785644423,
+                  0.7955661507194529
+                ],
+                "colorTemperature": 5625.7843696342,
+                "transmission": 0.8818159313026177,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              },
+              "west": {
+                "altitude": 31.787301774456218,
+                "azimuth": 185.65532208942204,
+                "relativeAzimuth": -84.34467791057796,
+                "direction": [
+                  -0.8458722205505093,
+                  0.5267674243705508,
+                  0.08376316089407496
+                ],
+                "screenX": -6.625046554250464,
+                "screenY": -6.168386120508946,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.33509005389499474,
+                "diffuse": 0.33509005389499474,
+                "specular": 0.014031968201543123,
+                "color": [
+                  1,
+                  0.8824657785644423,
+                  0.7955661507194529
+                ],
+                "colorTemperature": 5625.7843696342,
+                "transmission": 0.8818159313026177,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "changing light direction repaints actual photograph pixels",
+              "passed": true,
+              "eastHash": "17c8ae8f",
+              "westHash": "6fb62718"
+            },
+            {
+              "name": "known NASA full Moon is nearly fully illuminated",
+              "passed": true,
+              "illumination": 0.9999299782473179
+            },
+            {
+              "name": "known USNO new Moon is nearly unilluminated",
+              "passed": true,
+              "illumination": 0.000009359343851766955
+            },
+            {
+              "name": "Moon below the horizon contributes no moonlight",
+              "passed": true,
+              "moon": {
+                "altitude": -11.628781085945345,
+                "azimuth": 276.24912484422134,
+                "relativeAzimuth": -173.75087515577866,
+                "direction": [
+                  -0.10661741447929733,
+                  -0.2015699606114459,
+                  -0.9736540853449185
+                ],
+                "screenX": 0.5652499119817265,
+                "screenY": 0.3207117813638085,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "illumination": 0.9995730173255832,
+                "phase": 0.5062708637060496,
+                "phaseBrightness": 0.9991535241504749,
+                "geometricAltitude": -11.628781085945345,
+                "brightLimbAngle": 95.19013937379322,
+                "parallacticAngle": 48.942891487928364,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  0.66,
+                  0.75,
+                  0.94
+                ],
+                "colorTemperature": 8500,
+                "transmission": 0.008229747049020023,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.24569697666877724
+              }
+            },
+            {
+              "name": "lunar direction evolves during the night",
+              "passed": true,
+              "start": {
+                "altitude": 12.27653271934621,
+                "geometricAltitude": 12.201686748054142,
+                "geocentricAltitude": 13.080804042734348,
+                "geocentricAzimuth": 100.8490366054923,
+                "azimuth": 100.84602552724039,
+                "refraction": 0.07484597129206795,
+                "distance": 405680.7511205566,
+                "topocentricDistance": 404282.9912593447,
+                "parallacticAngle": -48.07763119527866,
+                "angularRadius": 0.24622849807839547,
+                "direction": [
+                  0.9596776479482396,
+                  -0.18386738382939385,
+                  0.21263018880739648
+                ],
+                "geometricDirection": [
+                  0.9599496279022469,
+                  -0.1839194932462426,
+                  0.2113535708105803
+                ],
+                "visible": true,
+                "illumination": 0.9991160345491635,
+                "fraction": 0.9991160345491635,
+                "phase": 0.49119212647764243,
+                "waxing": true,
+                "brightLimbAngle": -44.7128882366685,
+                "angle": -44.7128882366685,
+                "elongation": 176.5832774487633,
+                "tiltAngle": 3.364742958610165
+              },
+              "end": {
+                "altitude": 45.670335467625776,
+                "geometricAltitude": 45.65383641222533,
+                "geocentricAltitude": 46.280993035318254,
+                "geocentricAzimuth": 201.331538485019,
+                "azimuth": 201.33311133551197,
+                "refraction": 0.016499055400443562,
+                "distance": 405438.2381233941,
+                "topocentricDistance": 400845.4964890816,
+                "parallacticAngle": 16.003583526219835,
+                "angularRadius": 0.24834007089070978,
+                "direction": [
+                  -0.25421098093832095,
+                  -0.6509057410716241,
+                  0.7153310376394809
+                ],
+                "geometricDirection": [
+                  -0.25428590696413,
+                  -0.6510975887257845,
+                  0.7151297836581127
+                ],
+                "visible": true,
+                "illumination": 0.999907388672298,
+                "fraction": 0.999907388672298,
+                "phase": 0.4987267577105854,
+                "waxing": true,
+                "brightLimbAngle": -1.1294615891586148,
+                "angle": -1.1294615891586148,
+                "elongation": 178.8942250667624,
+                "tiltAngle": -17.13304511537845
+              }
+            },
+            {
+              "name": "realtime astronomy keeps ticking with landscape motion off",
+              "passed": true,
+              "beforeUtc": 1794354913123,
+              "afterUtc": 1794354915333
+            },
+            {
+              "name": "light renderer repaints with landscape motion off",
+              "passed": true,
+              "before": 160,
+              "after": 185,
+              "renderer": "webgl"
+            },
+            {
+              "name": "manual preview remains at the selected instant",
+              "passed": true
+            },
+            {
+              "name": "WebGL context loss retains a working light renderer",
+              "passed": true,
+              "relighting": {
+                "ready": true,
+                "renderer": "canvas",
+                "sceneId": "manhattan",
+                "frameCount": 201,
+                "drawCount": 201,
+                "utcMillis": 1794330000000,
+                "width": 960,
+                "height": 640,
+                "contextLost": true,
+                "fallbackReason": "WebGL context lost",
+                "pixelHash": "64e2d84b",
+                "pixels": [
+                  178,
+                  206,
+                  248,
+                  255,
+                  168,
+                  200,
+                  246,
+                  255,
+                  163,
+                  197,
+                  244,
+                  255,
+                  51,
+                  50,
+                  53,
+                  255,
+                  158,
+                  163,
+                  168,
+                  255,
+                  138,
+                  104,
+                  95,
+                  255,
+                  150,
+                  147,
+                  149,
+                  255,
+                  230,
+                  227,
+                  223,
+                  255
+                ],
+                "geometryVersion": "authored-2.5d-1.0"
+              }
+            },
+            {
+              "name": "light rendering recovers after context restoration",
+              "passed": true,
+              "relighting": {
+                "ready": true,
+                "renderer": "webgl",
+                "sceneId": "manhattan",
+                "frameCount": 204,
+                "drawCount": 204,
+                "utcMillis": 1794330000000,
+                "width": 1544,
+                "height": 1029,
+                "contextLost": false,
+                "fallbackReason": null,
+                "pixelHash": "6fb62718",
+                "pixels": [
+                  177,
+                  207,
+                  249,
+                  255,
+                  168,
+                  201,
+                  247,
+                  255,
+                  164,
+                  197,
+                  244,
+                  255,
+                  49,
+                  50,
+                  53,
+                  255,
+                  151,
+                  150,
+                  154,
+                  255,
+                  164,
+                  120,
+                  105,
+                  255,
+                  157,
+                  156,
+                  156,
+                  255,
+                  222,
+                  220,
+                  220,
+                  255
+                ],
+                "geometryVersion": "authored-2.5d-1.0"
+              }
+            },
+            {
+              "name": "native window resize updates light-canvas aspect ratio",
+              "passed": true,
+              "relighting": {
+                "ready": true,
+                "renderer": "webgl",
+                "sceneId": "manhattan",
+                "frameCount": 214,
+                "drawCount": 214,
+                "utcMillis": 1794330000000,
+                "width": 1124,
+                "height": 750,
+                "contextLost": false,
+                "fallbackReason": null,
+                "pixelHash": "3cb9871e",
+                "pixels": [
+                  178,
+                  207,
+                  249,
+                  255,
+                  168,
+                  201,
+                  247,
+                  255,
+                  164,
+                  197,
+                  244,
+                  255,
+                  51,
+                  51,
+                  54,
+                  255,
+                  154,
+                  156,
+                  163,
+                  255,
+                  162,
+                  120,
+                  105,
+                  255,
+                  155,
+                  154,
+                  155,
+                  255,
+                  229,
+                  228,
+                  227,
+                  255
+                ],
+                "geometryVersion": "authored-2.5d-1.0"
+              }
+            },
+            {
+              "name": "lighting tests restore complete native fullscreen coverage",
+              "passed": true
+            }
+          ],
+          "rendererErrors": [],
+          "state": {
+            "fullscreen": true,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "displayBounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "platform": "win32"
+          }
+        }
+      },
+      {
+        "name": "source-lighting-canvas",
+        "passed": true,
+        "code": 0,
+        "signal": null,
+        "timedOut": false,
+        "elapsedMs": 13929,
+        "details": {
+          "passed": true,
+          "checks": [
+            {
+              "name": "photographic relighting initializes a real rendering path",
+              "passed": true,
+              "relighting": {
+                "ready": true,
+                "renderer": "canvas",
+                "sceneId": "manhattan",
+                "frameCount": 6,
+                "drawCount": 6,
+                "utcMillis": 1794354920944,
+                "width": 960,
+                "height": 640,
+                "contextLost": false,
+                "fallbackReason": "WebGL unavailable",
+                "pixelHash": "d3350e4d",
+                "pixels": [
+                  13,
+                  19,
+                  37,
+                  255,
+                  13,
+                  19,
+                  36,
+                  255,
+                  12,
+                  17,
+                  37,
+                  255,
+                  66,
+                  38,
+                  16,
+                  255,
+                  208,
+                  156,
+                  85,
+                  255,
+                  77,
+                  57,
+                  45,
+                  255,
+                  93,
+                  80,
+                  78,
+                  255,
+                  147,
+                  126,
+                  115,
+                  255
+                ],
+                "geometryVersion": "authored-2.5d-1.0"
+              }
+            },
+            {
+              "name": "solar ephemeris and normalized light direction are finite",
+              "passed": true,
+              "sun": {
+                "altitude": -25.37174780262192,
+                "azimuth": 268.4412420875258,
+                "relativeAzimuth": -156.55875791247422,
+                "direction": [
+                  -0.3594384595574343,
+                  -0.42848965218411544,
+                  -0.8289756400293766
+                ],
+                "screenX": 0.8059276826734418,
+                "screenY": -0.05727006507564403,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.47,
+                  0.24
+                ],
+                "colorTemperature": 2200,
+                "transmission": 0.021067999523041434,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "lunar ephemeris and illuminated fraction are finite",
+              "passed": true,
+              "moon": {
+                "altitude": -17.680129698266935,
+                "azimuth": 249.31471488063107,
+                "relativeAzimuth": -175.68528511936893,
+                "direction": [
+                  -0.07168124779125971,
+                  -0.3037026575621177,
+                  -0.9500665737224918
+                ],
+                "screenX": 0.5532338062481692,
+                "screenY": 0.15154753808330157,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "illumination": 0.029587858856794047,
+                "phase": 0.053240532624556636,
+                "phaseBrightness": 0.004332959286836836,
+                "geometricAltitude": -17.680129698266935,
+                "brightLimbAngle": -66.55169137825094,
+                "parallacticAngle": 52.66338419202188,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  0.66,
+                  0.75,
+                  0.94
+                ],
+                "colorTemperature": 8500,
+                "transmission": 0.008229747049020023,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.24747673327045563
+              }
+            },
+            {
+              "name": "manual morning to afternoon changes the actual Sun direction",
+              "passed": true,
+              "morning": {
+                "altitude": 12.830603498378917,
+                "azimuth": 126.67192700312984,
+                "relativeAzimuth": 61.671927003129895,
+                "direction": [
+                  0.8582660177845249,
+                  0.22206932428015672,
+                  0.462671220122938
+                ],
+                "screenX": 1.8088366066760808,
+                "screenY": -0.018181919475640518,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.23269707225660663,
+                "diffuse": 0.23269707225660663,
+                "specular": 0.051193355896453456,
+                "color": [
+                  1,
+                  0.7347608433560602,
+                  0.5966166461530606
+                ],
+                "colorTemperature": 4495.681178819417,
+                "transmission": 0.6123607164647543,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              },
+              "afternoon": {
+                "altitude": 6.371362749617862,
+                "azimuth": 240.54917086759724,
+                "relativeAzimuth": 175.54917086759724,
+                "direction": [
+                  0.07712420147707517,
+                  0.11097221887902234,
+                  -0.9908264349438755
+                ],
+                "screenX": 0.44508018103042146,
+                "screenY": 0.6085822833758137,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.12379094847714821,
+                "diffuse": 0.12379094847714821,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.6277118131654924,
+                  0.45242815650862245
+                ],
+                "colorTemperature": 3598.006841522517,
+                "transmission": 0.3257656538872321,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "Sun below the horizon contributes no direct light",
+              "passed": true,
+              "sun": {
+                "altitude": -65.98989145155306,
+                "azimuth": 11.918468111808806,
+                "relativeAzimuth": -53.08153188819119,
+                "direction": [
+                  -0.32531117214025335,
+                  -0.9134736839151919,
+                  0.24441454554740094
+                ],
+                "screenX": -0.4390915482146912,
+                "screenY": 4.447055269058586,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.47,
+                  0.24
+                ],
+                "colorTemperature": 2200,
+                "transmission": 0.021067999523041434,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "local noon produces direct daylight even outside the camera view",
+              "passed": true,
+              "sun": {
+                "altitude": 31.787301774456218,
+                "azimuth": 185.65532208942204,
+                "relativeAzimuth": 120.65532208942204,
+                "direction": [
+                  0.7312207388679488,
+                  0.5267674243705508,
+                  -0.43339625248890556
+                ],
+                "screenX": -0.6904176298342437,
+                "screenY": 1.7768765355125988,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.33509005389499474,
+                "diffuse": 0.33509005389499474,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.8824657785644423,
+                  0.7955661507194529
+                ],
+                "colorTemperature": 5625.7843696342,
+                "transmission": 0.8818159313026177,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "ground shadows point away from the direct Sun",
+              "passed": true,
+              "shadow": {
+                "source": "sun",
+                "direction": [
+                  -0.8602501195816414,
+                  -0.5098722700439511
+                ],
+                "angle": -149.34467791057799,
+                "length": 1.5241121687824675,
+                "physicalLength": 1.613633303449789,
+                "strength": 0.33509005389499474
+              }
+            },
+            {
+              "name": "camera bearing changes projected sunlight",
+              "passed": true,
+              "east": {
+                "altitude": 31.787301774456218,
+                "azimuth": 185.65532208942204,
+                "relativeAzimuth": 95.65532208942204,
+                "direction": [
+                  0.8458722205505093,
+                  0.5267674243705508,
+                  -0.08376316089407504
+                ],
+                "screenX": -6.625046554250457,
+                "screenY": 7.148386120508939,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.33509005389499474,
+                "diffuse": 0.33509005389499474,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.8824657785644423,
+                  0.7955661507194529
+                ],
+                "colorTemperature": 5625.7843696342,
+                "transmission": 0.8818159313026177,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              },
+              "west": {
+                "altitude": 31.787301774456218,
+                "azimuth": 185.65532208942204,
+                "relativeAzimuth": -84.34467791057796,
+                "direction": [
+                  -0.8458722205505093,
+                  0.5267674243705508,
+                  0.08376316089407496
+                ],
+                "screenX": -6.625046554250464,
+                "screenY": -6.168386120508946,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.33509005389499474,
+                "diffuse": 0.33509005389499474,
+                "specular": 0.014031968201543123,
+                "color": [
+                  1,
+                  0.8824657785644423,
+                  0.7955661507194529
+                ],
+                "colorTemperature": 5625.7843696342,
+                "transmission": 0.8818159313026177,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "changing light direction repaints actual photograph pixels",
+              "passed": true,
+              "eastHash": "8b09e9c6",
+              "westHash": "64e2d84b"
+            },
+            {
+              "name": "known NASA full Moon is nearly fully illuminated",
+              "passed": true,
+              "illumination": 0.9999299782473179
+            },
+            {
+              "name": "known USNO new Moon is nearly unilluminated",
+              "passed": true,
+              "illumination": 0.000009359343851766955
+            },
+            {
+              "name": "Moon below the horizon contributes no moonlight",
+              "passed": true,
+              "moon": {
+                "altitude": -11.628781085945345,
+                "azimuth": 276.24912484422134,
+                "relativeAzimuth": -173.75087515577866,
+                "direction": [
+                  -0.10661741447929733,
+                  -0.2015699606114459,
+                  -0.9736540853449185
+                ],
+                "screenX": 0.5652499119817265,
+                "screenY": 0.3207117813638085,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "illumination": 0.9995730173255832,
+                "phase": 0.5062708637060496,
+                "phaseBrightness": 0.9991535241504749,
+                "geometricAltitude": -11.628781085945345,
+                "brightLimbAngle": 95.19013937379322,
+                "parallacticAngle": 48.942891487928364,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  0.66,
+                  0.75,
+                  0.94
+                ],
+                "colorTemperature": 8500,
+                "transmission": 0.008229747049020023,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.24569697666877724
+              }
+            },
+            {
+              "name": "lunar direction evolves during the night",
+              "passed": true,
+              "start": {
+                "altitude": 12.27653271934621,
+                "geometricAltitude": 12.201686748054142,
+                "geocentricAltitude": 13.080804042734348,
+                "geocentricAzimuth": 100.8490366054923,
+                "azimuth": 100.84602552724039,
+                "refraction": 0.07484597129206795,
+                "distance": 405680.7511205566,
+                "topocentricDistance": 404282.9912593447,
+                "parallacticAngle": -48.07763119527866,
+                "angularRadius": 0.24622849807839547,
+                "direction": [
+                  0.9596776479482396,
+                  -0.18386738382939385,
+                  0.21263018880739648
+                ],
+                "geometricDirection": [
+                  0.9599496279022469,
+                  -0.1839194932462426,
+                  0.2113535708105803
+                ],
+                "visible": true,
+                "illumination": 0.9991160345491635,
+                "fraction": 0.9991160345491635,
+                "phase": 0.49119212647764243,
+                "waxing": true,
+                "brightLimbAngle": -44.7128882366685,
+                "angle": -44.7128882366685,
+                "elongation": 176.5832774487633,
+                "tiltAngle": 3.364742958610165
+              },
+              "end": {
+                "altitude": 45.670335467625776,
+                "geometricAltitude": 45.65383641222533,
+                "geocentricAltitude": 46.280993035318254,
+                "geocentricAzimuth": 201.331538485019,
+                "azimuth": 201.33311133551197,
+                "refraction": 0.016499055400443562,
+                "distance": 405438.2381233941,
+                "topocentricDistance": 400845.4964890816,
+                "parallacticAngle": 16.003583526219835,
+                "angularRadius": 0.24834007089070978,
+                "direction": [
+                  -0.25421098093832095,
+                  -0.6509057410716241,
+                  0.7153310376394809
+                ],
+                "geometricDirection": [
+                  -0.25428590696413,
+                  -0.6510975887257845,
+                  0.7151297836581127
+                ],
+                "visible": true,
+                "illumination": 0.999907388672298,
+                "fraction": 0.999907388672298,
+                "phase": 0.4987267577105854,
+                "waxing": true,
+                "brightLimbAngle": -1.1294615891586148,
+                "angle": -1.1294615891586148,
+                "elongation": 178.8942250667624,
+                "tiltAngle": -17.13304511537845
+              }
+            },
+            {
+              "name": "realtime astronomy keeps ticking with landscape motion off",
+              "passed": true,
+              "beforeUtc": 1794354927267,
+              "afterUtc": 1794354929398
+            },
+            {
+              "name": "light renderer repaints with landscape motion off",
+              "passed": true,
+              "before": 105,
+              "after": 123,
+              "renderer": "canvas"
+            },
+            {
+              "name": "manual preview remains at the selected instant",
+              "passed": true
+            },
+            {
+              "name": "WebGL context-loss exercise",
+              "passed": true,
+              "skipped": true,
+              "reason": "This launch is exercising the Canvas renderer"
+            },
+            {
+              "name": "forced WebGL-disabled launch uses the Canvas fallback",
+              "passed": true,
+              "renderer": "canvas"
+            },
+            {
+              "name": "native window resize updates light-canvas aspect ratio",
+              "passed": true,
+              "relighting": {
+                "ready": true,
+                "renderer": "canvas",
+                "sceneId": "manhattan",
+                "frameCount": 146,
+                "drawCount": 146,
+                "utcMillis": 1794330000000,
+                "width": 960,
+                "height": 641,
+                "contextLost": false,
+                "fallbackReason": "WebGL unavailable",
+                "pixelHash": "8638afea",
+                "pixels": [
+                  176,
+                  206,
+                  248,
+                  255,
+                  168,
+                  200,
+                  246,
+                  255,
+                  164,
+                  196,
+                  243,
+                  255,
+                  50,
+                  50,
+                  54,
+                  255,
+                  158,
+                  161,
+                  167,
+                  255,
+                  177,
+                  127,
+                  110,
+                  255,
+                  154,
+                  154,
+                  154,
+                  255,
+                  219,
+                  217,
+                  216,
+                  255
+                ],
+                "geometryVersion": "authored-2.5d-1.0"
+              }
+            },
+            {
+              "name": "lighting tests restore complete native fullscreen coverage",
+              "passed": true
+            }
+          ],
+          "rendererErrors": [],
+          "state": {
+            "fullscreen": true,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "displayBounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "platform": "win32"
+          }
+        }
+      },
+      {
+        "name": "source-software-flows",
+        "passed": true,
+        "code": 0,
+        "signal": null,
+        "timedOut": false,
+        "elapsedMs": 23894,
+        "details": {
+          "passed": true,
+          "checks": [
+            {
+              "name": "all-scenes: manhattan loads",
+              "passed": true,
+              "sceneId": "manhattan"
+            },
+            {
+              "name": "all-scenes: medieval loads",
+              "passed": true,
+              "sceneId": "medieval"
+            },
+            {
+              "name": "all-scenes: kyoto loads",
+              "passed": true,
+              "sceneId": "kyoto"
+            },
+            {
+              "name": "all-scenes: fuji loads",
+              "passed": true,
+              "sceneId": "fuji"
+            },
+            {
+              "name": "all-scenes: lake loads",
+              "passed": true,
+              "sceneId": "lake"
+            },
+            {
+              "name": "all-scenes: coast loads",
+              "passed": true,
+              "sceneId": "coast"
+            },
+            {
+              "name": "all-scenes: forest loads",
+              "passed": true,
+              "sceneId": "forest"
+            },
+            {
+              "name": "all-scenes: procedural loads",
+              "passed": true,
+              "sceneId": "procedural"
+            },
+            {
+              "name": "rapid scene switches keep the final request",
+              "passed": true
+            },
+            {
+              "name": "failed scene decode retains the previous visible scene",
+              "passed": true
+            },
+            {
+              "name": "invalid custom time zone preserves the active location",
+              "passed": true
+            },
+            {
+              "name": "invalid custom coordinates preserve the active location",
+              "passed": true
+            },
+            {
+              "name": "valid custom location applies",
+              "passed": true
+            },
+            {
+              "name": "corrupt image import preserves the current scene",
+              "passed": true
+            },
+            {
+              "name": "unsupported media is rejected without replacing scenery",
+              "passed": true
+            },
+            {
+              "name": "browser supports an actual WebM import fixture",
+              "passed": true
+            },
+            {
+              "name": "recorded WebM fixture independently decodes in Chromium",
+              "passed": true,
+              "fixture": {
+                "event": "loadeddata",
+                "bytes": 3593,
+                "mime": "video/webm",
+                "chunks": 7,
+                "capture": {
+                  "trackState": "live",
+                  "muted": false,
+                  "settings": {
+                    "aspectRatio": 1.7777777777777777,
+                    "deviceId": "<redacted>",
+                    "frameRate": 0,
+                    "height": 90,
+                    "resizeMode": "none",
+                    "width": 160
+                  },
+                  "errors": [],
+                  "documentHidden": false
+                },
+                "readyState": 4,
+                "width": 160,
+                "height": 90,
+                "duration": "Infinity",
+                "events": [
+                  "loadedmetadata"
+                ]
+              }
+            },
+            {
+              "name": "local video imports and decodes",
+              "passed": true,
+              "fixture": {
+                "event": "loadeddata",
+                "bytes": 3593,
+                "mime": "video/webm",
+                "chunks": 7,
+                "capture": {
+                  "trackState": "live",
+                  "muted": false,
+                  "settings": {
+                    "aspectRatio": 1.7777777777777777,
+                    "deviceId": "<redacted>",
+                    "frameRate": 0,
+                    "height": 90,
+                    "resizeMode": "none",
+                    "width": 160
+                  },
+                  "errors": [],
+                  "documentHidden": false
+                },
+                "readyState": 4,
+                "width": 160,
+                "height": 90,
+                "duration": "Infinity",
+                "events": [
+                  "loadedmetadata"
+                ]
+              },
+              "storedMedia": {
+                "name": "software-test-video.webm",
+                "mime": "video/webm",
+                "bytes": 3593
+              },
+              "toast": "这片风景已保存在本机。",
+              "sceneId": "custom",
+              "mediaCards": 9
+            },
+            {
+              "name": "enabled video actually starts playback",
+              "passed": true
+            },
+            {
+              "name": "motion off pauses imported video",
+              "passed": true
+            },
+            {
+              "name": "motion on resumes imported video",
+              "passed": true
+            },
+            {
+              "name": "video and preference configuration persist before reload",
+              "passed": true
+            },
+            {
+              "name": "video and full preferences survive reload",
+              "passed": true
+            },
+            {
+              "name": "persisted video decodes and plays after reload",
+              "passed": true
+            },
+            {
+              "name": "minimizing pauses video",
+              "passed": true
+            },
+            {
+              "name": "restoring resumes enabled video",
+              "passed": true
+            },
+            {
+              "name": "corrupt saved preferences recover to a working default scene",
+              "passed": true
+            },
+            {
+              "name": "software tests restore first-launch defaults",
+              "passed": true
+            }
+          ],
+          "rendererErrors": [],
+          "state": {
+            "fullscreen": true,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "displayBounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "platform": "win32"
+          }
+        }
+      }
+    ]
+  },
+  "packaged": {
+    "passed": true,
+    "generatedAt": "2026-11-11T10:27:29.724Z",
+    "version": "1.2.0",
+    "target": "packaged",
+    "selectedSuites": "all",
+    "platform": "win32",
+    "architecture": "x64",
+    "nodeVersion": "v22.12.0",
+    "elapsedMs": 91745,
+    "results": [
+      {
+        "name": "all-javascript-syntax",
+        "passed": true,
+        "files": 19,
+        "failures": []
+      },
+      {
+        "name": "unit-tests",
+        "passed": true,
+        "code": 0,
+        "signal": null,
+        "timedOut": false,
+        "elapsedMs": 1025
+      },
+      {
+        "name": "packaged-source-and-assets-match",
+        "passed": true,
+        "comparedFiles": 50,
+        "sourceTreeSha256": "0f268d1b2cae880acc8e0b248c66f43c78a0510abdc08e6fa69eaa5cb442ae7b",
+        "mismatches": []
+      },
+      {
+        "name": "packaged-smoke",
+        "passed": true,
+        "code": 0,
+        "signal": null,
+        "timedOut": false,
+        "elapsedMs": 29596,
+        "details": {
+          "passed": true,
+          "state": {
+            "fullscreen": true,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "displayBounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "platform": "win32"
+          },
+          "finalState": {
+            "fullscreen": true,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "displayBounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "platform": "win32"
+          },
+          "renderer": {
+            "title": "数字窗户 · Digital Window",
+            "ready": "complete",
+            "bridge": true,
+            "bridgeUsable": true,
+            "isolated": true,
+            "width": 1235,
+            "height": 823,
+            "images": 12,
+            "controls": true
+          },
+          "ui": {
+            "ready": true,
+            "sceneId": "manhattan",
+            "timeZone": "America/New_York",
+            "sceneCount": 8,
+            "hasSolar": true,
+            "canvasReady": true,
+            "phase": "night",
+            "weights": {
+              "dawn": 0,
+              "morning": 0,
+              "noon": 0,
+              "evening": 0,
+              "night": 1
+            },
+            "lighting": {
+              "sun": {
+                "altitude": -13.878324316580468,
+                "azimuth": 101.27187635397274,
+                "relativeAzimuth": 36.27187635397274,
+                "direction": [
+                  0.5743466007411925,
+                  -0.23986079155970283,
+                  0.7826830666939141
+                ],
+                "screenX": 1.0177547817037829,
+                "screenY": 0.8144714192270622,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.47,
+                  0.24
+                ],
+                "colorTemperature": 2200,
+                "transmission": 0.021067999523041434,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              },
+              "moon": {
+                "altitude": -38.47462647594065,
+                "azimuth": 95.33644896262899,
+                "relativeAzimuth": 30.336448962628992,
+                "direction": [
+                  0.3954164052078332,
+                  -0.6221679963802917,
+                  0.6756869473155803
+                ],
+                "screenX": 0.9129002592163898,
+                "screenY": 1.4649116543351033,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "illumination": 0.04510170050398704,
+                "phase": 0.06671334633875858,
+                "phaseBrightness": 0.008167543301315786,
+                "geometricAltitude": -38.47462647594065,
+                "brightLimbAngle": -71.9448679508411,
+                "parallacticAngle": -58.22766254640457,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  0.66,
+                  0.75,
+                  0.94
+                ],
+                "colorTemperature": 8500,
+                "transmission": 0.008229747049020023,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.24691187833505562
+              },
+              "ambient": {
+                "color": [
+                  0.31449785082844656,
+                  0.37964946174194547,
+                  0.5244183844259794
+                ],
+                "intensity": 0.13322899806979055
+              },
+              "sky": {
+                "color": [
+                  0.0736552261902564,
+                  0.09678875644481456,
+                  0.16925390300132956
+                ],
+                "intensity": 0.05718257490569102,
+                "colorTemperature": 9195.379012674057,
+                "horizonGlow": 0.07491316911398625
+              },
+              "shadow": {
+                "source": "none",
+                "direction": [
+                  0,
+                  0
+                ],
+                "angle": 0,
+                "length": 0,
+                "physicalLength": 0,
+                "strength": 0
+              },
+              "nightFactor": 1,
+              "daylight": 0.0780183634077358,
+              "camera": {
+                "viewAzimuth": 65,
+                "fieldOfView": 70.64686212109497,
+                "verticalFieldOfView": 50.557528965527,
+                "horizon": 0.49,
+                "exposure": 1,
+                "maxShadowLength": 14
+              },
+              "exposure": 0.890922570877083,
+              "colorTemperature": 8930.465947123528,
+              "utcMillis": 1794392762369
+            },
+            "celestial": {
+              "sun": {
+                "altitude": -13.878324316580468,
+                "azimuth": 101.27187635397274,
+                "hourAngle": -93.47721316048472,
+                "declination": -17.47708575250439,
+                "equationOfTime": 15.994464024727677,
+                "geometricAltitude": -13.878324316580468,
+                "apparentAltitude": -13.878324316580468,
+                "direction": [
+                  0.9520811201683423,
+                  -0.1897586395697106,
+                  -0.23986079155970283
+                ],
+                "visible": false
+              },
+              "moon": {
+                "altitude": -38.47462647594065,
+                "geometricAltitude": -38.47462647594065,
+                "geocentricAltitude": -37.76581723123528,
+                "geocentricAzimuth": 95.34023369621474,
+                "azimuth": 95.33644896262899,
+                "refraction": 0,
+                "distance": 403164.060436688,
+                "topocentricDistance": 407094.2794252039,
+                "parallacticAngle": -58.22766254640457,
+                "angularRadius": 0.24452809717586488,
+                "direction": [
+                  0.7794905357838237,
+                  -0.07281132400650851,
+                  -0.6221679963802917
+                ],
+                "geometricDirection": [
+                  0.7794905357838237,
+                  -0.07281132400650851,
+                  -0.6221679963802917
+                ],
+                "visible": false,
+                "illumination": 0.04510170050398704,
+                "fraction": 0.04510170050398704,
+                "phase": 0.06671334633875858,
+                "waxing": true,
+                "brightLimbAngle": -71.9448679508411,
+                "angle": -71.9448679508411,
+                "elongation": 24.45865282474681,
+                "tiltAngle": -13.717205404436534
+              },
+              "nightFactor": 1,
+              "timestamp": 1794392762369
+            },
+            "relighting": {
+              "ready": true,
+              "renderer": "webgl",
+              "sceneId": "manhattan",
+              "frameCount": 4,
+              "drawCount": 4,
+              "utcMillis": 1794392762369,
+              "width": 1544,
+              "height": 1029,
+              "contextLost": false,
+              "fallbackReason": null,
+              "pixelHash": "7d921c9",
+              "pixels": [
+                13,
+                19,
+                37,
+                255,
+                13,
+                18,
+                36,
+                255,
+                11,
+                17,
+                37,
+                255,
+                59,
+                34,
+                15,
+                255,
+                216,
+                175,
+                100,
+                255,
+                76,
+                51,
+                38,
+                255,
+                80,
+                70,
+                69,
+                255,
+                148,
+                127,
+                117,
+                255
+              ],
+              "geometryVersion": "authored-2.5d-1.0"
+            },
+            "atmosphere": {
+              "scene": "manhattan",
+              "time": 0.8825,
+              "sunDrawn": false,
+              "moonDrawn": false,
+              "glintSources": [],
+              "terrainLight": []
+            },
+            "locationSource": "scene",
+            "visibleMainButtons": [
+              "menu-button"
+            ],
+            "imageLoaded": true,
+            "layerImages": [
+              {
+                "phase": "dawn",
+                "loaded": true,
+                "opacity": 1,
+                "weight": 0
+              },
+              {
+                "phase": "morning",
+                "loaded": true,
+                "opacity": 0,
+                "weight": 0
+              },
+              {
+                "phase": "noon",
+                "loaded": true,
+                "opacity": 0,
+                "weight": 0
+              },
+              {
+                "phase": "evening",
+                "loaded": true,
+                "opacity": 0,
+                "weight": 0
+              },
+              {
+                "phase": "night",
+                "loaded": true,
+                "opacity": 1,
+                "weight": 1
+              }
+            ],
+            "transitioning": true,
+            "phaseAnimating": false
+          },
+          "coverage": true,
+          "integration": [
+            {
+              "name": "scenery shows only the three-dot control",
+              "passed": true,
+              "visibleMainButtons": [
+                "menu-button"
+              ]
+            },
+            {
+              "name": "three-dot menu opens",
+              "passed": true
+            },
+            {
+              "name": "settings opens while dots remain available",
+              "passed": true
+            },
+            {
+              "name": "manhattan follows its own time zone",
+              "passed": true,
+              "timeZone": "America/New_York"
+            },
+            {
+              "name": "manhattan decodes all five lighting images",
+              "passed": true,
+              "images": [
+                {
+                  "phase": "dawn",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 0
+                },
+                {
+                  "phase": "morning",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "noon",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "evening",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "night",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "name": "manhattan dawn preset changes actual layer",
+              "passed": true,
+              "weight": 0.998543223317156,
+              "opacity": 1,
+              "phase": "dawn"
+            },
+            {
+              "name": "manhattan morning preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "morning"
+            },
+            {
+              "name": "manhattan noon preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "noon"
+            },
+            {
+              "name": "manhattan evening preset changes actual layer",
+              "passed": true,
+              "weight": 0.9999979417308063,
+              "opacity": 1,
+              "phase": "evening"
+            },
+            {
+              "name": "manhattan night preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "night"
+            },
+            {
+              "name": "manhattan returns to live solar lighting",
+              "passed": true
+            },
+            {
+              "name": "medieval follows its own time zone",
+              "passed": true,
+              "timeZone": "Europe/Prague"
+            },
+            {
+              "name": "medieval decodes all five lighting images",
+              "passed": true,
+              "images": [
+                {
+                  "phase": "dawn",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 0
+                },
+                {
+                  "phase": "morning",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "noon",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 1
+                },
+                {
+                  "phase": "evening",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "night",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                }
+              ]
+            },
+            {
+              "name": "medieval dawn preset changes actual layer",
+              "passed": true,
+              "weight": 0.9991527070448148,
+              "opacity": 1,
+              "phase": "dawn"
+            },
+            {
+              "name": "medieval morning preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "morning"
+            },
+            {
+              "name": "medieval noon preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "noon"
+            },
+            {
+              "name": "medieval evening preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "evening"
+            },
+            {
+              "name": "medieval night preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "night"
+            },
+            {
+              "name": "medieval returns to live solar lighting",
+              "passed": true
+            },
+            {
+              "name": "kyoto follows its own time zone",
+              "passed": true,
+              "timeZone": "Asia/Tokyo"
+            },
+            {
+              "name": "kyoto decodes all five lighting images",
+              "passed": true,
+              "images": [
+                {
+                  "phase": "dawn",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 0
+                },
+                {
+                  "phase": "morning",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "noon",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "evening",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "night",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "name": "kyoto dawn preset changes actual layer",
+              "passed": true,
+              "weight": 0.9989071336313331,
+              "opacity": 1,
+              "phase": "dawn"
+            },
+            {
+              "name": "kyoto morning preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "morning"
+            },
+            {
+              "name": "kyoto noon preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "noon"
+            },
+            {
+              "name": "kyoto evening preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "evening"
+            },
+            {
+              "name": "kyoto night preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "night"
+            },
+            {
+              "name": "kyoto returns to live solar lighting",
+              "passed": true
+            },
+            {
+              "name": "fuji follows its own time zone",
+              "passed": true,
+              "timeZone": "Asia/Tokyo"
+            },
+            {
+              "name": "fuji decodes all five lighting images",
+              "passed": true,
+              "images": [
+                {
+                  "phase": "dawn",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 0
+                },
+                {
+                  "phase": "morning",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "noon",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "evening",
+                  "loaded": true,
+                  "opacity": 0,
+                  "weight": 0
+                },
+                {
+                  "phase": "night",
+                  "loaded": true,
+                  "opacity": 1,
+                  "weight": 1
+                }
+              ]
+            },
+            {
+              "name": "fuji dawn preset changes actual layer",
+              "passed": true,
+              "weight": 0.9991460731505212,
+              "opacity": 1,
+              "phase": "dawn"
+            },
+            {
+              "name": "fuji morning preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "morning"
+            },
+            {
+              "name": "fuji noon preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "noon"
+            },
+            {
+              "name": "fuji evening preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "evening"
+            },
+            {
+              "name": "fuji night preset changes actual layer",
+              "passed": true,
+              "weight": 1,
+              "opacity": 1,
+              "phase": "night"
+            },
+            {
+              "name": "fuji returns to live solar lighting",
+              "passed": true
+            },
+            {
+              "name": "London overrides the scene time zone",
+              "passed": true,
+              "timeZone": "Europe/London"
+            },
+            {
+              "name": "manual slider changes noon versus night assets",
+              "passed": true,
+              "noon": {
+                "dawn": 0,
+                "morning": 0,
+                "noon": 1,
+                "evening": 0,
+                "night": 0
+              },
+              "midnight": {
+                "dawn": 0,
+                "morning": 0,
+                "noon": 0,
+                "evening": 0,
+                "night": 1
+              }
+            },
+            {
+              "name": "realtime preference restores and saves",
+              "passed": true
+            },
+            {
+              "name": "scene time zone can be restored",
+              "passed": true
+            },
+            {
+              "name": "procedural scene renders",
+              "passed": true
+            },
+            {
+              "name": "static forest loads",
+              "passed": true
+            },
+            {
+              "name": "motion switch disables animation and saves",
+              "passed": true
+            },
+            {
+              "name": "brightness control changes scenery",
+              "passed": true
+            },
+            {
+              "name": "native Escape leaves fullscreen with settings open",
+              "passed": true,
+              "state": {
+                "fullscreen": false,
+                "bounds": {
+                  "x": 50,
+                  "y": 50,
+                  "width": 1136,
+                  "height": 677
+                },
+                "displayBounds": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 1235,
+                  "height": 823
+                },
+                "platform": "win32"
+              }
+            },
+            {
+              "name": "F11 leaves native fullscreen",
+              "passed": true,
+              "state": {
+                "fullscreen": false,
+                "bounds": {
+                  "x": 50,
+                  "y": 50,
+                  "width": 1136,
+                  "height": 677
+                },
+                "displayBounds": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 1235,
+                  "height": 823
+                },
+                "platform": "win32"
+              }
+            },
+            {
+              "name": "F11 restores full display coverage",
+              "passed": true,
+              "state": {
+                "fullscreen": true,
+                "bounds": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 1235,
+                  "height": 823
+                },
+                "displayBounds": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 1235,
+                  "height": 823
+                },
+                "platform": "win32"
+              }
+            },
+            {
+              "name": "local image import decodes and saves",
+              "passed": true,
+              "sceneId": "custom",
+              "imageLoaded": true,
+              "storedScene": "custom"
+            },
+            {
+              "name": "imported image survives reload through IndexedDB",
+              "passed": true,
+              "ui": {
+                "ready": true,
+                "sceneId": "custom",
+                "timeZone": "Asia/Shanghai",
+                "sceneCount": 9,
+                "hasSolar": true,
+                "canvasReady": true,
+                "phase": "night",
+                "weights": {
+                  "dawn": 0,
+                  "morning": 0,
+                  "noon": 0,
+                  "evening": 0,
+                  "night": 1
+                },
+                "lighting": {
+                  "sun": {
+                    "altitude": -16.390165370562574,
+                    "azimuth": 260.6703129269149,
+                    "relativeAzimuth": -99.3296870730851,
+                    "direction": [
+                      -0.946671834291198,
+                      -0.2821767896405926,
+                      -0.1555271601613923
+                    ],
+                    "screenX": 4.127017809473086,
+                    "screenY": -1.1223279206509709,
+                    "inFront": false,
+                    "inFrame": false,
+                    "aboveHorizon": false,
+                    "strength": 0,
+                    "diffuse": 0,
+                    "specular": 0,
+                    "color": [
+                      1,
+                      0.47,
+                      0.24
+                    ],
+                    "colorTemperature": 2200,
+                    "transmission": 0.021067999523041434,
+                    "visibility": 0,
+                    "visible": false,
+                    "angularRadius": 0.2666
+                  },
+                  "moon": {
+                    "altitude": -5.978349471992133,
+                    "azimuth": 238.54830389827055,
+                    "relativeAzimuth": -121.45169610172945,
+                    "direction": [
+                      -0.8484407313504393,
+                      -0.10415265284318259,
+                      -0.518941760018655
+                    ],
+                    "screenX": 1.4742252094471995,
+                    "screenY": 0.3205368392802739,
+                    "inFront": false,
+                    "inFrame": false,
+                    "aboveHorizon": false,
+                    "illumination": 0.04511377078268075,
+                    "phase": 0.06672282201043345,
+                    "phaseBrightness": 0.008170832372867287,
+                    "geometricAltitude": -5.978349471992133,
+                    "brightLimbAngle": -71.94831006617211,
+                    "parallacticAngle": 47.65894561420112,
+                    "strength": 0,
+                    "diffuse": 0,
+                    "specular": 0,
+                    "color": [
+                      0.66,
+                      0.75,
+                      0.94
+                    ],
+                    "colorTemperature": 8500,
+                    "transmission": 0.008229747049020023,
+                    "visibility": 0,
+                    "visible": false,
+                    "angularRadius": 0.24691150620541588
+                  },
+                  "ambient": {
+                    "color": [
+                      0.291472219163127,
+                      0.3612799922213856,
+                      0.5101931287074638
+                    ],
+                    "intensity": 0.11617230521334004
+                  },
+                  "sky": {
+                    "color": [
+                      0.04700107228527241,
+                      0.07159118475471409,
+                      0.13996962745253755
+                    ],
+                    "intensity": 0.042823624286740344,
+                    "colorTemperature": 9371.582477764789,
+                    "horizonGlow": 0.024701443498222567
+                  },
+                  "shadow": {
+                    "source": "none",
+                    "direction": [
+                      0,
+                      0
+                    ],
+                    "angle": 0,
+                    "length": 0,
+                    "physicalLength": 0,
+                    "strength": 0
+                  },
+                  "nightFactor": 1,
+                  "daylight": 0.04320878614967355,
+                  "camera": {
+                    "viewAzimuth": 0,
+                    "fieldOfView": 80,
+                    "verticalFieldOfView": 58.42550824228087,
+                    "horizon": 0.5,
+                    "exposure": 1,
+                    "maxShadowLength": 14
+                  },
+                  "exposure": 0.8860492300609543,
+                  "colorTemperature": 9184.575861107383,
+                  "utcMillis": 1794392789064
+                },
+                "celestial": {
+                  "sun": {
+                    "altitude": -16.390165370562574,
+                    "azimuth": 260.6703129269149,
+                    "hourAngle": 97.02710728106456,
+                    "declination": -17.47717066444249,
+                    "equationOfTime": 15.994429124258204,
+                    "geometricAltitude": -16.390165370562574,
+                    "apparentAltitude": -16.390165370562574,
+                    "direction": [
+                      -0.9466718342911979,
+                      -0.15552716016139276,
+                      -0.2821767896405926
+                    ],
+                    "visible": false
+                  },
+                  "moon": {
+                    "altitude": -5.978349471992133,
+                    "geometricAltitude": -5.978349471992133,
+                    "geocentricAltitude": -5.077892858764123,
+                    "geocentricAzimuth": 238.54574293057522,
+                    "azimuth": 238.54830389827055,
+                    "refraction": 0,
+                    "distance": 403164.66805668164,
+                    "topocentricDistance": 403767.3449110973,
+                    "parallacticAngle": 47.65894561420112,
+                    "angularRadius": 0.24654295542766116,
+                    "direction": [
+                      -0.848440731350439,
+                      -0.5189417600186556,
+                      -0.10415265284318259
+                    ],
+                    "geometricDirection": [
+                      -0.848440731350439,
+                      -0.5189417600186556,
+                      -0.10415265284318259
+                    ],
+                    "visible": false,
+                    "illumination": 0.04511377078268075,
+                    "fraction": 0.04511377078268075,
+                    "phase": 0.06672282201043345,
+                    "waxing": true,
+                    "brightLimbAngle": -71.94831006617211,
+                    "angle": -71.94831006617211,
+                    "elongation": 24.46197680529804,
+                    "tiltAngle": -119.60725568037324
+                  },
+                  "nightFactor": 1,
+                  "timestamp": 1794392789064
+                },
+                "relighting": {
+                  "ready": true,
+                  "renderer": "webgl",
+                  "sceneId": "custom",
+                  "frameCount": 4,
+                  "drawCount": 4,
+                  "utcMillis": 1794392789064,
+                  "width": 1544,
+                  "height": 1029,
+                  "contextLost": false,
+                  "fallbackReason": null,
+                  "pixelHash": "cad64b25",
+                  "pixels": [
+                    54,
+                    87,
+                    87,
+                    255,
+                    54,
+                    87,
+                    87,
+                    255,
+                    54,
+                    87,
+                    87,
+                    255,
+                    54,
+                    87,
+                    87,
+                    255,
+                    54,
+                    87,
+                    87,
+                    255,
+                    54,
+                    87,
+                    87,
+                    255,
+                    54,
+                    87,
+                    87,
+                    255,
+                    54,
+                    87,
+                    87,
+                    255
+                  ],
+                  "geometryVersion": "authored-2.5d-1.0"
+                },
+                "atmosphere": {
+                  "scene": "custom",
+                  "time": 0,
+                  "sunDrawn": false,
+                  "moonDrawn": false,
+                  "glintSources": [],
+                  "terrainLight": []
+                },
+                "locationSource": "scene",
+                "visibleMainButtons": [
+                  "menu-button"
+                ],
+                "imageLoaded": true,
+                "layerImages": [],
+                "transitioning": true,
+                "phaseAnimating": false
+              }
+            },
+            {
+              "name": "default scene and time zone restored",
+              "passed": true,
+              "ui": {
+                "ready": true,
+                "sceneId": "manhattan",
+                "timeZone": "America/New_York",
+                "sceneCount": 8,
+                "hasSolar": true,
+                "canvasReady": true,
+                "phase": "night",
+                "weights": {
+                  "dawn": 0,
+                  "morning": 0,
+                  "noon": 0,
+                  "evening": 0,
+                  "night": 1
+                },
+                "lighting": {
+                  "sun": {
+                    "altitude": -13.793811777251777,
+                    "azimuth": 101.34208731050967,
+                    "relativeAzimuth": 36.34208731050967,
+                    "direction": [
+                      0.5755143164929771,
+                      -0.23842856896383835,
+                      0.7822628004791468
+                    ],
+                    "screenX": 1.0190861658067547,
+                    "screenY": 0.8127072612387971,
+                    "inFront": true,
+                    "inFrame": false,
+                    "aboveHorizon": false,
+                    "strength": 0,
+                    "diffuse": 0,
+                    "specular": 0,
+                    "color": [
+                      1,
+                      0.47,
+                      0.24
+                    ],
+                    "colorTemperature": 2200,
+                    "transmission": 0.021067999523041434,
+                    "visibility": 0,
+                    "visible": false,
+                    "angularRadius": 0.2666
+                  },
+                  "moon": {
+                    "altitude": -38.392737962528706,
+                    "azimuth": 95.40259172274625,
+                    "relativeAzimuth": 30.40259172274625,
+                    "direction": [
+                      0.3966457645983091,
+                      -0.6210484449145172,
+                      0.6759962769834482
+                    ],
+                    "screenX": 0.9139944495703347,
+                    "screenY": 1.4627120554036186,
+                    "inFront": true,
+                    "inFrame": false,
+                    "aboveHorizon": false,
+                    "illumination": 0.0451140547549117,
+                    "phase": 0.06672304492525427,
+                    "phaseBrightness": 0.008170909758812963,
+                    "geometricAltitude": -38.392737962528706,
+                    "brightLimbAngle": -71.94839103702573,
+                    "parallacticAngle": -58.21840022515547,
+                    "strength": 0,
+                    "diffuse": 0,
+                    "specular": 0,
+                    "color": [
+                      0.66,
+                      0.75,
+                      0.94
+                    ],
+                    "colorTemperature": 8500,
+                    "transmission": 0.008229747049020023,
+                    "visibility": 0,
+                    "visible": false,
+                    "angularRadius": 0.24691149745152693
+                  },
+                  "ambient": {
+                    "color": [
+                      0.315492745185441,
+                      0.3804428186489861,
+                      0.5250324410605279
+                    ],
+                    "intensity": 0.13398036044387296
+                  },
+                  "sky": {
+                    "color": [
+                      0.07493146963175058,
+                      0.09793337174655203,
+                      0.1705407223312483
+                    ],
+                    "intensity": 0.05781509935326041,
+                    "colorTemperature": 9186.726111965298,
+                    "horizonGlow": 0.07749628267585648
+                  },
+                  "shadow": {
+                    "source": "none",
+                    "direction": [
+                      0,
+                      0
+                    ],
+                    "angle": 0,
+                    "length": 0,
+                    "physicalLength": 0,
+                    "strength": 0
+                  },
+                  "nightFactor": 1,
+                  "daylight": 0.07955175600790401,
+                  "camera": {
+                    "viewAzimuth": 65,
+                    "fieldOfView": 70.64686212109497,
+                    "verticalFieldOfView": 50.557528965527,
+                    "horizon": 0.49,
+                    "exposure": 1,
+                    "maxShadowLength": 14
+                  },
+                  "exposure": 0.8911372458411065,
+                  "colorTemperature": 8919.272181142302,
+                  "utcMillis": 1794392789692
+                },
+                "celestial": {
+                  "sun": {
+                    "altitude": -13.793811777251777,
+                    "azimuth": 101.34208731050967,
+                    "hourAngle": -93.36337625753129,
+                    "declination": -17.477172661990746,
+                    "equationOfTime": 15.994428303208224,
+                    "geometricAltitude": -13.793811777251777,
+                    "apparentAltitude": -13.793811777251777,
+                    "direction": [
+                      0.9521937276264968,
+                      -0.19099456162575165,
+                      -0.23842856896383835
+                    ],
+                    "visible": false
+                  },
+                  "moon": {
+                    "altitude": -38.392737962528706,
+                    "geometricAltitude": -38.392737962528706,
+                    "geocentricAltitude": -37.68312377915182,
+                    "geocentricAzimuth": 95.40637181704727,
+                    "azimuth": 95.40259172274625,
+                    "refraction": 0,
+                    "distance": 403164.68235021154,
+                    "topocentricDistance": 407087.6799274334,
+                    "parallacticAngle": -58.21840022515547,
+                    "angularRadius": 0.24453206136468683,
+                    "direction": [
+                      0.7802904333992312,
+                      -0.07379477362862429,
+                      -0.6210484449145172
+                    ],
+                    "geometricDirection": [
+                      0.7802904333992312,
+                      -0.07379477362862429,
+                      -0.6210484449145172
+                    ],
+                    "visible": false,
+                    "illumination": 0.0451140547549117,
+                    "fraction": 0.0451140547549117,
+                    "phase": 0.06672304492525427,
+                    "waxing": true,
+                    "brightLimbAngle": -71.94839103702573,
+                    "angle": -71.94839103702573,
+                    "elongation": 24.4620550020533,
+                    "tiltAngle": -13.729990811870259
+                  },
+                  "nightFactor": 1,
+                  "timestamp": 1794392789692
+                },
+                "relighting": {
+                  "ready": true,
+                  "renderer": "webgl",
+                  "sceneId": "manhattan",
+                  "frameCount": 4,
+                  "drawCount": 4,
+                  "utcMillis": 1794392789692,
+                  "width": 1544,
+                  "height": 1029,
+                  "contextLost": false,
+                  "fallbackReason": null,
+                  "pixelHash": "7d921c9",
+                  "pixels": [
+                    13,
+                    19,
+                    37,
+                    255,
+                    13,
+                    18,
+                    36,
+                    255,
+                    11,
+                    17,
+                    37,
+                    255,
+                    59,
+                    34,
+                    15,
+                    255,
+                    216,
+                    175,
+                    100,
+                    255,
+                    76,
+                    51,
+                    38,
+                    255,
+                    80,
+                    70,
+                    69,
+                    255,
+                    148,
+                    127,
+                    117,
+                    255
+                  ],
+                  "geometryVersion": "authored-2.5d-1.0"
+                },
+                "atmosphere": {
+                  "scene": "manhattan",
+                  "time": 0.1691,
+                  "sunDrawn": false,
+                  "moonDrawn": false,
+                  "glintSources": [],
+                  "terrainLight": []
+                },
+                "locationSource": "scene",
+                "visibleMainButtons": [
+                  "menu-button"
+                ],
+                "imageLoaded": true,
+                "layerImages": [
+                  {
+                    "phase": "dawn",
+                    "loaded": true,
+                    "opacity": 1,
+                    "weight": 0
+                  },
+                  {
+                    "phase": "morning",
+                    "loaded": true,
+                    "opacity": 0,
+                    "weight": 0
+                  },
+                  {
+                    "phase": "noon",
+                    "loaded": true,
+                    "opacity": 0,
+                    "weight": 0
+                  },
+                  {
+                    "phase": "evening",
+                    "loaded": true,
+                    "opacity": 0,
+                    "weight": 0
+                  },
+                  {
+                    "phase": "night",
+                    "loaded": true,
+                    "opacity": 1,
+                    "weight": 1
+                  }
+                ],
+                "transitioning": true,
+                "phaseAnimating": false
+              }
+            }
+          ],
+          "rendererErrors": []
+        }
+      },
+      {
+        "name": "packaged-lighting",
+        "passed": true,
+        "code": 0,
+        "signal": null,
+        "timedOut": false,
+        "elapsedMs": 14636,
+        "details": {
+          "passed": true,
+          "checks": [
+            {
+              "name": "photographic relighting initializes a real rendering path",
+              "passed": true,
+              "relighting": {
+                "ready": true,
+                "renderer": "webgl",
+                "sceneId": "manhattan",
+                "frameCount": 7,
+                "drawCount": 7,
+                "utcMillis": 1794392791397,
+                "width": 1544,
+                "height": 1029,
+                "contextLost": false,
+                "fallbackReason": null,
+                "pixelHash": "7d921c9",
+                "pixels": [
+                  13,
+                  19,
+                  37,
+                  255,
+                  13,
+                  18,
+                  36,
+                  255,
+                  11,
+                  17,
+                  37,
+                  255,
+                  59,
+                  34,
+                  15,
+                  255,
+                  216,
+                  175,
+                  100,
+                  255,
+                  76,
+                  51,
+                  38,
+                  255,
+                  80,
+                  70,
+                  69,
+                  255,
+                  148,
+                  127,
+                  117,
+                  255
+                ],
+                "geometryVersion": "authored-2.5d-1.0"
+              }
+            },
+            {
+              "name": "solar ephemeris and normalized light direction are finite",
+              "passed": true,
+              "sun": {
+                "altitude": -13.788538744532485,
+                "azimuth": 101.34646862064102,
+                "relativeAzimuth": 36.34646862064096,
+                "direction": [
+                  0.5755871355566012,
+                  -0.23833919036492138,
+                  0.7822364602330554
+                ],
+                "screenX": 1.019169326489865,
+                "screenY": 0.8125971519291555,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.47,
+                  0.24
+                ],
+                "colorTemperature": 2200,
+                "transmission": 0.021067999523041434,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "lunar ephemeris and illuminated fraction are finite",
+              "passed": true,
+              "moon": {
+                "altitude": -38.38762823326091,
+                "azimuth": 95.40671726211275,
+                "relativeAzimuth": 30.406717262112807,
+                "direction": [
+                  0.3967224694282037,
+                  -0.6209785443882195,
+                  0.6760154803407064
+                ],
+                "screenX": 0.9140627468701034,
+                "screenY": 1.4625749458623765,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "illumination": 0.04511482573460923,
+                "phase": 0.06672365013156423,
+                "phaseBrightness": 0.008171119861564978,
+                "geometricAltitude": -38.38762823326091,
+                "brightLimbAngle": -71.94861086910161,
+                "parallacticAngle": -58.21781853107345,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  0.66,
+                  0.75,
+                  0.94
+                ],
+                "colorTemperature": 8500,
+                "transmission": 0.008229747049020023,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.24691147368510785
+              }
+            },
+            {
+              "name": "manual morning to afternoon changes the actual Sun direction",
+              "passed": true,
+              "morning": {
+                "altitude": 12.600718832397488,
+                "azimuth": 126.83211373757382,
+                "relativeAzimuth": 61.83211373757376,
+                "direction": [
+                  0.8603347448528758,
+                  0.21815548522336572,
+                  0.4606867819526569
+                ],
+                "screenX": 1.8176428573427204,
+                "screenY": -0.01137596327528101,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.23008001326954902,
+                "diffuse": 0.23008001326954902,
+                "specular": 0.050617602919300786,
+                "color": [
+                  1,
+                  0.7316541894552014,
+                  0.592432173551904
+                ],
+                "colorTemperature": 4470.3673647957075,
+                "transmission": 0.6054737191303922,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              },
+              "afternoon": {
+                "altitude": 6.190917746395957,
+                "azimuth": 240.33851585206003,
+                "relativeAzimuth": 175.33851585206003,
+                "direction": [
+                  0.08079456992912536,
+                  0.10784176628222175,
+                  -0.9908796046518963
+                ],
+                "screenX": 0.442469614312319,
+                "screenY": 0.6052309723913804,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.11933956666487147,
+                "diffuse": 0.11933956666487147,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.6240510516055939,
+                  0.447497334815698
+                ],
+                "colorTemperature": 3566.4803853824137,
+                "transmission": 0.31405149122334597,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "Sun below the horizon contributes no direct light",
+              "passed": true,
+              "sun": {
+                "altitude": -66.268565631888,
+                "azimuth": 11.971704096472877,
+                "relativeAzimuth": -53.02829590352712,
+                "direction": [
+                  -0.32153049729290295,
+                  -0.9154419336404165,
+                  0.24204174318343077
+                ],
+                "screenX": -0.43727687408228266,
+                "screenY": 4.4944571795264805,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.47,
+                  0.24
+                ],
+                "colorTemperature": 2200,
+                "transmission": 0.021067999523041434,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "local noon produces direct daylight even outside the camera view",
+              "passed": true,
+              "sun": {
+                "altitude": 31.51422727875403,
+                "azimuth": 185.59942320272046,
+                "relativeAzimuth": 120.59942320272046,
+                "direction": [
+                  0.7337958940716092,
+                  0.522710270121266,
+                  -0.4339557112810025
+                ],
+                "screenX": -0.693069848579658,
+                "screenY": 1.7653187606762986,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.3343995227328374,
+                "diffuse": 0.3343995227328374,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.8813569353519637,
+                  0.7940726068006042
+                ],
+                "colorTemperature": 5618.025719999194,
+                "transmission": 0.8799987440337826,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "ground shadows point away from the direct Sun",
+              "passed": true,
+              "shadow": {
+                "source": "sun",
+                "direction": [
+                  -0.8607471514861879,
+                  -0.5090327506245682
+                ],
+                "angle": -149.40057679727954,
+                "length": 1.5395274658820528,
+                "physicalLength": 1.6309425004395448,
+                "strength": 0.3343995227328374
+              }
+            },
+            {
+              "name": "camera bearing changes projected sunlight",
+              "passed": true,
+              "east": {
+                "altitude": 31.51422727875403,
+                "azimuth": 185.59942320272046,
+                "relativeAzimuth": 95.59942320272046,
+                "direction": [
+                  0.8484425412666463,
+                  0.522710270121266,
+                  -0.083181895137995
+                ],
+                "screenX": -6.696637488874906,
+                "screenY": 7.143273034729149,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.3343995227328374,
+                "diffuse": 0.3343995227328374,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.8813569353519637,
+                  0.7940726068006042
+                ],
+                "colorTemperature": 5618.025719999194,
+                "transmission": 0.8799987440337826,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              },
+              "west": {
+                "altitude": 31.51422727875403,
+                "azimuth": 185.59942320272046,
+                "relativeAzimuth": -84.40057679727954,
+                "direction": [
+                  -0.8484425412666463,
+                  0.522710270121266,
+                  0.08318189513799511
+                ],
+                "screenX": -6.696637488874897,
+                "screenY": -6.16327303472914,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.3343995227328374,
+                "diffuse": 0.3343995227328374,
+                "specular": 0.013831298222699791,
+                "color": [
+                  1,
+                  0.8813569353519637,
+                  0.7940726068006042
+                ],
+                "colorTemperature": 5618.025719999194,
+                "transmission": 0.8799987440337826,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "changing light direction repaints actual photograph pixels",
+              "passed": true,
+              "eastHash": "889d852a",
+              "westHash": "6fb62718"
+            },
+            {
+              "name": "known NASA full Moon is nearly fully illuminated",
+              "passed": true,
+              "illumination": 0.9999299782473179
+            },
+            {
+              "name": "known USNO new Moon is nearly unilluminated",
+              "passed": true,
+              "illumination": 0.000009359343851766955
+            },
+            {
+              "name": "Moon below the horizon contributes no moonlight",
+              "passed": true,
+              "moon": {
+                "altitude": -11.628781085945345,
+                "azimuth": 276.24912484422134,
+                "relativeAzimuth": -173.75087515577866,
+                "direction": [
+                  -0.10661741447929733,
+                  -0.2015699606114459,
+                  -0.9736540853449185
+                ],
+                "screenX": 0.5652499119817265,
+                "screenY": 0.3207117813638085,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "illumination": 0.9995730173255832,
+                "phase": 0.5062708637060496,
+                "phaseBrightness": 0.9991535241504749,
+                "geometricAltitude": -11.628781085945345,
+                "brightLimbAngle": 95.19013937379322,
+                "parallacticAngle": 48.942891487928364,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  0.66,
+                  0.75,
+                  0.94
+                ],
+                "colorTemperature": 8500,
+                "transmission": 0.008229747049020023,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.24569697666877724
+              }
+            },
+            {
+              "name": "lunar direction evolves during the night",
+              "passed": true,
+              "start": {
+                "altitude": 12.27653271934621,
+                "geometricAltitude": 12.201686748054142,
+                "geocentricAltitude": 13.080804042734348,
+                "geocentricAzimuth": 100.8490366054923,
+                "azimuth": 100.84602552724039,
+                "refraction": 0.07484597129206795,
+                "distance": 405680.7511205566,
+                "topocentricDistance": 404282.9912593447,
+                "parallacticAngle": -48.07763119527866,
+                "angularRadius": 0.24622849807839547,
+                "direction": [
+                  0.9596776479482396,
+                  -0.18386738382939385,
+                  0.21263018880739648
+                ],
+                "geometricDirection": [
+                  0.9599496279022469,
+                  -0.1839194932462426,
+                  0.2113535708105803
+                ],
+                "visible": true,
+                "illumination": 0.9991160345491635,
+                "fraction": 0.9991160345491635,
+                "phase": 0.49119212647764243,
+                "waxing": true,
+                "brightLimbAngle": -44.7128882366685,
+                "angle": -44.7128882366685,
+                "elongation": 176.5832774487633,
+                "tiltAngle": 3.364742958610165
+              },
+              "end": {
+                "altitude": 45.670335467625776,
+                "geometricAltitude": 45.65383641222533,
+                "geocentricAltitude": 46.280993035318254,
+                "geocentricAzimuth": 201.331538485019,
+                "azimuth": 201.33311133551197,
+                "refraction": 0.016499055400443562,
+                "distance": 405438.2381233941,
+                "topocentricDistance": 400845.4964890816,
+                "parallacticAngle": 16.003583526219835,
+                "angularRadius": 0.24834007089070978,
+                "direction": [
+                  -0.25421098093832095,
+                  -0.6509057410716241,
+                  0.7153310376394809
+                ],
+                "geometricDirection": [
+                  -0.25428590696413,
+                  -0.6510975887257845,
+                  0.7151297836581127
+                ],
+                "visible": true,
+                "illumination": 0.999907388672298,
+                "fraction": 0.999907388672298,
+                "phase": 0.4987267577105854,
+                "waxing": true,
+                "brightLimbAngle": -1.1294615891586148,
+                "angle": -1.1294615891586148,
+                "elongation": 178.8942250667624,
+                "tiltAngle": -17.13304511537845
+              }
+            },
+            {
+              "name": "realtime astronomy keeps ticking with landscape motion off",
+              "passed": true,
+              "beforeUtc": 1794392797979,
+              "afterUtc": 1794392800272
+            },
+            {
+              "name": "light renderer repaints with landscape motion off",
+              "passed": true,
+              "before": 159,
+              "after": 186,
+              "renderer": "webgl"
+            },
+            {
+              "name": "manual preview remains at the selected instant",
+              "passed": true
+            },
+            {
+              "name": "WebGL context loss retains a working light renderer",
+              "passed": true,
+              "relighting": {
+                "ready": true,
+                "renderer": "canvas",
+                "sceneId": "manhattan",
+                "frameCount": 202,
+                "drawCount": 202,
+                "utcMillis": 1794416400000,
+                "width": 960,
+                "height": 640,
+                "contextLost": true,
+                "fallbackReason": "WebGL context lost",
+                "pixelHash": "6bb07272",
+                "pixels": [
+                  178,
+                  206,
+                  248,
+                  255,
+                  168,
+                  200,
+                  246,
+                  255,
+                  163,
+                  197,
+                  244,
+                  255,
+                  51,
+                  50,
+                  53,
+                  255,
+                  158,
+                  163,
+                  168,
+                  255,
+                  138,
+                  104,
+                  95,
+                  255,
+                  151,
+                  147,
+                  149,
+                  255,
+                  230,
+                  227,
+                  223,
+                  255
+                ],
+                "geometryVersion": "authored-2.5d-1.0"
+              }
+            },
+            {
+              "name": "light rendering recovers after context restoration",
+              "passed": true,
+              "relighting": {
+                "ready": true,
+                "renderer": "webgl",
+                "sceneId": "manhattan",
+                "frameCount": 205,
+                "drawCount": 205,
+                "utcMillis": 1794416400000,
+                "width": 1544,
+                "height": 1029,
+                "contextLost": false,
+                "fallbackReason": null,
+                "pixelHash": "6fb62718",
+                "pixels": [
+                  177,
+                  207,
+                  249,
+                  255,
+                  168,
+                  201,
+                  247,
+                  255,
+                  164,
+                  197,
+                  244,
+                  255,
+                  49,
+                  50,
+                  53,
+                  255,
+                  151,
+                  150,
+                  154,
+                  255,
+                  164,
+                  120,
+                  105,
+                  255,
+                  157,
+                  156,
+                  156,
+                  255,
+                  222,
+                  220,
+                  220,
+                  255
+                ],
+                "geometryVersion": "authored-2.5d-1.0"
+              }
+            },
+            {
+              "name": "native window resize updates light-canvas aspect ratio",
+              "passed": true,
+              "relighting": {
+                "ready": true,
+                "renderer": "webgl",
+                "sceneId": "manhattan",
+                "frameCount": 215,
+                "drawCount": 215,
+                "utcMillis": 1794416400000,
+                "width": 1124,
+                "height": 750,
+                "contextLost": false,
+                "fallbackReason": null,
+                "pixelHash": "3cb9871e",
+                "pixels": [
+                  178,
+                  207,
+                  249,
+                  255,
+                  168,
+                  201,
+                  247,
+                  255,
+                  164,
+                  197,
+                  244,
+                  255,
+                  51,
+                  51,
+                  54,
+                  255,
+                  154,
+                  156,
+                  163,
+                  255,
+                  162,
+                  120,
+                  105,
+                  255,
+                  155,
+                  154,
+                  155,
+                  255,
+                  229,
+                  228,
+                  227,
+                  255
+                ],
+                "geometryVersion": "authored-2.5d-1.0"
+              }
+            },
+            {
+              "name": "lighting tests restore complete native fullscreen coverage",
+              "passed": true
+            }
+          ],
+          "rendererErrors": [],
+          "state": {
+            "fullscreen": true,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "displayBounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "platform": "win32"
+          }
+        }
+      },
+      {
+        "name": "packaged-lighting-canvas",
+        "passed": true,
+        "code": 0,
+        "signal": null,
+        "timedOut": false,
+        "elapsedMs": 13734,
+        "details": {
+          "passed": true,
+          "checks": [
+            {
+              "name": "photographic relighting initializes a real rendering path",
+              "passed": true,
+              "relighting": {
+                "ready": true,
+                "renderer": "canvas",
+                "sceneId": "manhattan",
+                "frameCount": 6,
+                "drawCount": 6,
+                "utcMillis": 1794392805737,
+                "width": 960,
+                "height": 640,
+                "contextLost": false,
+                "fallbackReason": "WebGL unavailable",
+                "pixelHash": "acf6e768",
+                "pixels": [
+                  13,
+                  19,
+                  38,
+                  255,
+                  13,
+                  19,
+                  37,
+                  255,
+                  12,
+                  17,
+                  38,
+                  255,
+                  67,
+                  39,
+                  16,
+                  255,
+                  210,
+                  157,
+                  85,
+                  255,
+                  77,
+                  57,
+                  45,
+                  255,
+                  94,
+                  81,
+                  78,
+                  255,
+                  148,
+                  127,
+                  116,
+                  255
+                ],
+                "geometryVersion": "authored-2.5d-1.0"
+              }
+            },
+            {
+              "name": "solar ephemeris and normalized light direction are finite",
+              "passed": true,
+              "sun": {
+                "altitude": -13.74419281153594,
+                "azimuth": 101.38331805047079,
+                "relativeAzimuth": 36.383318050470734,
+                "direction": [
+                  0.5761993594750211,
+                  -0.23758744115839192,
+                  0.7820143898576184
+                ],
+                "screenX": 1.019869128029438,
+                "screenY": 0.8116709631159569,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.47,
+                  0.24
+                ],
+                "colorTemperature": 2200,
+                "transmission": 0.021067999523041434,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "lunar ephemeris and illuminated fraction are finite",
+              "passed": true,
+              "moon": {
+                "altitude": -38.34465372340977,
+                "azimuth": 95.44140665947822,
+                "relativeAzimuth": 30.44140665947816,
+                "direction": [
+                  0.39736755662766077,
+                  -0.6203904625017156,
+                  0.6761765294482427
+                ],
+                "screenX": 0.9146372498585804,
+                "screenY": 1.4614224688126685,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "illumination": 0.04512131035549505,
+                "phase": 0.06672874024769726,
+                "phaseBrightness": 0.00817288708361769,
+                "geometricAltitude": -38.34465372340977,
+                "brightLimbAngle": -71.95045971304879,
+                "parallacticAngle": -58.212908939518435,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  0.66,
+                  0.75,
+                  0.94
+                ],
+                "colorTemperature": 8500,
+                "transmission": 0.008229747049020023,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.24691127380252068
+              }
+            },
+            {
+              "name": "manual morning to afternoon changes the actual Sun direction",
+              "passed": true,
+              "morning": {
+                "altitude": 12.600718832397488,
+                "azimuth": 126.83211373757382,
+                "relativeAzimuth": 61.83211373757376,
+                "direction": [
+                  0.8603347448528758,
+                  0.21815548522336572,
+                  0.4606867819526569
+                ],
+                "screenX": 1.8176428573427204,
+                "screenY": -0.01137596327528101,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.23008001326954902,
+                "diffuse": 0.23008001326954902,
+                "specular": 0.050617602919300786,
+                "color": [
+                  1,
+                  0.7316541894552014,
+                  0.592432173551904
+                ],
+                "colorTemperature": 4470.3673647957075,
+                "transmission": 0.6054737191303922,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              },
+              "afternoon": {
+                "altitude": 6.190917746395957,
+                "azimuth": 240.33851585206003,
+                "relativeAzimuth": 175.33851585206003,
+                "direction": [
+                  0.08079456992912536,
+                  0.10784176628222175,
+                  -0.9908796046518963
+                ],
+                "screenX": 0.442469614312319,
+                "screenY": 0.6052309723913804,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.11933956666487147,
+                "diffuse": 0.11933956666487147,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.6240510516055939,
+                  0.447497334815698
+                ],
+                "colorTemperature": 3566.4803853824137,
+                "transmission": 0.31405149122334597,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "Sun below the horizon contributes no direct light",
+              "passed": true,
+              "sun": {
+                "altitude": -66.268565631888,
+                "azimuth": 11.971704096472877,
+                "relativeAzimuth": -53.02829590352712,
+                "direction": [
+                  -0.32153049729290295,
+                  -0.9154419336404165,
+                  0.24204174318343077
+                ],
+                "screenX": -0.43727687408228266,
+                "screenY": 4.4944571795264805,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.47,
+                  0.24
+                ],
+                "colorTemperature": 2200,
+                "transmission": 0.021067999523041434,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "local noon produces direct daylight even outside the camera view",
+              "passed": true,
+              "sun": {
+                "altitude": 31.51422727875403,
+                "azimuth": 185.59942320272046,
+                "relativeAzimuth": 120.59942320272046,
+                "direction": [
+                  0.7337958940716092,
+                  0.522710270121266,
+                  -0.4339557112810025
+                ],
+                "screenX": -0.693069848579658,
+                "screenY": 1.7653187606762986,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.3343995227328374,
+                "diffuse": 0.3343995227328374,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.8813569353519637,
+                  0.7940726068006042
+                ],
+                "colorTemperature": 5618.025719999194,
+                "transmission": 0.8799987440337826,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "ground shadows point away from the direct Sun",
+              "passed": true,
+              "shadow": {
+                "source": "sun",
+                "direction": [
+                  -0.8607471514861879,
+                  -0.5090327506245682
+                ],
+                "angle": -149.40057679727954,
+                "length": 1.5395274658820528,
+                "physicalLength": 1.6309425004395448,
+                "strength": 0.3343995227328374
+              }
+            },
+            {
+              "name": "camera bearing changes projected sunlight",
+              "passed": true,
+              "east": {
+                "altitude": 31.51422727875403,
+                "azimuth": 185.59942320272046,
+                "relativeAzimuth": 95.59942320272046,
+                "direction": [
+                  0.8484425412666463,
+                  0.522710270121266,
+                  -0.083181895137995
+                ],
+                "screenX": -6.696637488874906,
+                "screenY": 7.143273034729149,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.3343995227328374,
+                "diffuse": 0.3343995227328374,
+                "specular": 0,
+                "color": [
+                  1,
+                  0.8813569353519637,
+                  0.7940726068006042
+                ],
+                "colorTemperature": 5618.025719999194,
+                "transmission": 0.8799987440337826,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              },
+              "west": {
+                "altitude": 31.51422727875403,
+                "azimuth": 185.59942320272046,
+                "relativeAzimuth": -84.40057679727954,
+                "direction": [
+                  -0.8484425412666463,
+                  0.522710270121266,
+                  0.08318189513799511
+                ],
+                "screenX": -6.696637488874897,
+                "screenY": -6.16327303472914,
+                "inFront": true,
+                "inFrame": false,
+                "aboveHorizon": true,
+                "strength": 0.3343995227328374,
+                "diffuse": 0.3343995227328374,
+                "specular": 0.013831298222699791,
+                "color": [
+                  1,
+                  0.8813569353519637,
+                  0.7940726068006042
+                ],
+                "colorTemperature": 5618.025719999194,
+                "transmission": 0.8799987440337826,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.2666
+              }
+            },
+            {
+              "name": "changing light direction repaints actual photograph pixels",
+              "passed": true,
+              "eastHash": "b922351f",
+              "westHash": "6bb07272"
+            },
+            {
+              "name": "known NASA full Moon is nearly fully illuminated",
+              "passed": true,
+              "illumination": 0.9999299782473179
+            },
+            {
+              "name": "known USNO new Moon is nearly unilluminated",
+              "passed": true,
+              "illumination": 0.000009359343851766955
+            },
+            {
+              "name": "Moon below the horizon contributes no moonlight",
+              "passed": true,
+              "moon": {
+                "altitude": -11.628781085945345,
+                "azimuth": 276.24912484422134,
+                "relativeAzimuth": -173.75087515577866,
+                "direction": [
+                  -0.10661741447929733,
+                  -0.2015699606114459,
+                  -0.9736540853449185
+                ],
+                "screenX": 0.5652499119817265,
+                "screenY": 0.3207117813638085,
+                "inFront": false,
+                "inFrame": false,
+                "aboveHorizon": false,
+                "illumination": 0.9995730173255832,
+                "phase": 0.5062708637060496,
+                "phaseBrightness": 0.9991535241504749,
+                "geometricAltitude": -11.628781085945345,
+                "brightLimbAngle": 95.19013937379322,
+                "parallacticAngle": 48.942891487928364,
+                "strength": 0,
+                "diffuse": 0,
+                "specular": 0,
+                "color": [
+                  0.66,
+                  0.75,
+                  0.94
+                ],
+                "colorTemperature": 8500,
+                "transmission": 0.008229747049020023,
+                "visibility": 0,
+                "visible": false,
+                "angularRadius": 0.24569697666877724
+              }
+            },
+            {
+              "name": "lunar direction evolves during the night",
+              "passed": true,
+              "start": {
+                "altitude": 12.27653271934621,
+                "geometricAltitude": 12.201686748054142,
+                "geocentricAltitude": 13.080804042734348,
+                "geocentricAzimuth": 100.8490366054923,
+                "azimuth": 100.84602552724039,
+                "refraction": 0.07484597129206795,
+                "distance": 405680.7511205566,
+                "topocentricDistance": 404282.9912593447,
+                "parallacticAngle": -48.07763119527866,
+                "angularRadius": 0.24622849807839547,
+                "direction": [
+                  0.9596776479482396,
+                  -0.18386738382939385,
+                  0.21263018880739648
+                ],
+                "geometricDirection": [
+                  0.9599496279022469,
+                  -0.1839194932462426,
+                  0.2113535708105803
+                ],
+                "visible": true,
+                "illumination": 0.9991160345491635,
+                "fraction": 0.9991160345491635,
+                "phase": 0.49119212647764243,
+                "waxing": true,
+                "brightLimbAngle": -44.7128882366685,
+                "angle": -44.7128882366685,
+                "elongation": 176.5832774487633,
+                "tiltAngle": 3.364742958610165
+              },
+              "end": {
+                "altitude": 45.670335467625776,
+                "geometricAltitude": 45.65383641222533,
+                "geocentricAltitude": 46.280993035318254,
+                "geocentricAzimuth": 201.331538485019,
+                "azimuth": 201.33311133551197,
+                "refraction": 0.016499055400443562,
+                "distance": 405438.2381233941,
+                "topocentricDistance": 400845.4964890816,
+                "parallacticAngle": 16.003583526219835,
+                "angularRadius": 0.24834007089070978,
+                "direction": [
+                  -0.25421098093832095,
+                  -0.6509057410716241,
+                  0.7153310376394809
+                ],
+                "geometricDirection": [
+                  -0.25428590696413,
+                  -0.6510975887257845,
+                  0.7151297836581127
+                ],
+                "visible": true,
+                "illumination": 0.999907388672298,
+                "fraction": 0.999907388672298,
+                "phase": 0.4987267577105854,
+                "waxing": true,
+                "brightLimbAngle": -1.1294615891586148,
+                "angle": -1.1294615891586148,
+                "elongation": 178.8942250667624,
+                "tiltAngle": -17.13304511537845
+              }
+            },
+            {
+              "name": "realtime astronomy keeps ticking with landscape motion off",
+              "passed": true,
+              "beforeUtc": 1794392812048,
+              "afterUtc": 1794392814241
+            },
+            {
+              "name": "light renderer repaints with landscape motion off",
+              "passed": true,
+              "before": 105,
+              "after": 124,
+              "renderer": "canvas"
+            },
+            {
+              "name": "manual preview remains at the selected instant",
+              "passed": true
+            },
+            {
+              "name": "WebGL context-loss exercise",
+              "passed": true,
+              "skipped": true,
+              "reason": "This launch is exercising the Canvas renderer"
+            },
+            {
+              "name": "forced WebGL-disabled launch uses the Canvas fallback",
+              "passed": true,
+              "renderer": "canvas"
+            },
+            {
+              "name": "native window resize updates light-canvas aspect ratio",
+              "passed": true,
+              "relighting": {
+                "ready": true,
+                "renderer": "canvas",
+                "sceneId": "manhattan",
+                "frameCount": 147,
+                "drawCount": 147,
+                "utcMillis": 1794416400000,
+                "width": 960,
+                "height": 641,
+                "contextLost": false,
+                "fallbackReason": "WebGL unavailable",
+                "pixelHash": "ad448dab",
+                "pixels": [
+                  176,
+                  206,
+                  248,
+                  255,
+                  168,
+                  200,
+                  246,
+                  255,
+                  164,
+                  196,
+                  243,
+                  255,
+                  50,
+                  50,
+                  54,
+                  255,
+                  158,
+                  161,
+                  167,
+                  255,
+                  176,
+                  127,
+                  110,
+                  255,
+                  154,
+                  154,
+                  154,
+                  255,
+                  219,
+                  217,
+                  216,
+                  255
+                ],
+                "geometryVersion": "authored-2.5d-1.0"
+              }
+            },
+            {
+              "name": "lighting tests restore complete native fullscreen coverage",
+              "passed": true
+            }
+          ],
+          "rendererErrors": [],
+          "state": {
+            "fullscreen": true,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "displayBounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "platform": "win32"
+          }
+        }
+      },
+      {
+        "name": "packaged-software-flows",
+        "passed": true,
+        "code": 0,
+        "signal": null,
+        "timedOut": false,
+        "elapsedMs": 23290,
+        "details": {
+          "passed": true,
+          "checks": [
+            {
+              "name": "all-scenes: manhattan loads",
+              "passed": true,
+              "sceneId": "manhattan"
+            },
+            {
+              "name": "all-scenes: medieval loads",
+              "passed": true,
+              "sceneId": "medieval"
+            },
+            {
+              "name": "all-scenes: kyoto loads",
+              "passed": true,
+              "sceneId": "kyoto"
+            },
+            {
+              "name": "all-scenes: fuji loads",
+              "passed": true,
+              "sceneId": "fuji"
+            },
+            {
+              "name": "all-scenes: lake loads",
+              "passed": true,
+              "sceneId": "lake"
+            },
+            {
+              "name": "all-scenes: coast loads",
+              "passed": true,
+              "sceneId": "coast"
+            },
+            {
+              "name": "all-scenes: forest loads",
+              "passed": true,
+              "sceneId": "forest"
+            },
+            {
+              "name": "all-scenes: procedural loads",
+              "passed": true,
+              "sceneId": "procedural"
+            },
+            {
+              "name": "rapid scene switches keep the final request",
+              "passed": true
+            },
+            {
+              "name": "failed scene decode retains the previous visible scene",
+              "passed": true
+            },
+            {
+              "name": "invalid custom time zone preserves the active location",
+              "passed": true
+            },
+            {
+              "name": "invalid custom coordinates preserve the active location",
+              "passed": true
+            },
+            {
+              "name": "valid custom location applies",
+              "passed": true
+            },
+            {
+              "name": "corrupt image import preserves the current scene",
+              "passed": true
+            },
+            {
+              "name": "unsupported media is rejected without replacing scenery",
+              "passed": true
+            },
+            {
+              "name": "browser supports an actual WebM import fixture",
+              "passed": true
+            },
+            {
+              "name": "recorded WebM fixture independently decodes in Chromium",
+              "passed": true,
+              "fixture": {
+                "event": "loadeddata",
+                "bytes": 3593,
+                "mime": "video/webm",
+                "chunks": 7,
+                "capture": {
+                  "trackState": "live",
+                  "muted": false,
+                  "settings": {
+                    "aspectRatio": 1.7777777777777777,
+                    "deviceId": "<redacted>",
+                    "frameRate": 0,
+                    "height": 90,
+                    "resizeMode": "none",
+                    "width": 160
+                  },
+                  "errors": [],
+                  "documentHidden": false
+                },
+                "readyState": 4,
+                "width": 160,
+                "height": 90,
+                "duration": "Infinity",
+                "events": [
+                  "loadedmetadata"
+                ]
+              }
+            },
+            {
+              "name": "local video imports and decodes",
+              "passed": true,
+              "fixture": {
+                "event": "loadeddata",
+                "bytes": 3593,
+                "mime": "video/webm",
+                "chunks": 7,
+                "capture": {
+                  "trackState": "live",
+                  "muted": false,
+                  "settings": {
+                    "aspectRatio": 1.7777777777777777,
+                    "deviceId": "<redacted>",
+                    "frameRate": 0,
+                    "height": 90,
+                    "resizeMode": "none",
+                    "width": 160
+                  },
+                  "errors": [],
+                  "documentHidden": false
+                },
+                "readyState": 4,
+                "width": 160,
+                "height": 90,
+                "duration": "Infinity",
+                "events": [
+                  "loadedmetadata"
+                ]
+              },
+              "storedMedia": {
+                "name": "software-test-video.webm",
+                "mime": "video/webm",
+                "bytes": 3593
+              },
+              "toast": "这片风景已保存在本机。",
+              "sceneId": "custom",
+              "mediaCards": 9
+            },
+            {
+              "name": "enabled video actually starts playback",
+              "passed": true
+            },
+            {
+              "name": "motion off pauses imported video",
+              "passed": true
+            },
+            {
+              "name": "motion on resumes imported video",
+              "passed": true
+            },
+            {
+              "name": "video and preference configuration persist before reload",
+              "passed": true
+            },
+            {
+              "name": "video and full preferences survive reload",
+              "passed": true
+            },
+            {
+              "name": "persisted video decodes and plays after reload",
+              "passed": true
+            },
+            {
+              "name": "minimizing pauses video",
+              "passed": true
+            },
+            {
+              "name": "restoring resumes enabled video",
+              "passed": true
+            },
+            {
+              "name": "corrupt saved preferences recover to a working default scene",
+              "passed": true
+            },
+            {
+              "name": "software tests restore first-launch defaults",
+              "passed": true
+            }
+          ],
+          "rendererErrors": [],
+          "state": {
+            "fullscreen": true,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "displayBounds": {
+              "x": 0,
+              "y": 0,
+              "width": 1235,
+              "height": 823
+            },
+            "platform": "win32"
+          }
+        }
+      },
+      {
+        "name": "packaged-native-lifecycle",
+        "passed": true,
+        "code": 0,
+        "signal": null,
+        "timedOut": false,
+        "elapsedMs": 7905,
+        "details": {
+          "passed": true,
+          "executable": "<project>\\release\\数字窗户-win32-x64\\数字窗户.exe",
+          "results": [
+            {
+              "case": "escape",
+              "executable": "<project>\\release\\数字窗户-win32-x64\\数字窗户.exe",
+              "passed": true,
+              "code": 0,
+              "signal": null,
+              "timedOut": false,
+              "didQuit": true,
+              "actionObserved": true,
+              "elapsedMs": 1805
+            },
+            {
+              "case": "alt-f4",
+              "executable": "<project>\\release\\数字窗户-win32-x64\\数字窗户.exe",
+              "passed": true,
+              "code": 0,
+              "signal": null,
+              "timedOut": false,
+              "didQuit": true,
+              "actionObserved": true,
+              "elapsedMs": 1488
+            },
+            {
+              "case": "menu-quit",
+              "executable": "<user>\\Desktop\\Digital Window\\release\\数字窗户-win32-x64\\数字窗户.exe",
+              "passed": true,
+              "code": 0,
+              "signal": null,
+              "timedOut": false,
+              "didQuit": true,
+              "actionObserved": true,
+              "elapsedMs": 1444
+            },
+            {
+              "case": "native-close",
+              "executable": "<project>\\release\\数字窗户-win32-x64\\数字窗户.exe",
+              "passed": true,
+              "code": 0,
+              "signal": null,
+              "timedOut": false,
+              "didQuit": true,
+              "actionObserved": true,
+              "elapsedMs": 1520
+            },
+            {
+              "case": "single-instance",
+              "passed": true,
+              "primaryCode": 0,
+              "secondaryCode": 0,
+              "rejected": true,
+              "oneWindow": true,
+              "timedOut": false,
+              "elapsedMs": 1566
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
