@@ -79,12 +79,13 @@ async function main() {
   if (fs.existsSync(reportsSource)) {
     const reportsOutput = path.join(expectedOutput, 'reports');
     fs.mkdirSync(reportsOutput, { recursive: true });
-    for (const filename of fs.readdirSync(reportsSource).filter((name) => /\.(?:json|png|jpg)$/i.test(name))) {
+    for (const filename of fs.readdirSync(reportsSource).filter((name) => /\.(?:json|png|jpg|html)$/i.test(name))) {
       fs.copyFileSync(path.join(reportsSource, filename), path.join(reportsOutput, filename));
     }
   }
   const sourceLicense = path.join(projectRoot, 'LICENSE');
   if (fs.existsSync(sourceLicense)) fs.copyFileSync(sourceLicense, path.join(expectedOutput, 'PROJECT_LICENSE.txt'));
+  fs.copyFileSync(path.join(projectRoot, 'vendor', 'THREE-LICENSE.txt'), path.join(expectedOutput, 'THREE-LICENSE.txt'));
   console.log(`Portable Windows application ready:\n${executable}\nKeep the entire ${path.basename(expectedOutput)} folder together.`);
 }
 

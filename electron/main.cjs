@@ -11,9 +11,10 @@ const windowed = process.argv.includes('--windowed');
 const smokeTest = process.argv.includes('--smoke-test');
 const lightingTest = process.argv.includes('--lighting-test');
 const softwareTest = process.argv.includes('--software-test');
+const naturalTest = process.argv.includes('--natural-test');
 const lifecycleMode = process.argv.find((argument) => argument.startsWith('--lifecycle-test='))?.split('=')[1];
 const lifecycleTest = ['escape', 'alt-f4', 'menu-quit', 'native-close', 'single-instance'].includes(lifecycleMode);
-const testMode = smokeTest || lightingTest || softwareTest || lifecycleTest;
+const testMode = smokeTest || lightingTest || softwareTest || naturalTest || lifecycleTest;
 let mainWindow = null;
 let normalBounds = null;
 let displaySleepBlocker = null;
@@ -201,6 +202,7 @@ async function runLifecycleTest() {
 
 async function runSmokeTest() {
   try {
+    await usePhotographicTestMode();
     // Wait for local assets, the astronomy model and the first canvas frame.
     let ui = null;
     for (let attempt = 0; attempt < 40; attempt += 1) {
@@ -238,6 +240,12 @@ async function runSmokeTest() {
 
 const testDelay = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
+async function usePhotographicTestMode() {
+  await waitRendererReady();
+  await mainWindow.webContents.executeJavaScript(`(() => { const select=document.getElementById('render-mode'); select.value='photo'; select.dispatchEvent(new Event('change',{bubbles:true})); })()`, true);
+  await testDelay(200);
+}
+
 async function waitRendererReady(expectedScene) {
   let ui = null;
   for (let attempt = 0; attempt < 150; attempt += 1) {
@@ -266,6 +274,7 @@ function finishInstrumentedTest(marker, checks, error) {
 async function runLightingTest() {
   const checks = [];
   try {
+    await usePhotographicTestMode();
     await waitRendererReady();
     checks.push(...await mainWindow.webContents.executeJavaScript(`(${lightingBrowserFlows.toString()})()`, true));
     checks.push(...await verifyPhotographicQuality());
@@ -371,7 +380,7 @@ async function lightingBrowserFlows() {
   change('view-azimuth', 90); await delay(650); const eastView = ui();
   change('view-azimuth', 270); await delay(650); const westView = ui();
   check('camera bearing changes projected sunlight', JSON.stringify(eastView.lighting.sun.direction) !== JSON.stringify(westView.lighting.sun.direction) || Math.abs(eastView.lighting.sun.screenX - westView.lighting.sun.screenX) > 0.05, { east: eastView.lighting.sun, west: westView.lighting.sun });
-  check('changing light direction repaints actual photograph pixels', eastView.relighting.pixelHash !== westView.relighting.pixelHash && eastView.relighting.pixels?.length > 0 && westView.relighting.pixels?.length > 0, { eastHash: eastView.relighting.pixelHash, westHash: westView.relighting.pixelHash });
+  check('original-photo mode preserves photographic pixels instead of pretending to recast shadows', eastView.relighting.pixelHash === westView.relighting.pixelHash && eastView.relighting.pixels?.length > 0, { eastHash: eastView.relighting.pixelHash, westHash: westView.relighting.pixelHash });
 
   const celestialModule = await import(new URL('./celestial.js', location.href).href);
   const lightingModule = await import(new URL('./lighting.js', location.href).href);
@@ -422,6 +431,7 @@ async function lightingBrowserFlows() {
 async function runSoftwareTest() {
   const checks = [];
   try {
+    await usePhotographicTestMode();
     await waitRendererReady();
     const browserChecks = await mainWindow.webContents.executeJavaScript(`(${softwareBrowserFlows.toString()})()`, true);
     checks.push(...browserChecks);
@@ -644,7 +654,7 @@ async function runRendererIntegration() {
         await new Promise(resolve => setTimeout(resolve, 80));
         const current = diagnostic();
         const weight = Number(current.weights?.[phase] || 0);
-        check(sceneId + ' ' + phase + ' preset updates continuous photographic lighting', !byId('realtime-toggle').checked && weight > 0.8 && current.imageLoaded && current.relighting.ready && current.relighting.utcMillis === current.lighting.utcMillis && current.relighting.pixels.length > 0, { weight, phase: current.phase, pixelHash: current.relighting.pixelHash });
+        check(sceneId + ' ' + phase + ' preset updates astronomy while retaining the original photograph', !byId('realtime-toggle').checked && weight > 0.8 && current.imageLoaded && current.relighting.ready && current.relighting.utcMillis === current.lighting.utcMillis && current.relighting.pixelHash === scene.relighting.pixelHash, { weight, phase: current.phase, pixelHash: current.relighting.pixelHash });
       }
       change('realtime-toggle', true);
       check(sceneId + ' returns to live solar lighting', byId('realtime-toggle').checked && diagnostic().timeZone === zone);
@@ -653,7 +663,7 @@ async function runRendererIntegration() {
     check('London overrides the scene time zone', diagnostic().timeZone === 'Europe/London' && byId('city-select').value === 'london' && !byId('scene-timezone-toggle').checked, { timeZone: diagnostic().timeZone });
     change('realtime-toggle', false);
     const noon = preview(720), midnight = preview(0);
-    check('manual slider changes noon versus night assets', Number(noon.weights?.noon) > Number(noon.weights?.night) && Number(midnight.weights?.night) > Number(midnight.weights?.noon), { noon: noon.weights, midnight: midnight.weights });
+    check('manual slider evaluates noon and midnight astronomy independently of the original photograph', Number(noon.weights?.noon) > Number(noon.weights?.night) && Number(midnight.weights?.night) > Number(midnight.weights?.noon), { noon: noon.weights, midnight: midnight.weights });
     change('realtime-toggle', true);
     check('realtime preference restores and saves', byId('realtime-toggle').checked && JSON.parse(localStorage.getItem('digital-window.settings.v2') || '{}').realtime === true);
     change('scene-timezone-toggle', true);
@@ -858,6 +868,7 @@ function createWindow() {
     if (smokeTest) runSmokeTest();
     if (lightingTest) runLightingTest();
     if (softwareTest) runSoftwareTest();
+    if (naturalTest) require('./natural-tests.cjs').runNaturalTests(mainWindow, { finish: finishInstrumentedTest, delay: testDelay, outputDirectory: path.resolve(process.cwd(), '.test-results', app.isPackaged ? 'packaged-natural' : 'source-natural') });
     if (lifecycleTest) runLifecycleTest();
   });
   mainWindow.loadFile(rendererPath).catch(reportError);
@@ -899,6 +910,7 @@ if (!app.requestSingleInstanceLock()) {
         app.exit(2);
       }, 90000).unref();
     }
+    if (naturalTest) setTimeout(() => { finishInstrumentedTest('DIGITAL_WINDOW_NATURAL', [], new Error('Natural-light integration timed out')); }, 240000).unref();
   }).catch((error) => {
     reportError(error);
     app.exit(1);

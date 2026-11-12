@@ -6,22 +6,24 @@ import { Atmosphere } from './atmosphere.js';
 import { getCelestialState } from './celestial.js';
 import { getLightingState } from './lighting.js';
 import { RelightingRenderer, cameraForScene } from './relighting.js';
+import { NaturalLightRenderer } from './natural-renderer.js';
 
 const $ = (id) => document.getElementById(id);
 const STORAGE_KEY = 'digital-window.settings.v2';
 const scenes = [...SCENES];
-const defaults = { scene: 'manhattan', city: 'new-york', custom: null, sceneTimezone: true, realtime: true, previewMinute: 720, bearings: {}, motion: !matchMedia('(prefers-reduced-motion: reduce)').matches, frame: false, brightness: 100 };
+const defaults = { scene: 'manhattan', city: 'new-york', custom: null, renderMode: 'natural', sceneTimezone: true, realtime: true, previewMinute: 720, bearings: {}, motion: !matchMedia('(prefers-reduced-motion: reduce)').matches, frame: false, brightness: 100 };
 function loadSettings() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     const value = JSON.parse(stored || localStorage.getItem('digital-window.settings.v1') || '{}');
     const result = { ...defaults };
+    if (['natural', 'photo'].includes(value.renderMode)) result.renderMode = value.renderMode;
     for (const key of ['motion', 'frame', 'realtime', 'sceneTimezone']) if (typeof value[key] === 'boolean') result[key] = value[key];
     if (!stored) result.realtime = true;
     if ([...scenes.map((scene) => scene.id), 'custom'].includes(value.scene)) result.scene = value.scene;
     if (CITIES.some((city) => city.id === value.city) || value.city === 'custom') result.city = value.city;
     if (Number.isFinite(value.brightness)) result.brightness = Math.max(50, Math.min(130, value.brightness));
-    if (Number.isFinite(value.previewMinute)) result.previewMinute = Math.round(Math.max(0, Math.min(1439, value.previewMinute)));
+    if (Number.isFinite(value.previewMinute)) result.previewMinute = Math.max(0, Math.min(1439.999, value.previewMinute));
     if (value.bearings && typeof value.bearings === 'object') result.bearings = Object.fromEntries(Object.entries(value.bearings).filter(([id, bearing]) => scenes.some((scene) => scene.id === id) && Number.isFinite(bearing) && bearing >= 0 && bearing < 360));
     if (value.custom && Number.isFinite(value.custom.latitude) && Math.abs(value.custom.latitude) <= 90 && Number.isFinite(value.custom.longitude) && Math.abs(value.custom.longitude) <= 180) {
       getZonedDateParts(new Date(), value.custom.zone);
@@ -36,7 +38,8 @@ const sceneView = new SceneView($('scene-base'));
 const atmosphere = new Atmosphere($('atmosphere'));
 let activeScene = scenes.find((scene) => scene.id === settings.scene) || scenes[0];
 let solar, blend, celestial, lighting, camera, utcMillis, currentPanel = null, currentFullscreen = false, desktopVisible = true, idleTimer, toastTimer, closeTimer, previousFocus, customURL, sceneRequest = 0;
-const relighting = new RelightingRenderer(() => ({ lighting, camera, utcMillis, weights: sceneView.displayWeights, visible: desktopVisible, motion: settings.motion && desktopVisible, animating: sceneView.transitioning }));
+const relighting = new RelightingRenderer(() => ({ lighting, camera, utcMillis, weights: sceneView.displayWeights, originalPhoto: activeScene.photoReal === true, visible: desktopVisible && (settings.renderMode === 'photo' || activeScene.id === 'custom'), motion: settings.motion && desktopVisible, animating: sceneView.transitioning }));
+const naturalRenderer = new NaturalLightRenderer($('natural-stage'), () => ({ utcMillis, realtime: settings.realtime, place: currentCity(), bearing: settings.bearings[activeScene.id] ?? activeScene.camera?.azimuth, motion: settings.motion, visible: desktopVisible }), (message) => { settings.renderMode = 'photo'; syncRenderMode(); save(); toast(message); });
 const presetCache = new Map();
 function currentCity() {
   if (settings.sceneTimezone) return CITIES.find((city) => city.id === activeScene.location) || CITIES[0];
@@ -103,7 +106,8 @@ function renderSceneCards() {
     else { const art = document.createElement('div'); art.className = 'procedural-thumb'; wrap.append(art); }
     if (scene.id === settings.scene) { const check = document.createElement('span'); check.className = 'card-check'; check.textContent = '✓'; wrap.append(check); }
     const title = document.createElement('span'); title.className = 'card-title'; title.textContent = scene.title;
-    const sub = document.createElement('span'); sub.className = 'card-subtitle'; sub.textContent = scene.subtitle;
+    const sub = document.createElement('span'); sub.className = 'card-subtitle'; sub.textContent = settings.renderMode === 'natural' && scene.id !== 'custom' ? `${CITIES.find((city) => city.id === scene.location)?.name.split(' · ')[0] || '风景'} · 三维仿真` : scene.subtitle;
+    if (settings.renderMode === 'natural' && scene.image && scene.id !== 'custom') { const reference = document.createElement('span'); reference.className = 'reference-photo-tag'; reference.textContent = '实拍参考'; wrap.append(reference); }
     card.append(wrap, title, sub); card.addEventListener('click', () => { void selectScene(scene.id); }); $('landscape-grid').append(card);
   }
   if (focusId) $('landscape-grid').querySelector(`[data-scene="${focusId}"]`)?.focus();
@@ -113,15 +117,30 @@ async function selectScene(id, persist = true) {
   try {
     if (!await sceneView.show(scene) || request !== sceneRequest) return false;
     activeScene = scene; settings.scene = scene.id;
-    buildCities(); relighting.setScene(scene, sceneView.current); updateSolar(); sceneView.setMotion(settings.motion && desktopVisible); renderSceneCards();
+    buildCities(); syncRenderMode(); updateSolar(); sceneView.setMotion(settings.motion && desktopVisible); renderSceneCards();
     if (persist) save();
     return true;
   } catch { if (request === sceneRequest) toast('这片景观未能加载，请重新选择。'); return false; }
 }
+function syncRenderMode() {
+  const requested = settings.renderMode === 'natural' && activeScene.id !== 'custom';
+  let enabled = false;
+  if (requested && naturalRenderer.available && !naturalRenderer.contextLost) {
+    naturalRenderer.setScene(activeScene); enabled = naturalRenderer.setActive(true);
+  } else naturalRenderer.setActive(false);
+  if (requested && !enabled) { settings.renderMode = 'photo'; toast('此设备暂不支持三维自然光，正在显示原始实拍。'); }
+  document.body.classList.toggle('natural-mode', enabled);
+  $('window-view').setAttribute('aria-label', `${activeScene.title}，${enabled ? '三维自然光仿真' : activeScene.id === 'procedural' ? '二维程序景观' : '原始实拍或视频'}`);
+  $('render-mode').value = settings.renderMode;
+  $('render-mode-description').textContent = activeScene.id === 'custom' ? '导入的照片或视频保留原有光影。' : enabled ? '天空、表面受光和投影实时计算。场景为实景启发建模，非实景测绘复原。' : activeScene.id === 'procedural' ? '当前为二维程序景观，切换自然光仿真可使用三维场景。' : '保留摄影原片光影；切换自然光仿真可查看移动的日月照明与投影。';
+  $('preview-help').textContent = enabled ? '时间连续推进，按钮只是跳转时刻。开启实时日光即可回到此刻。' : '原始实拍保留拍摄时的光影。请切换自然光仿真，查看移动的日月照明与投影。';
+  if (!enabled && sceneView.current) relighting.setScene(activeScene, sceneView.current);
+}
 function previewDate() {
   const city = currentCity(), local = getZonedDateParts(new Date(), city.zone);
-  const parts = { ...local, hour: Math.floor(settings.previewMinute / 60), minute: settings.previewMinute % 60, second: 0 };
-  try { return zonedDateTimeToDate(parts, city.zone); }
+  const wholeMinute = Math.floor(settings.previewMinute), fractionMillis = (settings.previewMinute - wholeMinute) * 60000;
+  const parts = { ...local, hour: Math.floor(wholeMinute / 60), minute: wholeMinute % 60, second: 0 };
+  try { return new Date(+zonedDateTimeToDate(parts, city.zone) + fractionMillis); }
   catch {
     const afterGap = new Date(Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute) + 3600000);
     const fallback = { year: afterGap.getUTCFullYear(), month: afterGap.getUTCMonth() + 1, day: afterGap.getUTCDate(), hour: afterGap.getUTCHours(), minute: afterGap.getUTCMinutes() };
@@ -139,21 +158,23 @@ function updateSolar() {
   lighting = { ...getLightingState(celestial, camera), utcMillis };
   $('solar-phase').textContent = blend.label; $('phase-orb').dataset.phase = blend.phase;
   $('daylight-description').textContent = `${city.name}${solar.polarDay ? ' · 极昼' : solar.polarNight ? ' · 极夜' : ''}`;
-  $('sync-status').textContent = settings.realtime ? '实时' : '预览'; $('preview-phase').textContent = blend.label;
+  const wall = getZonedDateParts(instant, city.zone), pad = (value) => String(value).padStart(2, '0');
+  $('sync-status').textContent = settings.realtime ? '实时' : '预览'; $('preview-phase').textContent = `${blend.label} · ${pad(wall.hour)}:${pad(wall.minute)}:${pad(wall.second)}`;
   $('view-azimuth').value = camera.viewAzimuth; $('view-azimuth-value').textContent = `${Math.round(camera.viewAzimuth)}°`;
   $('realtime-toggle').checked = settings.realtime;
-  $('time-slider').value = settings.realtime ? solar.local.hour * 60 + solar.local.minute : settings.previewMinute;
+  $('time-slider').value = settings.realtime ? wall.hour * 60 + wall.minute + wall.second / 60 + (instant.getUTCMilliseconds() / 60000) : settings.previewMinute;
   $('phase-presets').querySelectorAll('button').forEach((button) => button.setAttribute('aria-pressed', String(!settings.realtime && button.dataset.previewPhase === blend.phase)));
   document.documentElement.style.setProperty('--scene-brightness', String(.25 + solar.daylight * .75));
   document.documentElement.style.setProperty('--scene-saturation', String(.48 + solar.daylight * .52));
   const warmth = solar.twilight * .17, night = (1 - solar.daylight) * .4;
   document.documentElement.style.setProperty('--light-overlay', warmth > .07 ? `rgba(199,136,104,${warmth})` : `rgba(38,63,112,${night})`);
   sceneView.setWeights(blend.weights);
-  atmosphere.update({ scene: activeScene.id, solar, celestial, lighting, photoReal: Boolean(activeScene.photoReal), motion: settings.motion && desktopVisible && activeScene.kind !== '静态' });
+  atmosphere.update({ scene: activeScene.id, solar, celestial, lighting, photoReal: Boolean(activeScene.photoReal || naturalRenderer.active), motion: !naturalRenderer.active && settings.motion && desktopVisible && activeScene.kind !== '静态' });
   const frameLight = .30 + solar.daylight * .70 + lighting.moon.strength * .35;
   document.documentElement.style.setProperty('--office-frame-light', String(frameLight));
   document.documentElement.style.setProperty('--office-light-side', `${50 + lighting.sun.direction[0] * 30}%`);
   relighting.update();
+  naturalRenderer.update();
 }
 function presetMinutes() {
   const city = currentCity(), local = getZonedDateParts(new Date(), city.zone);
@@ -218,7 +239,7 @@ async function mediaStorage(mode, value) {
 function registerCustomMedia(file) {
   if (customURL) URL.revokeObjectURL(customURL); customURL = URL.createObjectURL(file);
   const index = scenes.findIndex((scene) => scene.id === 'custom'); if (index >= 0) scenes.splice(index, 1);
-  scenes.push({ id: 'custom', title: file.name.replace(/\.[^.]+$/, '').slice(0, 20) || '自己的风景', subtitle: file.type.startsWith('video/') ? '本地视频 · 循环播放' : '本地图片', kind: file.type.startsWith('video/') ? '动态' : '静态', image: customURL, isVideo: file.type.startsWith('video/'), alt: file.name, location: 'beijing' });
+  scenes.push({ id: 'custom', title: file.name.replace(/\.[^.]+$/, '').slice(0, 20) || '自己的风景', subtitle: file.type.startsWith('video/') ? '本地视频 · 循环播放' : '本地图片', kind: file.type.startsWith('video/') ? '动态' : '静态', photoReal: true, image: customURL, isVideo: file.type.startsWith('video/'), alt: file.name, location: 'beijing' });
 }
 async function importMedia(file) {
   if (!file) return;
@@ -263,7 +284,14 @@ $('custom-location-form').addEventListener('submit', (event) => {
     $('location-error').textContent = ''; buildCities(); updateSolar(); save();
   } catch { $('location-error').textContent = '请填写有效的 IANA 时区、纬度与经度。'; }
 });
-$('realtime-toggle').addEventListener('change', (event) => { settings.realtime = event.target.checked; if (!settings.realtime) settings.previewMinute = solar.local.hour * 60 + solar.local.minute; updateSolar(); save(); });
+$('realtime-toggle').addEventListener('change', (event) => {
+  settings.realtime = event.target.checked;
+  if (!settings.realtime) {
+    const instant = new Date(), wall = getZonedDateParts(instant, currentCity().zone);
+    settings.previewMinute = wall.hour * 60 + wall.minute + wall.second / 60 + instant.getUTCMilliseconds() / 60000;
+  }
+  updateSolar(); save();
+});
 $('time-slider').addEventListener('input', (event) => { settings.realtime = false; settings.previewMinute = Number(event.target.value); document.body.classList.add('scrubbing'); updateSolar(); });
 $('time-slider').addEventListener('change', () => { save(); setTimeout(() => document.body.classList.remove('scrubbing'), 150); });
 $('phase-presets').querySelectorAll('button').forEach((button) => button.addEventListener('click', () => { settings.realtime = false; settings.previewMinute = presetMinutes()[button.dataset.previewPhase]; updateSolar(); save(); }));
@@ -272,6 +300,7 @@ $('brightness-slider').addEventListener('input', (event) => { settings.brightnes
 $('view-azimuth').addEventListener('input', (event) => { settings.bearings[activeScene.id] = Number(event.target.value); updateSolar(); }); $('view-azimuth').addEventListener('change', save);
 $('import-button').addEventListener('click', () => $('media-input').click()); $('media-input').addEventListener('change', (event) => { void importMedia(event.target.files[0]); });
 document.addEventListener('visibilitychange', () => sceneView.setMotion(settings.motion && desktopVisible));
+$('render-mode').addEventListener('change', () => { settings.renderMode = $('render-mode').value; syncRenderMode(); updateSolar(); save(); renderSceneCards(); });
 document.addEventListener('pointermove', wake, { passive: true }); document.addEventListener('pointerdown', wake, { passive: true });
 document.addEventListener('click', (event) => { if (!$('main-menu').hidden && !event.target.closest('#main-menu, #menu-button')) closeMenu(); });
 document.addEventListener('fullscreenchange', () => { if (!window.digitalWindow) setFullscreenState({ fullscreen: Boolean(document.fullscreenElement) }); });
@@ -316,5 +345,7 @@ if (window.digitalWindow) {
 window.addEventListener('resize', updateSolar);
 setInterval(() => { if (!document.hidden && desktopVisible) updateSolar(); }, 250);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) updateSolar(); });
-window.__digitalWindowSmoke = () => ({ ready: Boolean(sceneView.ready && solar && relighting.ready), sceneId: activeScene.id, timeZone: currentCity().zone, sceneCount: scenes.length, photoReal: Boolean(activeScene.photoReal), hasSolar: Number.isFinite(solar?.altitude), canvasReady: atmosphere.ready, phase: blend?.phase, weights: blend?.weights, lighting, celestial, relighting: relighting.diagnostics(), atmosphere: atmosphere.lastDraw, locationSource: settings.sceneTimezone ? 'scene' : 'override', visibleMainButtons: [...$('window-view').querySelectorAll('button')].filter((button) => button.getClientRects().length).map((button) => button.id), ...sceneView.diagnostics() });
+window.__digitalWindowSmoke = () => ({ ready: Boolean(sceneView.ready && solar && (naturalRenderer.active ? naturalRenderer.ready : relighting.ready)), sceneId: activeScene.id, timeZone: currentCity().zone, sceneCount: scenes.length, renderMode: naturalRenderer.active ? 'natural' : 'photo', photoReal: Boolean(activeScene.photoReal), hasSolar: Number.isFinite(solar?.altitude), canvasReady: atmosphere.ready, phase: blend?.phase, weights: blend?.weights, lighting, celestial, relighting: relighting.diagnostics(), natural: naturalRenderer.diagnostics(), atmosphere: atmosphere.lastDraw, locationSource: settings.sceneTimezone ? 'scene' : 'override', visibleMainButtons: [...$('window-view').querySelectorAll('button')].filter((button) => button.getClientRects().length).map((button) => button.id), ...sceneView.diagnostics() });
+window.__digitalWindowNatural = () => naturalRenderer.diagnostics();
+window.__digitalWindowVerifyTransport = () => naturalRenderer.verifyShadowTransport();
 wake();

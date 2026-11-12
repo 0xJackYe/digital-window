@@ -2,6 +2,7 @@ import { createSceneGeometry } from './scene-geometry.js';
 
 const PHASES = ['dawn', 'morning', 'noon', 'evening', 'night'];
 const RAD = Math.PI / 180;
+const ORIGINAL_PHOTO_GRADE = { baseTint: [1,1,1], sunTint: [0,0,0], moonTint: [0,0,0] };
 const vertexShader = `
 attribute vec2 aPosition;
 varying vec2 vUv;
@@ -317,7 +318,7 @@ export class RelightingRenderer {
     const scalars = { uHasPhases: Number(this.hasPhases), uExposure: l.exposure, uNightFactor: l.nightFactor, uTime: performance.now() / 1000 % 3600, uHorizon: l.camera.horizon, uSunGain: l.sun.strength, uMoonGain: l.moon.strength, uMoonPhase: l.moon.phase, uMoonIllumination: l.moon.illumination, uMoonAngle: (l.moon.brightLimbAngle - l.moon.parallacticAngle) * RAD, uMoonRadius: l.moon.angularRadius * RAD, uSunVisibility: l.sun.visibility, uMoonVisibility: l.moon.visibility, uMotion: Number(state.motion), uPhotoReal: Number(this.scene.photoReal === true) };
     for (const [name, value] of Object.entries(scalars)) gl.uniform1f(this.location(name), value);
     for (const [name, value] of Object.entries({uSunDirection:l.sun.direction,uMoonDirection:l.moon.direction,uSunColor:l.sun.color,uMoonColor:l.moon.color,uAmbientColor:l.ambient.color})) gl.uniform3fv(this.location(name), value);
-    const grade = photographicGrade(l);
+    const grade = state.originalPhoto ? ORIGINAL_PHOTO_GRADE : photographicGrade(l);
     for (const [name, value] of Object.entries({uPhotoBaseTint:grade.baseTint,uPhotoSunTint:grade.sunTint,uPhotoMoonTint:grade.moonTint})) gl.uniform3fv(this.location(name), value);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     if (this.validateNextFrame) { this.validateNextFrame = false; const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`GPU drawing failed (${error}); using Canvas`); }
@@ -347,7 +348,7 @@ export class RelightingRenderer {
   drawPhotographicCanvas(state) {
     // Native drawImage/filter/compositing keeps the original high-frequency
     // image detail without reading or iterating over a 4K framebuffer on CPU.
-    const c = this.context, w = this.canvas.width, h = this.canvas.height, grade = photographicGrade(state.lighting);
+    const c = this.context, w = this.canvas.width, h = this.canvas.height, grade = state.originalPhoto ? ORIGINAL_PHOTO_GRADE : photographicGrade(state.lighting);
     const crop = state.camera.crop, sx = (1 - crop[0]) / 2 * this.sourceWidth, sy = (1 - crop[1]) / 2 * this.sourceHeight;
     const gain = Math.max(...grade.baseTint);
     c.globalAlpha = 1; c.globalCompositeOperation = 'source-over'; c.filter = 'none'; c.fillStyle = '#000'; c.fillRect(0, 0, w, h);

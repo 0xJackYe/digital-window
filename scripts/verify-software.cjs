@@ -74,7 +74,7 @@ async function verifyPackageFreshness() {
     const asarModule = await import('@electron/asar');
     const asar = asarModule.default || asarModule;
     const archive = path.join(path.dirname(executable), 'resources', 'app.asar');
-    const files = ['src', 'electron', 'assets'].flatMap((folder) => filesWithin(path.join(root, folder)).map((filename) => path.relative(root, filename).replaceAll('\\', '/')));
+    const files = ['src', 'electron', 'assets', 'vendor'].flatMap((folder) => filesWithin(path.join(root, folder)).map((filename) => path.relative(root, filename).replaceAll('\\', '/')));
     const mismatches = [];
     const hashes = [];
     const sourceManifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
@@ -99,7 +99,7 @@ async function verifyPackageFreshness() {
 
 async function main() {
   if (!['all', 'source', 'packaged'].includes(target)) throw new Error('--target must be all, source, or packaged');
-  if (selectedSuites?.some((suite) => !['smoke', 'lighting', 'lighting-canvas', 'software-flows', 'native-lifecycle'].includes(suite))) throw new Error('Unknown --suites selection');
+  if (selectedSuites?.some((suite) => !['smoke', 'lighting', 'lighting-canvas', 'natural', 'natural-fallback', 'software-flows', 'native-lifecycle'].includes(suite))) throw new Error('Unknown --suites selection');
   const manifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
   const javascriptFiles = ['src', 'electron', 'scripts', 'tests'].flatMap((folder) => filesWithin(path.join(root, folder))).filter((filename) => /\.(?:js|cjs)$/.test(filename));
   const syntaxFailures = [];
@@ -121,8 +121,10 @@ async function main() {
       ['source-smoke', '--smoke-test', 'DIGITAL_WINDOW_SMOKE'],
       ['source-lighting', '--lighting-test', 'DIGITAL_WINDOW_LIGHTING'],
       ['source-lighting-canvas', '--lighting-test', 'DIGITAL_WINDOW_LIGHTING'],
+      ['source-natural', '--natural-test', 'DIGITAL_WINDOW_NATURAL'],
+      ['source-natural-fallback', '--natural-test', 'DIGITAL_WINDOW_NATURAL'],
       ['source-software-flows', '--software-test', 'DIGITAL_WINDOW_SOFTWARE'],
-    ]) if (includeSuite(name)) await command(name, electron, [root, flag, ...(name.endsWith('-canvas') ? ['--disable-webgl'] : [])], marker);
+    ]) if (includeSuite(name)) await command(name, electron, [root, flag, ...((name.endsWith('-canvas') || name.endsWith('-fallback')) ? ['--disable-webgl'] : [])], marker, name.includes('natural') ? 240000 : 120000);
   }
   if (target === 'all' || target === 'packaged') {
     if (await verifyPackageFreshness()) {
@@ -130,8 +132,10 @@ async function main() {
         ['packaged-smoke', '--smoke-test', 'DIGITAL_WINDOW_SMOKE'],
         ['packaged-lighting', '--lighting-test', 'DIGITAL_WINDOW_LIGHTING'],
         ['packaged-lighting-canvas', '--lighting-test', 'DIGITAL_WINDOW_LIGHTING'],
+        ['packaged-natural', '--natural-test', 'DIGITAL_WINDOW_NATURAL'],
+        ['packaged-natural-fallback', '--natural-test', 'DIGITAL_WINDOW_NATURAL'],
         ['packaged-software-flows', '--software-test', 'DIGITAL_WINDOW_SOFTWARE'],
-      ]) if (includeSuite(name)) await command(name, executable, [flag, ...(name.endsWith('-canvas') ? ['--disable-webgl'] : [])], marker);
+      ]) if (includeSuite(name)) await command(name, executable, [flag, ...((name.endsWith('-canvas') || name.endsWith('-fallback')) ? ['--disable-webgl'] : [])], marker, name.includes('natural') ? 240000 : 120000);
       if (includeSuite('packaged-native-lifecycle')) await command('packaged-native-lifecycle', process.execPath, [path.join(__dirname, 'verify-lifecycle.cjs'), '--exe', executable], 'DIGITAL_WINDOW_LIFECYCLE_SUMMARY');
     }
   }

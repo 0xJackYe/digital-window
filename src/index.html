@@ -9,10 +9,12 @@
   <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./office-window.css">
+  <link rel="stylesheet" href="./natural-view.css">
 </head>
 <body>
   <main id="window-view" aria-label="数字窗户景观">
     <div id="scene-base" class="scene-base"></div>
+    <div id="natural-stage" class="natural-stage"></div>
     <canvas id="atmosphere" aria-hidden="true"></canvas>
     <div id="window-frame" class="window-frame" hidden aria-hidden="true"><i></i><i></i></div>
     <div id="drag-region" class="drag-region" aria-hidden="true"></div>
@@ -44,6 +46,7 @@
     <div class="panel-content">
       <section id="panel-landscapes" role="tabpanel" aria-labelledby="tab-landscapes">
         <p class="section-intro">选一扇窗，望向远方。</p>
+        <div class="city-field render-mode-field"><label class="field-label" for="render-mode">光影模式</label><div class="select-wrap"><select id="render-mode"><option value="natural">自然光仿真 · 三维场景</option><option value="photo">原始实拍 · 摄影光影</option></select></div><p id="render-mode-description" class="subtle-note">三维场景随日月实时受光、产生投影。场景为实景启发建模。</p></div>
         <div id="landscape-grid" class="landscape-grid"></div>
         <button id="import-button" class="import-button" type="button"><span class="import-plus" aria-hidden="true">＋</span><span>导入自己的景观<small>本地图片或视频</small></span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
         <input id="media-input" type="file" accept="image/jpeg,image/png,image/webp,image/avif,video/mp4,video/webm" hidden>
@@ -61,10 +64,10 @@
         <div class="setting-row"><div><label for="realtime-toggle">跟随实时日光</label><p>随当地时间自动变化</p></div><input id="realtime-toggle" class="switch" type="checkbox" checked></div>
         <div id="time-preview" class="time-preview">
           <div class="range-label"><label for="time-slider">预览一天的光影</label><output id="preview-phase" for="time-slider">正午</output></div>
-          <input id="time-slider" type="range" min="0" max="1439" step="1" value="720" aria-label="预览当地一天的光影">
+          <input id="time-slider" type="range" min="0" max="1439.999" step="0.001" value="720" aria-label="连续预览当地一天的光影">
           <div class="range-hints" aria-hidden="true"><span>夜</span><span>黎明</span><span>正午</span><span>傍晚</span><span>夜</span></div>
           <div id="phase-presets" class="phase-presets" aria-label="选择预览时段"><button type="button" data-preview-phase="dawn" aria-pressed="false">黎明</button><button type="button" data-preview-phase="morning" aria-pressed="false">早晨</button><button type="button" data-preview-phase="noon" aria-pressed="false">中午</button><button type="button" data-preview-phase="evening" aria-pressed="false">傍晚</button><button type="button" data-preview-phase="night" aria-pressed="false">晚上</button></div>
-          <p class="subtle-note">拖动滑块预览，开启实时日光即可回到此刻。</p>
+          <p id="preview-help" class="subtle-note">时间连续推进，按钮只是跳转时刻。开启实时日光即可回到此刻。</p>
         </div>
         <div class="brightness-setting"><div class="range-label"><label for="view-azimuth">窗外朝向</label><output id="view-azimuth-value">0°</output></div><input id="view-azimuth" type="range" min="0" max="359" step="1" value="0" aria-label="窗外朝向"><p class="subtle-note">北为 0°，东为 90°。朝向决定日光与月光从哪一侧照入。</p></div>
         <details class="custom-location"><summary>自定义时区与位置</summary><form id="custom-location-form"><label class="field-label" for="custom-zone">时区</label><input id="custom-zone" placeholder="Europe/London" autocomplete="off" spellcheck="false" required><div class="coordinate-inputs"><label for="custom-lat">纬度<input id="custom-lat" type="number" min="-90" max="90" step="any" value="51.5074" required></label><label for="custom-lon">经度<input id="custom-lon" type="number" min="-180" max="180" step="any" value="-0.1278" required></label></div><button class="primary-button" type="submit">使用这个位置</button><p id="location-error" class="error-message" role="alert"></p></form></details>
