@@ -44,7 +44,7 @@ async function main() {
     overwrite: true,
     junk: true,
     ignore: [
-      /[\\/](?:release|node_modules|tests|\.git|scripts|captures|logs|\.test-results)(?:[\\/]|$)/i,
+      /[\\/](?:release|node_modules|tests|\.git|scripts|reports|captures|logs|\.test-results)(?:[\\/]|$)/i,
       /[\\/](?:\.gitignore|package-lock\.json|npm-debug\.log|.*\.log|.*\.tmp|.*\.bak)$/i,
       /[\\/]启动数字窗户\.cmd$/,
     ],
@@ -67,12 +67,21 @@ async function main() {
     const source = path.join(projectRoot, filename);
     if (fs.existsSync(source)) fs.copyFileSync(source, path.join(expectedOutput, filename));
   }
-  // Keep provenance links usable beside the portable EXE as well as in app.asar.
-  const promptSource = path.join(projectRoot, 'assets', 'landscapes');
-  const promptOutput = path.join(expectedOutput, 'assets', 'landscapes');
-  fs.mkdirSync(promptOutput, { recursive: true });
-  for (const filename of fs.readdirSync(promptSource).filter((name) => name.endsWith('-PROMPTS.md'))) {
-    fs.copyFileSync(path.join(promptSource, filename), path.join(promptOutput, filename));
+  // Make photo provenance readable beside the portable EXE without duplicating
+  // the full-resolution JPEGs that are already bundled inside app.asar.
+  const photoSource = path.join(projectRoot, 'assets', 'landscapes', 'photos');
+  const photoOutput = path.join(expectedOutput, 'assets', 'landscapes', 'photos');
+  fs.mkdirSync(photoOutput, { recursive: true });
+  for (const filename of fs.readdirSync(photoSource).filter((name) => /\.(?:json|md)$/i.test(name))) {
+    fs.copyFileSync(path.join(photoSource, filename), path.join(photoOutput, filename));
+  }
+  const reportsSource = path.join(projectRoot, 'reports');
+  if (fs.existsSync(reportsSource)) {
+    const reportsOutput = path.join(expectedOutput, 'reports');
+    fs.mkdirSync(reportsOutput, { recursive: true });
+    for (const filename of fs.readdirSync(reportsSource).filter((name) => /\.(?:json|png|jpg)$/i.test(name))) {
+      fs.copyFileSync(path.join(reportsSource, filename), path.join(reportsOutput, filename));
+    }
   }
   const sourceLicense = path.join(projectRoot, 'LICENSE');
   if (fs.existsSync(sourceLicense)) fs.copyFileSync(sourceLicense, path.join(expectedOutput, 'PROJECT_LICENSE.txt'));

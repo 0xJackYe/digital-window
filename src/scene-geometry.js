@@ -223,7 +223,16 @@ export function createSceneGeometry(scene, noonImage, width = 512, height) {
   const source = createCanvas(width, height), sourceContext = source.getContext('2d', { willReadFrequently: true });
   const p = createPainter(width, height), id = typeof scene === 'string' ? scene : scene?.id;
   let skyLimit = 0;
-  if (id === 'manhattan') skyLimit = authorManhattan(p);
+  const photoReal = typeof scene === 'object' && scene?.photoReal === true;
+  if (photoReal) {
+    // New photographs must never inherit polygon coordinates authored for an
+    // unrelated AI view. Their pixels keep the photographed illumination.
+    // Retain conservative, top-connected sky classification as metadata only;
+    // the photographic compositor does not synthesize silhouettes or shadows.
+    p.face(whole, { normal: FRONT, depth: .55, roughness: .96, occlusion: 0 });
+    skyLimit = clamp(scene.camera?.horizon ?? .5);
+  }
+  else if (id === 'manhattan') skyLimit = authorManhattan(p);
   else if (id === 'kyoto') skyLimit = authorKyoto(p);
   else if (id === 'medieval') skyLimit = authorMedieval(p);
   else if (id === 'fuji') skyLimit = authorFuji(p);
@@ -270,5 +279,5 @@ export function createSceneGeometry(scene, noonImage, width = 512, height) {
   // Direct byte writes preserve the independent depth alpha; painting a depth
   // with source-over RGBA fills would corrupt RGB normals at overlaps.
   normalContext.putImageData(normalPixels, 0, 0); materialContext.putImageData(materialPixels, 0, 0);
-  return { normalDepth, material, version: SCENE_GEOMETRY_VERSION, width, height };
+  return { normalDepth, material, version: photoReal ? 'photographic-preserved-1.0' : SCENE_GEOMETRY_VERSION, width, height };
 }

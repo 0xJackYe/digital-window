@@ -1,42 +1,47 @@
-# Reference research for the four requested scenes
+# 景观真实感与技术调研
 
-Research and downloads: 2026-11-11. The images in `assets/references/` are photographic references, not a five-phase time-lapse set. No source examined supplied dawn, morning, noon, evening and night from one perfectly fixed camera. Switching between unrelated source photos would visibly change geometry, so the final assets use a single generated master per scene followed by separate lighting-only edits.
+Digital Window **1.3.0**；研究与来源核对日期：**2026-11-12**。
 
-## Mount Fuji from Hirano-no-hama, Lake Yamanaka
+## 本次采用的方案
 
-This is a specifically verified **east/Hirano-shore** viewpoint, not a generic Mount Fuji photograph and not Lake Kawaguchi or Chureito Pagoda.
+本版本用原生高分辨率实拍替换原有 AI 景观。实拍保留现实中的建筑结构、文字、材质、镜头特性与自然光细节，直接解决生成图里窗户重复、屋顶形变、纹理涂抹等问题。提高生成图片的输出尺寸或执行超分辨率，不能证明错误结构已恢复为真实城市，因此本次没有使用 AI 生成、超分、扩图或补画。
 
-- Day reference: `assets/references/fuji-hirano-day-panorama.jpg`, 6660 × 2055. Photograph by **Алексей Чикишев**, [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
-- Primary source: [Wikimedia file page](https://commons.wikimedia.org/wiki/File:Hirano,_Yamanakako,_Minamitsuru_District,_Yamanashi_Prefecture_401-0502,_Japan_-_panoramio_(78).jpg).
-- [Original JPEG](https://upload.wikimedia.org/wikipedia/commons/3/35/Hirano%2C_Yamanakako%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0502%2C_Japan_-_panoramio_%2878%29.jpg).
-- Primary-source camera location: **35.426739 N, 138.872791 E**. Date: 2016-04-26. Filename explicitly identifies Hirano, Yamanakako. Visually inspected: Fuji across the lake, small opposite-shore buildings, broad mountain profile, lake foreground.
-- Night lighting reference: `assets/references/fuji-hirano-night.jpg`, 1800 × 1269; **Jun** from Kanagawa, [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/). [Wikimedia file page](https://commons.wikimedia.org/wiki/File:Night_view_of_Mt._Fuji.jpg), [original JPEG](https://upload.wikimedia.org/wikipedia/commons/8/83/Night_view_of_Mt._Fuji.jpg). Primary-source coordinates **35.426826, 138.878602** put it nearby on the eastern side; it has a tighter composition and foreground boats and is unsuitable for direct crossfades with the day image. Downloaded as a lighting/geography reference only, not used as the generation target.
+八张运行照片的作者、许可、分辨率、来源及哈希记录入口见 [ASSET_CREDITS.md](ASSET_CREDITS.md)、[七张 Commons 来源清单](assets/landscapes/photos/sources.json) 和 [丹佛来源清单](assets/landscapes/photos/denver-source.json)。当前照片均可离线显示；未接入网络摄像头或远程视频流。
 
-Five final generated images now exist at `assets/landscapes/fuji-{dawn,morning,noon,evening,night}.png`. The noon image was generated from the exact day reference, expanding sky/lake to approximately 16:9 and removing foreground stakes. Each other phase is independently edited from that same noon image. See [fuji-PROMPTS.md](assets/landscapes/fuji-PROMPTS.md) for exact prompts, transformation description, attribution and QA notes. These are AI-generated interpretations of the reference, not documentary or live photographs. Retain reference attribution when distributing the adapted imagery.
+丹佛选用 Shade 的 [Denver 城市实拍](https://unsplash.com/photos/a-city-skyline-with-tall-buildings-GPjse2kaUKA)，实际文件为 4272 × 2848。软件叠加独立绘制的写字楼窗框，呈现从内部向外看的构图；这不证明原照片拍摄于办公室。摄影师没有提供精确相机位置、朝向或同机位夜景，因此本项目相关相机参数是可调估计，不能当作测绘资料。
 
-## Manhattan from inside a residential-style high-rise window
+曼哈顿使用真实第 21 层窗内视角；布拉格和京都使用真实旧城、八坂通照片；富士山保留经过来源坐标核实的平野东岸视角；梦莲湖、马代海岸与森林换用高分辨率摄影。马代地点校正为 Eriyadu，森林没有已核实地址，默认北京时间只是光照参考。
 
-- Reference: `assets/references/manhattan-apartment-day.jpg`, 2560 × 3840 downloaded derivative.
-- **Andrea Davis**, [White and Brown High Rise Buildings](https://www.pexels.com/photo/white-and-brown-high-rise-buildings-10812975/), Pexels photograph ID 10812975. Original 3349 × 5024, source says New York, NY and describes the skyline from a modern apartment window.
-- [Download JPEG](https://images.pexels.com/photos/10812975/pexels-photo-10812975.jpeg?auto=compress&cs=tinysrgb&w=2560).
-- [Pexels License](https://www.pexels.com/license/). Source page identifies it as free to use. Viewed locally: window mullions, nearby Manhattan buildings, domestic chair edge. The portrait composition is useful as an architectural/perspective reference and would need a new wide composition for the full-screen scene. No claim is made that the private interior is a specific named residential property.
+## 连续光照与照片的界限
 
-## Medieval European old town
+照片的光影在按下快门时已经记录在像素中。当前实拍模式保留照片的几何与纹理，并根据实时计算的日月方向连续调整曝光、色温和方向性光照响应。它不再通过混合五张结构略有不同的生成图呈现一天，也不把旧生成图的手工深度场和伪投影套在新照片上。
 
-- Reference: `assets/references/rothenburg-day.jpg`, 2560 × 3840 downloaded derivative.
-- **Florian Süß**, [Quaint Alleyway in Rothenburg ob der Tauber](https://www.pexels.com/photo/quaint-alleyway-in-rothenburg-ob-der-tauber-30035565/), Pexels ID 30035565. Original 4621 × 6931. Source location Rothenburg ob der Tauber, Bavaria, Germany.
-- [Download JPEG](https://images.pexels.com/photos/30035565/pexels-photo-30035565.jpeg?auto=compress&cs=tinysrgb&w=2560).
-- [Pexels License](https://www.pexels.com/license/). Viewed locally: cobbled lane, Markus tower/clock, historic hotel facades and warm existing lamps. It is a portrait reference, not a ready wide-screen master.
-- Additional primary-source night collection: [Night in Rothenburg ob der Tauber on Wikimedia](https://commons.wikimedia.org/wiki/Category:Night_in_Rothenburg_ob_der_Tauber). Licenses differ by file; category listing alone is not a license for any photo.
+这些变化可以每秒持续更新，但只是对摄影画面的连续呈现。它们不能让源照片中的楼房重新计算完整投影，不能移除全部原始日光，也不能推断所有夜间窗灯。单张照片没有被遮住的表面、完整几何和各表面材质等必要信息。对本项目而言，「每秒有变化」「素材来自现实摄影」和「任意日月位置下的物理正确重照明」是三项不同能力；当前实现满足前两项，未声称满足第三项。
 
-## Kyoto historic streets
+## 可行技术比较
 
-- Reference: `assets/references/kyoto-yasaka-evening.jpg`, 2560 × 1920 downloaded derivative.
-- **Rizk Nas**, [Scenic View of Kyoto Pagoda at Sunset](https://www.pexels.com/photo/scenic-view-of-kyoto-pagoda-at-sunset-31713582/), Pexels ID 31713582. Original 5164 × 3873, location Kyoto, Japan.
-- [Download JPEG](https://images.pexels.com/photos/31713582/pexels-photo-31713582.jpeg?auto=compress&cs=tinysrgb&w=2560).
-- [Pexels License](https://www.pexels.com/license/). Viewed locally: traditional tiled roofs/wood facades and Yasaka-area pagoda at sunset. The image emphasizes roofs and pagoda rather than a complete street floor; generation should establish a consistent wider old-street view.
-- Night reference candidates discovered but not downloaded: [Historic Kyoto Street at Night with Traditional Houses](https://www.pexels.com/photo/historic-kyoto-street-at-night-with-traditional-houses-35195397/) by MacroLingo LLC (2628 × 1752, Pexels), and [Streets of Gion, Kyoto - Gion7709](https://commons.wikimedia.org/wiki/File:Streets_of_Gion,_Kyoto_-_Gion7709.jpg) by lumoplank (5105 × 3403, source states CC0). These have different viewpoints and should be lighting references rather than alternated as if recorded by one fixed camera.
+| 路线 | 所需素材与实现 | 能做到的效果 | 对本项目的限制 |
+| --- | --- | --- | --- |
+| 原生高分辨率照片 | 一张可靠实拍，按显示器比例裁切，克制调色 | 最容易保留真实城市细节，离线稳定 | 光影属于拍摄时刻，只能近似调光；本版本采用 |
+| 固定机位 4K/8K 视频或全天延时 | 同机位拍摄的高质量素材，按当地时间播放或插值 | 云、车流、树叶和现实光影都可来自真实拍摄 | 需要实际拍摄或取得授权；录制日期、天气和太阳轨迹固定，不能随意改成其他季节或光源角度 |
+| 摄影测量 + 可照明三维场景 | 多角度实拍重建几何，准备材质、环境光，运行三维太阳/月亮光源与阴影 | 可计算几何遮挡和移动投影 | 数据采集、材质去光照、建筑细节与性能优化成本较高；不能由当前单张背景直接得到完整准确场景 |
+| 标准 3D Gaussian Splatting（3DGS） | 多视角照片或视频、相机位姿，训练三维辐射场并实时渲染 | 能以较高照片感生成新的观察视角 | 原始方法拟合拍摄外观，不自动获得物理材质与任意光源下的重照明能力；需要额外采集与训练。[原论文与官方项目](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) |
+| 可重光照 3DGS | 在三维重建之外估计法线、BRDF、入射光及可见性，执行物理渲染与光线追踪 | 研究方法可重新设置照明，产生相应高光和阴影 | 需要合适的多视角数据、训练和运行时集成；不等于安装插件后即可准确改造一张照片。[Relightable 3D Gaussians 论文](https://arxiv.org/abs/2311.16043) |
 
-## Licensing and provenance notes
+标准 3DGS 的官方工作重点是从真实采集数据生成新视角；可重光照工作进一步加入材质与照明分解。因此，若后续要求「现实建筑投影随着太阳和月亮真正移动」，本项目的技术判断是：应取得适合重建的实景数据，采用有材质与可见性信息的三维场景，或专门的可重光照重建方法。仅把当前 JPEG 放大或转换为普通 splat，不能保证这一目标。
 
-Pexels permits free use and modification and appreciates attribution; consult the [complete license](https://www.pexels.com/license/) for its restrictions, including separate redistribution through stock-photo or wallpaper platforms. The source photographs' licenses apply independently of the project's code license. No purchased Unsplash+ images were downloaded. No generated asset existed in the original workspace; existing `alpine-lake.jpg`, `forest.jpg` and `ocean-coast.jpg` were from the earlier landscape brief and are unrelated to the exact four new locations.
+上述论文与开源项目是技术研究来源，不表示其代码、模型、训练数据已加入本应用，也不表示本版本已经实现 3DGS 或摄影测量。
+
+## 分辨率与来源验证
+
+七张 Commons 原文件已逐张视觉检查、完整解码，并与来源分辨率核对；来源清单保留下载字节数及 SHA-256。丹佛使用 Unsplash CDN 的高质量 JPEG，不做 AI 上采样。原文件与软件运行时的屏幕裁切分别记录，避免将显示器输出尺寸误认为源照片分辨率。
+
+富士山原图为 6660 × 2055 的宽全景，按 16:9 填满时约有 3653 × 2055 有效像素，垂直方向未达到原生 UHD。其余七张实拍照片的 16:9 有效裁切达到或超过 3840 × 2160，但照片的对焦、镜头、噪声、源压缩和显示比例仍影响观感。没有通过新增像素把富士山标成「原生 4K」。
+
+本次调研未取得任何景观从同一固定机位完整覆盖黎明、白天、黄昏、夜间的可分发实拍序列。不同摄影师、不同机位的日夜照片不能冒充同一个窗口的连续拍摄；本版本也没有这样拼接。
+
+## 许可与旧资源
+
+摄影许可独立于代码 MIT 许可。Commons 的 CC BY、CC BY-SA 和 CC0 按各自条件使用；CC BY-SA 图片的裁切、调色等衍生继续遵从相应许可。丹佛保留 [Unsplash License](https://unsplash.com/license)，没有被重新许可为 MIT 或 CC。完整署名与改动说明见 [ASSET_CREDITS.md](ASSET_CREDITS.md)。
+
+旧二十张 AI 时段图和原三张 Pexels 运行照片已退出 1.3.0 运行资源，本地备份位于被忽略的 .test-results/legacy-landscapes/，旧提交中可追溯原素材及生成记录。旧调研中「以实拍作参考生成五时段图」的结论已被本次实拍方案取代，不再描述当前实现。

@@ -1,61 +1,54 @@
-# 素材来源与生成记录
+# 景观素材来源与许可
 
-数字窗户 1.2.0；素材与生成日期：2026-11-11。所有运行景观均随应用保存在本机，无需图片 API、远程媒体或网络请求。代码许可与以下摄影素材许可分别适用。
+Digital Window **1.3.0**；核对日期：**2026-11-12**。当前运行资源包含八张实拍照片，以及程序绘制的「云山镜湖」。照片均随应用保存在本机，不依赖远程图片 API。照片记录的是拍摄时的景观，不是实时摄像头或当地当前天气。
 
-## 四组新景观
+## 当前运行照片
 
-每组包含 `dawn`、`morning`、`noon`、`evening`、`night` 五个 PNG，使用内置 **`image_gen`** 工具生成。先生成正午主图，再以同一主图分别编辑其余四个时段的光照。未使用 CLI/API 后备模式，没有通过脚本裁剪、拼接或重绘图像。
+下表尺寸为实际下载文件的像素尺寸，没有通过 AI 生成、超分、扩图或补画增加像素。除丹佛由 Unsplash CDN 提供高质量 JPEG 外，其余七张为 Wikimedia Commons 原文件的下载字节。
 
-| 文件前缀 | 场景与性质 | 提示词和生成记录 |
-| --- | --- | --- |
-| `assets/landscapes/manhattan-*.png` | 曼哈顿居民楼向外望的艺术重建；未使用第三方照片作为生成输入 | [主记录](assets/landscapes/manhattan-PROMPTS.md)、[补充提示词](assets/landscapes/manhattan-ROOT-PROMPTS.md) |
-| `assets/landscapes/medieval-*.png` | 布拉格小城风格启发的中世纪欧洲老城；未使用第三方照片作为生成输入 | [生成记录](assets/landscapes/medieval-PROMPTS.md) |
-| `assets/landscapes/kyoto-*.png` | 京都东山、町屋与八坂塔的艺术重建；未使用第三方照片作为生成输入 | [生成记录](assets/landscapes/kyoto-PROMPTS.md) |
-| `assets/landscapes/fuji-*.png` | 以山中湖平野之滨东岸实景为参考的富士山艺术重建；参考照片许可见下文 | [生成记录](assets/landscapes/fuji-PROMPTS.md) |
+| 文件（位于 assets/landscapes/photos/） | 摄影师 | 作品与来源 | 尺寸 | 图片许可 |
+| --- | --- | --- | --- | --- |
+| manhattan.jpg | Davidwbarratt | [New York City 2](https://commons.wikimedia.org/wiki/File:New_York_City_2.jpg) | 4048 × 3036 | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
+| denver.jpg | Shade | [a city skyline with tall buildings — Denver, CO](https://unsplash.com/photos/a-city-skyline-with-tall-buildings-GPjse2kaUKA) | 4272 × 2848 | [Unsplash License](https://unsplash.com/license) |
+| medieval.jpg | Tiia Monto | [Old Town Square - panorama](https://commons.wikimedia.org/wiki/File:Old_Town_Square_-_panorama.jpg) | 10919 × 3659 | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
+| kyoto.jpg | Basile Morin | [Yasaka-dori early morning with street lanterns and the Tower of Yasaka (Hokan-ji Temple), Kyoto, Japan](https://commons.wikimedia.org/wiki/File:Yasaka-dori_early_morning_with_street_lanterns_and_the_Tower_of_Yasaka_(Hokan-ji_Temple),_Kyoto,_Japan.jpg) | 5550 × 3700 | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
+| fuji.jpg | Алексей Чикишев | [Hirano, Yamanakako, Minamitsuru District, Yamanashi Prefecture 401-0502, Japan - panoramio (78)](https://commons.wikimedia.org/wiki/File:Hirano,_Yamanakako,_Minamitsuru_District,_Yamanashi_Prefecture_401-0502,_Japan_-_panoramio_(78).jpg) | 6660 × 2055 | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+| lake.jpg | Adam Bishop | [Moraine Lake panorama](https://commons.wikimedia.org/wiki/File:Moraine_Lake_panorama.jpg) | 7759 × 3512 | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
+| coast.jpg | Ввласенко | [Palm tree and pier. Eriyadu, Maldives](https://commons.wikimedia.org/wiki/File:Palm_tree_and_pier._Eriyadu,_Maldives.jpg) | 5887 × 3929 | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) |
+| forest.jpg | Peter Heeling | [Forest sunrise](https://commons.wikimedia.org/wiki/File:Forest_sunrise.jpg)，最初发布于 [Skitterphoto / Foggy forest](https://skitterphoto.com/photos/250/foggy-forest) | 4550 × 2879 | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) |
 
-这些是 AI 生成的景观解释，并非实时摄像头、当地摄影记录或地理测绘。图像约为 16:9、1672 × 941；京都傍晚为 1671 × 941。各时段尽量保留相同构图，生成编辑不保证逐像素完全一致。运行时连续混合时段图像，额外氛围由程序绘制。
+原图直链、拍摄日期、来源提供的 GPS、字节数及七张 Commons 文件的 **SHA-256** 见 [sources.json](assets/landscapes/photos/sources.json)。丹佛来源、许可、下载地址及限制见 [denver-source.json](assets/landscapes/photos/denver-source.json)；本次下载文件的 SHA-256 为 9d69829305f49e793834f42d69b2817aa218e88b1b97bdea3d88dd81e521695e。七张 Commons 原图可通过 [下载脚本](scripts/fetch-photo-upgrades.py) 重新取得与验证。
 
-### 富士山参考照片与衍生改动
+## 许可与呈现改动
 
-**参考照片：**[Hirano, Yamanakako, Minamitsuru District, Yamanashi Prefecture 401-0502, Japan – panoramio (78)](https://commons.wikimedia.org/wiki/File:Hirano,_Yamanakako,_Minamitsuru_District,_Yamanashi_Prefecture_401-0502,_Japan_-_panoramio_(78).jpg)。
+项目 [MIT 许可](LICENSE) 适用于项目代码，不把上述第三方图片重新许可为 MIT。再次分发图片时，应保留各自作者、作品来源和许可链接，不暗示摄影师为本项目背书。
 
-- **作者：Алексей Чикишев**；[作者原页面存档](https://web.archive.org/web/20161102190811/http://www.panoramio.com/user/9099956?with_photo_id=129923644)。
-- **许可：[Creative Commons Attribution 3.0 Unported（CC BY 3.0）](https://creativecommons.org/licenses/by/3.0/)**。保留作者、来源和许可链接，并标明修改；不表示作者为本应用背书。
-- [原始 JPEG](https://upload.wikimedia.org/wikipedia/commons/3/35/Hirano%2C_Yamanakako%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0502%2C_Japan_-_panoramio_%2878%29.jpg)，6660 × 2055，拍摄于 2016-04-26。本机参考文件：`assets/references/fuji-hirano-day-panorama.jpg`。
-- Wikimedia 相机位置为 **35.426739 N，138.872791 E**，即山中湖东侧平野一带，隔湖朝富士山方向拍摄。
-- **改动：**根据照片的地理与构图生成约 16:9 的正午主图，扩展天空与湖面、移除前景桩杆和船只、重建细节，再分别生成黎明、早晨、傍晚和夜间光照。星点、窗灯、倒影及各时段光影由生成工具创作。最终 `fuji-*.png` 是经过这些改变的参考衍生图像，不应标为原摄影师拍摄的成片。
+七张 Commons JPEG 在项目中未进行离线像素改写。应用显示时会根据屏幕比例裁切，并可实时调整曝光、色温和光照响应；这些是运行时视觉呈现，不是原摄影师拍摄的其他时刻。图片及裁切、调色等衍生图像仍遵从各自 CC 许可；其中 **CC BY-SA** 图片的衍生部分继续适用对应的相同或兼容许可。独立的应用代码保留 MIT 许可，不因与图片一同打包而改变图片或代码各自的许可。
 
-## 原有景观摄影
+丹佛照片保留 **Unsplash License**，不重新许可为 MIT 或 CC。它作为数字窗户软件中的景观背景提供，不作为独立图库商品出售，也不用于复制 Unsplash 的图片服务。当前使用的是免费照片，不是 Unsplash+ 素材；完整使用条件以 [官方许可](https://unsplash.com/license) 为准。
 
-三张摄影图片继续保留为独立景观。应用叠加氛围动态，或随太阳状态调整亮度与色温；源图片均为静态照片。
+## 视角与真实程度
 
-| 本机文件 | 摄影师 | 原照片与来源 | 原始尺寸 |
-| --- | --- | --- | --- |
-| `assets/landscapes/alpine-lake.jpg` | Jaime Reimer | [Beautiful View of Moraine Lake, Banff National Park, Canada](https://www.pexels.com/photo/beautiful-view-of-moraine-lake-2662116/) | 5407 × 3605 |
-| `assets/landscapes/ocean-coast.jpg` | Asad Photo Maldives | [Landscape Photography of Trees on Shoreline, Laamu Atoll, Maldives](https://www.pexels.com/photo/landscape-photography-of-trees-on-shoreline-457882/) | 3936 × 2624 |
-| `assets/landscapes/forest.jpg` | Lukas Hartmann | [Green Leaf Trees / sunlight in a misty forest](https://www.pexels.com/photo/green-leaf-trees-879753/) | 详见来源页面 |
+- **曼哈顿：**照片通过美洲大道 32 号第 21 层的真实窗户拍摄，窗框本身属于摄影画面。该楼为办公楼；本版本不将它标为经过核实的居民楼内部。来源位置为 40.720406, -74.004900。
+- **丹佛：**背景是摄影师标注为 Denver, CO 的真实城市照片，可见丹尼尔斯与费舍尔塔、富国银行中心和共和广场等楼群。前景写字楼窗框由软件单独绘制，最终是「实拍丹佛背景 + 软件窗框」的复合景观。来源没有证明原照片拍自办公室，不能把完整场景描述为未经合成的办公室实拍。2022-09-21 是来源公布日期，不是已核实的快门时间。软件相机位置与朝向是估计值，不是测绘结果。
+- **布拉格：**真实老城广场全景，不再使用虚构的中世纪街景。来源位置为 50.087131, 14.420708。
+- **京都：**真实八坂通清晨与八坂塔；灯笼、屋顶和街道细节保留摄影原貌。来源位置为 34.998180, 135.780092。
+- **富士山：**保留山中湖东侧平野一带的真实视角，来源位置为 35.426739, 138.872791。照片没有生成扩展天空或湖面。
+- **梦莲湖：**真实加拿大班夫国家公园湖景，来源位置为 51.327178, -116.182486。
+- **马尔代夫：**真实艾瑞雅度（Eriyadu）岛海岸，来源位置为 4.589674, 73.414458；不是原版标注的拉穆环礁。
+- **森林：**摄影来源没有足以核实的具体地址。默认北京时间仅为日光模拟参考，不表示照片在北京拍摄。
 
-以上来源页面均标示按 [Pexels License](https://www.pexels.com/license/) 免费使用。Pexels 允许免费使用和修改，鼓励署名；限制出售未修改的照片，以及通过其他图库或壁纸平台单独再分发。完整条款以链接许可为准，摄影许可独立于项目代码的 MIT 许可。
+来源 GPS 不等于完整相机标定。日光设置中的朝向与视野可调整；未取得摄影测量资料的朝向属于估计。
 
-下载地址：
+富士山原图只有 **2055** 个垂直像素，按 16:9 填满时有效裁切约 **3653 × 2055**，因此不能声称所有景观均为原生 4K。其余七张照片的 16:9 有效裁切达到或超过 3840 × 2160；实际细节还取决于拍摄器材、对焦、压缩和显示比例，像素数量不保证每个细节同等锐利。
 
-- 湖景：`https://images.pexels.com/photos/2662116/pexels-photo-2662116.jpeg?auto=compress&cs=tinysrgb&w=2560`
-- 海岸：`https://images.pexels.com/photos/457882/pexels-photo-457882.jpeg?auto=compress&cs=tinysrgb&w=2560`
-- 森林：`https://images.pexels.com/photos/879753/pexels-photo-879753.jpeg?auto=compress&cs=tinysrgb&w=2560`
+所有照片均只有一个拍摄时刻。连续日月方向、曝光和色温变化不等同于真实固定机位的全天摄影，也不能从单张照片恢复全部建筑投影、遮挡和夜间窗灯。
 
-本机 JPEG 为 Pexels CDN 提供的压缩缩放副本，宽 2560 像素，没有运行时远程加载。
+## 程序景观与历史素材
 
-## 研究参考文件
+「云山镜湖」是程序绘制景观，不是摄影，仍按其设置实时更新昼夜。软件绘制的丹佛窗框、界面图标和独立程序代码属于本项目实现。
 
-以下照片保留在 `assets/references/` 用于调研，不作为运行时五时段图层；除上文的富士山日间参考外，未作为新景观生成输入。完整研究见 [ASSET_RESEARCH.md](ASSET_RESEARCH.md)。
+1.2.0 使用的四组、共二十张 AI 时段 PNG，以及原三张 Pexels 运行照片，已移出运行资源并在本机 .test-results/legacy-landscapes/ 备份。该目录被 Git 忽略，不随当前软件发布；旧提交及生成提示词可通过 Git 历史追溯。它们不再用于 1.3.0 的运行景观，旧版本中的生成、扩图或参考衍生说明不适用于本表列出的实拍文件。assets/references/ 中的调研文件也不作为当前运行背景。
 
-| 本机文件 | 作者、来源与许可 |
-| --- | --- |
-| `manhattan-apartment-day.jpg` | Andrea Davis，[Pexels 10812975](https://www.pexels.com/photo/white-and-brown-high-rise-buildings-10812975/)，[Pexels License](https://www.pexels.com/license/)；CDN 压缩缩放副本 |
-| `rothenburg-day.jpg` | Florian Süß，[Pexels 30035565](https://www.pexels.com/photo/quaint-alleyway-in-rothenburg-ob-der-tauber-30035565/)，[Pexels License](https://www.pexels.com/license/)；CDN 压缩缩放副本 |
-| `kyoto-yasaka-evening.jpg` | Rizk Nas，[Pexels 31713582](https://www.pexels.com/photo/scenic-view-of-kyoto-pagoda-at-sunset-31713582/)，[Pexels License](https://www.pexels.com/license/)；CDN 压缩缩放副本 |
-| `fuji-hirano-day-panorama.jpg` | Алексей Чикишев；来源与 [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) 见富士山章节；下载参考文件本身未经修改 |
-| `fuji-hirano-night.jpg` | Jun（Kanagawa, Japan），[Night view of Mt. Fuji](https://commons.wikimedia.org/wiki/File:Night_view_of_Mt._Fuji.jpg)、[作者](https://www.flickr.com/people/77585122@N00)、[CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)；[原 JPEG](https://upload.wikimedia.org/wikipedia/commons/8/83/Night_view_of_Mt._Fuji.jpg) 未修改，仅研究附近东岸夜间照明，未输入生成工具 |
-
-程序绘制的「云山镜湖」、氛围粒子及界面图标为本项目实现。Electron 和其依赖的第三方许可随打包运行时提供。
+更详细的技术取舍见 [ASSET_RESEARCH.md](ASSET_RESEARCH.md)。Electron 及依赖的第三方许可随打包运行时提供。
 

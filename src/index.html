@@ -8,6 +8,7 @@
   <title>数字窗户 · Digital Window</title>
   <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./office-window.css">
 </head>
 <body>
   <main id="window-view" aria-label="数字窗户景观">
@@ -71,7 +72,7 @@
 
       <section id="panel-preferences" role="tabpanel" aria-labelledby="tab-preferences" hidden>
         <p class="section-intro">把画面，调到舒服的样子。</p>
-        <div class="setting-row"><div><label for="motion-toggle">景观动态</label><p>云雾与水纹；关闭后日月照明仍实时变化</p></div><input id="motion-toggle" class="switch" type="checkbox" checked></div>
+        <div class="setting-row"><div><label for="motion-toggle">景观动态</label><p>程序景观与视频；日月光线始终实时变化</p></div><input id="motion-toggle" class="switch" type="checkbox" checked></div>
         <div class="setting-row"><div><label for="frame-toggle">极简窗框</label><p>为风景添一道细致的边界</p></div><input id="frame-toggle" class="switch" type="checkbox"></div>
         <div class="brightness-setting"><div class="range-label"><label for="brightness-slider">景观亮度</label><output id="brightness-value" for="brightness-slider">100%</output></div><input id="brightness-slider" type="range" min="50" max="130" value="100" step="5"></div>
         <div class="keyboard-help"><span class="field-label">快捷键</span><div><kbd>Esc</kbd><p>退出全屏</p></div><div><kbd>F11</kbd><p>切换全屏</p></div><div><kbd>Alt F4</kbd><p>退出应用</p></div></div>

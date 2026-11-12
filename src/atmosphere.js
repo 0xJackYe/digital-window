@@ -8,6 +8,7 @@ export class Atmosphere {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d', { alpha: true });
     this.scene = 'lake';
+    this.photoReal = false;
     this.motion = true;
     this.solar = { daylight: 1, twilight: 0, altitude: 40, phase: 'day' };
     this.celestial = null; this.lighting = null; this.lastDraw = null;
@@ -32,20 +33,21 @@ export class Atmosphere {
     this.ctx.setTransform(scale, 0, 0, scale, 0, 0);
     this.draw(this.lastTime || 0);
   }
-  update({ scene = this.scene, solar = this.solar, motion = this.motion, celestial = this.celestial, lighting = this.lighting } = {}) {
+  update({ scene = this.scene, solar = this.solar, motion = this.motion, celestial = this.celestial, lighting = this.lighting, photoReal = this.photoReal } = {}) {
     this.scene = scene;
+    this.photoReal = photoReal === true;
     this.solar = solar;
     this.celestial = celestial; this.lighting = lighting;
     this.motion = motion;
-    if (!motion) { cancelAnimationFrame(this.frame); this.frame = null; this.draw(0); }
+    if (!motion || this.photoReal) { cancelAnimationFrame(this.frame); this.frame = null; this.draw(0); }
     else this.schedule();
   }
   schedule() {
-    if (!this.frame && this.motion && !document.hidden) this.frame = requestAnimationFrame(this.loop);
+    if (!this.frame && this.motion && !this.photoReal && !document.hidden) this.frame = requestAnimationFrame(this.loop);
   }
   loop(now) {
     this.frame = null;
-    if (document.hidden || !this.motion) return;
+    if (document.hidden || !this.motion || this.photoReal) return;
     if (!this.lastFrame || now - this.lastFrame >= 1000 / 24) {
       this.lastFrame = now;
       this.lastTime = now / 1000;
@@ -55,7 +57,7 @@ export class Atmosphere {
   }
   draw(time) {
     const c = this.ctx, w = this.width, h = this.height;
-    this.lastDraw = { scene: this.scene, time, sunDrawn: false, moonDrawn: false, glintSources: [], terrainLight: [] };
+    this.lastDraw = { scene: this.scene, time, photoReal: this.photoReal, sunDrawn: false, moonDrawn: false, glintSources: [], terrainLight: [] };
     c.clearRect(0, 0, w, h);
     if (this.scene === 'procedural') this.drawLandscape(time);
     else this.drawPhotoAtmosphere(time);
@@ -73,6 +75,7 @@ export class Atmosphere {
   }
   drawPhotoAtmosphere(time) {
     const { ctx: c, width: w, height: h, solar: s } = this;
+    if (this.photoReal) return;
     if (['manhattan', 'medieval', 'kyoto', 'fuji'].includes(this.scene)) {
       // Registered photographic light states supply their own lamps, stars and
       // shadows. Keep the animated atmosphere restrained and out of the city.

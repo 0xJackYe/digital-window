@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "retrievedDate": "2026-11-12",
+  "kind": "original-photography",
+  "images": [
+    {
+      "id": "manhattan",
+      "file": "assets/landscapes/photos/manhattan.jpg",
+      "title": "New York City 2.jpg",
+      "author": "Davidwbarratt",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:New_York_City_2.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e0/New_York_City_2.jpg",
+      "nativeDimensions": {
+        "width": 4048,
+        "height": 3036
+      },
+      "description": "New York City Skyline from a window at 32 Avenue of the Americas on the 21st floor.",
+      "dateTimeOriginal": "Taken on 10 January 2017",
+      "gpsLatitude": "40.720406",
+      "gpsLongitude": "-74.004900",
+      "sha256": "38d4230168682b9b2f7a26c8130bb0cb786269796ab9f5b4d52c71da2e708db9",
+      "bytes": 3659860,
+      "modifications": "Original downloaded bytes; no AI generation, upscaling, pixel editing, or resampling. Application crops to fill the display and applies optional continuous lighting at runtime."
+    },
+    {
+      "id": "medieval",
+      "file": "assets/landscapes/photos/medieval.jpg",
+      "title": "Old Town Square - panorama.jpg",
+      "author": "Tiia Monto",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Old_Town_Square_-_panorama.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/4/47/Old_Town_Square_-_panorama.jpg",
+      "nativeDimensions": {
+        "width": 10919,
+        "height": 3659
+      },
+      "description": "Old Town Square in Prague.",
+      "dateTimeOriginal": "2014-07-31 17:51:14",
+      "gpsLatitude": "50.087131",
+      "gpsLongitude": "14.420708",
+      "sha256": "91a7da8cc1426ec3f6d630929d3a2407e9b6671d2d30d658de4b169a2196c572",
+      "bytes": 9060411,
+      "modifications": "Original downloaded bytes; no AI generation, upscaling, pixel editing, or resampling. Application crops to fill the display and applies optional continuous lighting at runtime."
+    },
+    {
+      "id": "kyoto",
+      "file": "assets/landscapes/photos/kyoto.jpg",
+      "title": "Yasaka-dori early morning with street lanterns and the Tower of Yasaka (Hokan-ji Temple), Kyoto, Japan.jpg",
+      "author": "Basile Morin",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Yasaka-dori_early_morning_with_street_lanterns_and_the_Tower_of_Yasaka_(Hokan-ji_Temple),_Kyoto,_Japan.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Yasaka-dori_early_morning_with_street_lanterns_and_the_Tower_of_Yasaka_%28Hokan-ji_Temple%29%2C_Kyoto%2C_Japan.jpg",
+      "nativeDimensions": {
+        "width": 5550,
+        "height": 3700
+      },
+      "description": "Yasaka-dori, early morning with street lanterns and the Tower of Yasaka (Hokan-ji Temple), 388 Yasaka Kamimachi, Higashiyama-ku, Kyoto, Japan. Important cultural heritage of Kyoto, Hokan-ji is a 46 m (151 ft) high, 5 storey pagoda with a tiled roof that was founded in the 6th century.",
+      "dateTimeOriginal": "12 June 2019 05:24:20",
+      "gpsLatitude": "34.998180",
+      "gpsLongitude": "135.780092",
+      "sha256": "805efd0627424577d111a6ff3751f0f5a965bfa69e29d82457c11a0577f8a94b",
+      "bytes": 8012393,
+      "modifications": "Original downloaded bytes; no AI generation, upscaling, pixel editing, or resampling. Application crops to fill the display and applies optional continuous lighting at runtime."
+    },
+    {
+      "id": "fuji",
+      "file": "assets/landscapes/photos/fuji.jpg",
+      "title": "Hirano, Yamanakako, Minamitsuru District, Yamanashi Prefecture 401-0502, Japan - panoramio (78).jpg",
+      "author": "Алексей Чикишев",
+      "license": "CC BY 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hirano,_Yamanakako,_Minamitsuru_District,_Yamanashi_Prefecture_401-0502,_Japan_-_panoramio_(78).jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/3/35/Hirano%2C_Yamanakako%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0502%2C_Japan_-_panoramio_%2878%29.jpg",
+      "nativeDimensions": {
+        "width": 6660,
+        "height": 2055
+      },
+      "description": "Hirano, Yamanakako, Minamitsuru District, Yamanashi Prefecture 401-0502, Japan",
+      "dateTimeOriginal": "Taken on 26 April 2016",
+      "gpsLatitude": "35.426739",
+      "gpsLongitude": "138.872791",
+      "sha256": "f8f440f7886eed73a7d867409a9321c3bfaf0e73a56c64b1b6049486ea2f0a76",
+      "bytes": 2146572,
+      "modifications": "Original downloaded bytes; no AI generation, upscaling, pixel editing, or resampling. Application crops to fill the display and applies optional continuous lighting at runtime."
+    },
+    {
+      "id": "lake",
+      "file": "assets/landscapes/photos/lake.jpg",
+      "title": "Moraine Lake panorama.jpg",
+      "author": "Adam Bishop",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Moraine_Lake_panorama.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Moraine_Lake_panorama.jpg",
+      "nativeDimensions": {
+        "width": 7759,
+        "height": 3512
+      },
+      "description": "Panorama of Moraine Lake, Banff National Park",
+      "dateTimeOriginal": "2022-08-26 12:29:15",
+      "gpsLatitude": "51.327178",
+      "gpsLongitude": "-116.182486",
+      "sha256": "b69650e6dd7d71852b89e621aec2a3cc85aa27abd96e04377f88bb085be4d884",
+      "bytes": 7051819,
+      "modifications": "Original downloaded bytes; no AI generation, upscaling, pixel editing, or resampling. Application crops to fill the display and applies optional continuous lighting at runtime."
+    },
+    {
+      "id": "coast",
+      "file": "assets/landscapes/photos/coast.jpg",
+      "title": "Palm tree and pier. Eriyadu, Maldives.jpg",
+      "author": "Ввласенко",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Palm_tree_and_pier._Eriyadu,_Maldives.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Palm_tree_and_pier._Eriyadu%2C_Maldives.jpg",
+      "nativeDimensions": {
+        "width": 5887,
+        "height": 3929
+      },
+      "description": "Palm tree and pier. Eriyadu, Maldives",
+      "dateTimeOriginal": "2022-02-28 07:41:05",
+      "gpsLatitude": "4.589674",
+      "gpsLongitude": "73.414458",
+      "sha256": "d3985c8e914db477262a46825c6d5f0b2e6767d3ba01478554135ba00f6cd154",
+      "bytes": 18605345,
+      "modifications": "Original downloaded bytes; no AI generation, upscaling, pixel editing, or resampling. Application crops to fill the display and applies optional continuous lighting at runtime."
+    },
+    {
+      "id": "forest",
+      "file": "assets/landscapes/photos/forest.jpg",
+      "title": "Forest sunrise.jpg",
+      "author": "Peter Heeling",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Forest_sunrise.jpg",
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/9/90/Forest_sunrise.jpg",
+      "nativeDimensions": {
+        "width": 4550,
+        "height": 2879
+      },
+      "description": "fog mist trees forest morning green foliage light beam landscape tree forest landscape mystery autumn mysterious outdoor lighting woods fall shadow scenic fairytale ethereal dreamy",
+      "dateTimeOriginal": "2015-10-05",
+      "gpsLatitude": "",
+      "gpsLongitude": "",
+      "sha256": "6cf0d603785f1dbc9e461023f12c7d5f424684339c9db9ffb1e3732cc13a05e9",
+      "bytes": 15361074,
+      "modifications": "Original downloaded bytes; no AI generation, upscaling, pixel editing, or resampling. Application crops to fill the display and applies optional continuous lighting at runtime."
+    }
+  ]
+}

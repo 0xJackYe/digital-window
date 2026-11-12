@@ -41,7 +41,17 @@ export class SceneView {
     this.pendingVideo?.abort();
     clearTimeout(this.transitionTimer); this.sceneTransitioning = true;
     const deck = document.createElement('div'); deck.className = 'scene-deck'; deck.dataset.scene = scene.id;
+    if (scene.photoReal) deck.classList.add('photographic-scene');
     const photo = document.createElement('div'); photo.className = 'scene-photo'; deck.append(photo);
+    if (scene.interior === 'office') {
+      // The real city photograph is unchanged; the separately rendered window
+      // foreground supplies the requested view from inside an office.
+      const interior = document.createElement('div'); interior.className = 'office-interior'; interior.setAttribute('aria-hidden', 'true');
+      for (const part of ['office-reveal', 'office-mullion', 'office-sill', 'office-glass']) {
+        const element = document.createElement('div'); element.className = part; interior.append(element);
+      }
+      deck.append(interior);
+    }
     const images = [];
     try {
       if (scene.variants) {
@@ -150,7 +160,7 @@ export class SceneView {
   }
   setMotion(enabled) {
     this.motion = enabled;
-    this.current?.classList.toggle('motion', enabled && this.scene.kind === '动态' && !this.scene.variants && !this.scene.isVideo);
+    this.current?.classList.toggle('motion', enabled && this.scene.kind === '动态' && !this.scene.photoReal && !this.scene.variants && !this.scene.isVideo);
     const video = this.current?.querySelector('video');
     if (video) {
       if (enabled && !document.hidden) video.play().catch(() => {}); else video.pause();

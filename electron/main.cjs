@@ -64,6 +64,8 @@ function getWindowState() {
   const bounds = mainWindow.getBounds();
   return {
     fullscreen: mainWindow.isFullScreen(),
+    visible: mainWindow.isVisible(),
+    minimized: mainWindow.isMinimized(),
     bounds,
     displayBounds: screen.getDisplayMatching(bounds).bounds,
     platform: process.platform,
@@ -266,6 +268,7 @@ async function runLightingTest() {
   try {
     await waitRendererReady();
     checks.push(...await mainWindow.webContents.executeJavaScript(`(${lightingBrowserFlows.toString()})()`, true));
+    checks.push(...await verifyPhotographicQuality());
     if (process.argv.includes('--disable-webgl')) {
       const renderer = await mainWindow.webContents.executeJavaScript(`window.__digitalWindowSmoke().relighting?.renderer`);
       checks.push({ name: 'forced WebGL-disabled launch uses the Canvas fallback', passed: renderer === 'canvas', renderer });
@@ -281,6 +284,53 @@ async function runLightingTest() {
     checks.push({ name: 'lighting tests restore complete native fullscreen coverage', passed: restored.fullscreen && Object.keys(restored.displayBounds).every((key) => restored.bounds[key] === restored.displayBounds[key]) });
     finishInstrumentedTest('DIGITAL_WINDOW_LIGHTING', checks);
   } catch (error) { finishInstrumentedTest('DIGITAL_WINDOW_LIGHTING', checks, error); }
+}
+
+async function verifyPhotographicQuality() {
+  const checks = [];
+  // Exercise a real high-DPI Chromium framebuffer, not only a size helper.
+  const emulate4K = () => mainWindow.webContents.enableDeviceEmulation({ screenPosition: 'desktop', screenSize: { width: 1920, height: 1080 }, viewPosition: { x: 0, y: 0 }, viewSize: { width: 1920, height: 1080 }, deviceScaleFactor: 2, scale: 1 });
+  emulate4K();
+  await testDelay(400);
+  try {
+    for (const sceneId of ['denver', 'manhattan', 'medieval', 'kyoto', 'fuji', 'lake', 'coast', 'forest']) {
+      const details = await mainWindow.webContents.executeJavaScript(`(${inspectPhotographicScene.toString()})(${JSON.stringify(sceneId)})`, true);
+      checks.push({ name: `${sceneId} preserves real photo detail at 4K without legacy proxy shadows or duplicate filters`, passed: details.ready && details.photoReal && details.sourceWidth >= 3840 && details.outputWidth === 3840 && details.outputHeight === 2160 && Math.abs(details.dpr - 2) < .001 && details.layers === 0 && details.filter === 'none' && details.animation === 'none' && details.geometryVersion === 'photographic-preserved-1.0' && details.noAtmosphereOverlay, ...details });
+      if (sceneId === 'denver') checks.push({ name: 'Denver displays an office-window foreground and follows Mountain Time', passed: details.officeForeground && details.timeZone === 'America/Denver', officeForeground: details.officeForeground, timeZone: details.timeZone });
+      if (!process.argv.includes('--disable-webgl')) {
+        const output = path.resolve(process.cwd(), '.test-results', `${app.isPackaged ? 'packaged' : 'source'}-quality-${sceneId}.png`);
+        fs.mkdirSync(path.dirname(output), { recursive: true });
+        // Pixel dimensions above are verified on the actual 4K framebuffer.
+        // Separately capture the complete native UI, including the foreground,
+        // at this monitor's own dimensions for visual inspection.
+        mainWindow.webContents.disableDeviceEmulation();
+        await testDelay(250);
+        fs.writeFileSync(output, (await mainWindow.webContents.capturePage()).toPNG());
+        emulate4K();
+        await testDelay(250);
+      }
+    }
+  } finally {
+    mainWindow.webContents.disableDeviceEmulation();
+    await testDelay(300);
+  }
+  return checks;
+}
+
+async function inspectPhotographicScene(sceneId) {
+  const byId = (id) => document.getElementById(id), ui = () => window.__digitalWindowSmoke();
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  byId('tab-landscapes').click();
+  document.querySelector(`.landscape-card[data-scene="${sceneId}"]`).click();
+  const deadline = Date.now() + 12000;
+  while (Date.now() < deadline && (ui().sceneId !== sceneId || !ui().imageLoaded || ui().transitioning)) await delay(80);
+  byId('tab-daylight').click();
+  byId('scene-timezone-toggle').checked = true; byId('scene-timezone-toggle').dispatchEvent(new Event('change', { bubbles: true }));
+  byId('time-slider').value = 720; byId('time-slider').dispatchEvent(new Event('input', { bubbles: true }));
+  byId('close-panel').click();
+  await delay(350);
+  const state = ui(), deck = document.querySelector(`.scene-deck[data-scene="${sceneId}"].is-visible`), photo = deck?.querySelector('.scene-photo');
+  return { ready: state.ready && state.sceneId === sceneId, photoReal: state.photoReal, sourceWidth: state.relighting.sourceWidth, sourceHeight: state.relighting.sourceHeight, outputWidth: state.relighting.width, outputHeight: state.relighting.height, dpr: devicePixelRatio, renderer: state.relighting.renderer, layers: state.layerImages.length, filter: photo && getComputedStyle(photo).filter, animation: photo && getComputedStyle(photo).animationName, geometryVersion: state.relighting.geometryVersion, noAtmosphereOverlay: state.atmosphere.photoReal && !state.atmosphere.sunDrawn && !state.atmosphere.moonDrawn && state.atmosphere.glintSources.length === 0, officeForeground: Boolean(deck?.querySelector('.office-interior .office-sill') && deck?.querySelector('.office-interior .office-mullion')), timeZone: state.timeZone };
 }
 
 async function lightingBrowserFlows() {
@@ -389,13 +439,21 @@ async function runSoftwareTest() {
       return checks;
     })()`, true));
     mainWindow.minimize();
-    await testDelay(450);
-    const videoPaused = await mainWindow.webContents.executeJavaScript(`document.hidden && document.getElementById('scene-video').paused`);
-    checks.push({ name: 'minimizing pauses video', passed: videoPaused });
+    let pauseState;
+    for (let attempt = 0; attempt < 30; attempt++) {
+      await testDelay(100);
+      pauseState = await mainWindow.webContents.executeJavaScript(`({ hidden: document.hidden, paused: document.getElementById('scene-video').paused })`);
+      if (mainWindow.isMinimized() && pauseState.paused) break;
+    }
+    checks.push({ name: 'minimizing pauses video', passed: mainWindow.isMinimized() && pauseState.paused, ...pauseState, minimized: mainWindow.isMinimized() });
     mainWindow.restore(); mainWindow.show(); mainWindow.focus();
-    await testDelay(650);
-    const videoResumed = await mainWindow.webContents.executeJavaScript(`!document.hidden && !document.getElementById('scene-video').paused`);
-    checks.push({ name: 'restoring resumes enabled video', passed: videoResumed });
+    let resumeState;
+    for (let attempt = 0; attempt < 30; attempt++) {
+      await testDelay(100);
+      resumeState = await mainWindow.webContents.executeJavaScript(`({ hidden: document.hidden, paused: document.getElementById('scene-video').paused })`);
+      if (!resumeState.hidden && !resumeState.paused) break;
+    }
+    checks.push({ name: 'restoring resumes enabled video', passed: !resumeState.hidden && !resumeState.paused, ...resumeState });
     await mainWindow.webContents.executeJavaScript(`localStorage.setItem('digital-window.settings.v2', '{broken-json')`);
     const recoveredSettings = await reloadForTest('manhattan');
     checks.push({ name: 'corrupt saved preferences recover to a working default scene', passed: recoveredSettings.imageLoaded && recoveredSettings.timeZone === 'America/New_York' });
@@ -438,19 +496,19 @@ async function softwareBrowserFlows() {
     return ui().sceneId === sceneId && ui().imageLoaded && deck?.dataset.scene === sceneId && Number(getComputedStyle(deck).opacity) > 0.99;
   };
   byId('menu-button').click(); document.querySelector('#main-menu [data-panel="landscapes"]').click();
-  for (const sceneId of ['manhattan', 'medieval', 'kyoto', 'fuji', 'lake', 'coast', 'forest', 'procedural']) {
+  for (const sceneId of ['manhattan', 'denver', 'medieval', 'kyoto', 'fuji', 'lake', 'coast', 'forest', 'procedural']) {
     document.querySelector('.landscape-card[data-scene="' + sceneId + '"]').click();
     const loaded = await waitFor(() => sceneSettled(sceneId), 12000);
     check('all-scenes: ' + sceneId + ' loads', loaded && ui().canvasReady && ui().hasSolar, { sceneId: ui().sceneId });
   }
   for (const sceneId of ['lake', 'manhattan', 'forest', 'fuji', 'kyoto']) document.querySelector('.landscape-card[data-scene="' + sceneId + '"]').click();
   await waitFor(() => sceneSettled('kyoto'), 12000); await delay(300);
-  check('rapid scene switches keep the final request', ui().sceneId === 'kyoto' && document.querySelectorAll('#scene-image').length === 1 && document.querySelectorAll('#scene-layers').length === 1 && document.querySelectorAll('.scene-deck').length === 1);
+  check('rapid scene switches keep the final request', ui().sceneId === 'kyoto' && document.querySelectorAll('#scene-image').length === 1 && document.querySelectorAll('#scene-layers').length === 0 && document.querySelectorAll('.scene-deck').length === 1);
 
   const { SceneView } = await import(new URL('./scene-view.js', location.href).href);
   const host = document.createElement('div'); host.style.cssText = 'position:fixed;left:-20000px;width:128px;height:80px'; document.body.append(host);
   const isolated = new SceneView(host);
-  await isolated.show({ id: 'test-valid', image: '../assets/landscapes/forest.jpg', kind: '静态' });
+  await isolated.show({ id: 'test-valid', image: '../assets/landscapes/photos/forest.jpg', kind: '静态' });
   const retained = isolated.current;
   let rejected = false;
   try { await isolated.show({ id: 'test-corrupt', image: 'data:image/png;base64,YmFk', kind: '静态' }); } catch { rejected = true; }
@@ -566,7 +624,7 @@ async function runRendererIntegration() {
     document.querySelector('#main-menu [data-panel="landscapes"]').click();
     check('settings opens while dots remain available', !byId('settings-panel').hidden && !byId('panel-landscapes').hidden && !byId('window-view').inert && byId('menu-button').getClientRects().length > 0);
     const phases = ['dawn', 'morning', 'noon', 'evening', 'night'];
-    const sceneZones = { manhattan: 'America/New_York', medieval: 'Europe/Prague', kyoto: 'Asia/Tokyo', fuji: 'Asia/Tokyo' };
+    const sceneZones = { manhattan: 'America/New_York', denver: 'America/Denver', medieval: 'Europe/Prague', kyoto: 'Asia/Tokyo', fuji: 'Asia/Tokyo' };
     for (const [sceneId, zone] of Object.entries(sceneZones)) {
       byId('tab-landscapes').click();
       document.querySelector('.landscape-card[data-scene="' + sceneId + '"]').click();
@@ -576,7 +634,7 @@ async function runRendererIntegration() {
       }, 10000);
       const scene = diagnostic();
       check(sceneId + ' follows its own time zone', scene.sceneId === sceneId && scene.timeZone === zone && byId('scene-timezone-toggle').checked, { timeZone: scene.timeZone });
-      check(sceneId + ' decodes all five lighting images', scene.layerImages?.length === 5 && phases.every(phase => scene.layerImages.some(image => image.phase === phase && image.loaded)), { images: scene.layerImages });
+      check(sceneId + ' decodes its full-resolution real photograph', scene.photoReal && scene.imageLoaded && scene.layerImages?.length === 0 && scene.relighting?.sourceWidth >= 3840, { sourceWidth: scene.relighting?.sourceWidth, sourceHeight: scene.relighting?.sourceHeight });
       byId('tab-daylight').click();
       for (const phase of phases) {
         document.querySelector('#phase-presets [data-preview-phase="' + phase + '"]').click();
@@ -586,9 +644,7 @@ async function runRendererIntegration() {
         await new Promise(resolve => setTimeout(resolve, 80));
         const current = diagnostic();
         const weight = Number(current.weights?.[phase] || 0);
-        const layer = document.querySelector('#scene-layers img[data-phase="' + phase + '"]');
-        const opacity = layer ? Number(getComputedStyle(layer).opacity) : 0;
-        check(sceneId + ' ' + phase + ' preset changes actual layer', !byId('realtime-toggle').checked && weight > 0.8 && opacity > 0.75 && current.layerImages.every(image => image.loaded), { weight, opacity, phase: current.phase });
+        check(sceneId + ' ' + phase + ' preset updates continuous photographic lighting', !byId('realtime-toggle').checked && weight > 0.8 && current.imageLoaded && current.relighting.ready && current.relighting.utcMillis === current.lighting.utcMillis && current.relighting.pixels.length > 0, { weight, phase: current.phase, pixelHash: current.relighting.pixelHash });
       }
       change('realtime-toggle', true);
       check(sceneId + ' returns to live solar lighting', byId('realtime-toggle').checked && diagnostic().timeZone === zone);
@@ -779,10 +835,9 @@ function createWindow() {
     publishWindowState();
   });
   mainWindow.on('resize', publishWindowState);
-  mainWindow.on('show', updateSleepBlocker);
-  mainWindow.on('hide', updateSleepBlocker);
-  mainWindow.on('minimize', updateSleepBlocker);
-  mainWindow.on('restore', updateSleepBlocker);
+  for (const event of ['show', 'hide', 'minimize', 'restore']) mainWindow.on(event, () => {
+    updateSleepBlocker(); publishWindowState();
+  });
   mainWindow.on('closed', () => {
     mainWindow = null;
     updateSleepBlocker();

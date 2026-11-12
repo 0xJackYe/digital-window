@@ -35,8 +35,8 @@ const settings = loadSettings();
 const sceneView = new SceneView($('scene-base'));
 const atmosphere = new Atmosphere($('atmosphere'));
 let activeScene = scenes.find((scene) => scene.id === settings.scene) || scenes[0];
-let solar, blend, celestial, lighting, camera, utcMillis, currentPanel = null, currentFullscreen = false, idleTimer, toastTimer, closeTimer, previousFocus, customURL, sceneRequest = 0;
-const relighting = new RelightingRenderer(() => ({ lighting, camera, utcMillis, weights: sceneView.displayWeights, motion: settings.motion, animating: sceneView.transitioning }));
+let solar, blend, celestial, lighting, camera, utcMillis, currentPanel = null, currentFullscreen = false, desktopVisible = true, idleTimer, toastTimer, closeTimer, previousFocus, customURL, sceneRequest = 0;
+const relighting = new RelightingRenderer(() => ({ lighting, camera, utcMillis, weights: sceneView.displayWeights, visible: desktopVisible, motion: settings.motion && desktopVisible, animating: sceneView.transitioning }));
 const presetCache = new Map();
 function currentCity() {
   if (settings.sceneTimezone) return CITIES.find((city) => city.id === activeScene.location) || CITIES[0];
@@ -88,7 +88,7 @@ function buildCities() {
   const city = currentCity(); $('city-select').value = city.id;
   $('scene-timezone-toggle').checked = settings.sceneTimezone;
   const sceneCity = CITIES.find((item) => item.id === activeScene.location);
-  $('scene-location-label').textContent = sceneCity?.name || '所选位置';
+  $('scene-location-label').textContent = (sceneCity?.name || '所选位置') + (activeScene.locationUnspecified ? '（日光参考）' : '');
   $('city-coordinates').textContent = `${city.zone} · ${Math.abs(city.latitude).toFixed(2)}°${city.latitude >= 0 ? 'N' : 'S'} · ${Math.abs(city.longitude).toFixed(2)}°${city.longitude >= 0 ? 'E' : 'W'}`;
   $('custom-zone').value = city.zone; $('custom-lat').value = city.latitude; $('custom-lon').value = city.longitude;
 }
@@ -113,7 +113,7 @@ async function selectScene(id, persist = true) {
   try {
     if (!await sceneView.show(scene) || request !== sceneRequest) return false;
     activeScene = scene; settings.scene = scene.id;
-    buildCities(); relighting.setScene(scene, sceneView.current); updateSolar(); sceneView.setMotion(settings.motion); renderSceneCards();
+    buildCities(); relighting.setScene(scene, sceneView.current); updateSolar(); sceneView.setMotion(settings.motion && desktopVisible); renderSceneCards();
     if (persist) save();
     return true;
   } catch { if (request === sceneRequest) toast('这片景观未能加载，请重新选择。'); return false; }
@@ -149,7 +149,10 @@ function updateSolar() {
   const warmth = solar.twilight * .17, night = (1 - solar.daylight) * .4;
   document.documentElement.style.setProperty('--light-overlay', warmth > .07 ? `rgba(199,136,104,${warmth})` : `rgba(38,63,112,${night})`);
   sceneView.setWeights(blend.weights);
-  atmosphere.update({ scene: activeScene.id, solar, celestial, lighting, motion: settings.motion && activeScene.kind !== '静态' });
+  atmosphere.update({ scene: activeScene.id, solar, celestial, lighting, photoReal: Boolean(activeScene.photoReal), motion: settings.motion && desktopVisible && activeScene.kind !== '静态' });
+  const frameLight = .30 + solar.daylight * .70 + lighting.moon.strength * .35;
+  document.documentElement.style.setProperty('--office-frame-light', String(frameLight));
+  document.documentElement.style.setProperty('--office-light-side', `${50 + lighting.sun.direction[0] * 30}%`);
   relighting.update();
 }
 function presetMinutes() {
@@ -172,10 +175,15 @@ function applyPreferences() {
   $('motion-toggle').checked = settings.motion; $('frame-toggle').checked = settings.frame; $('window-frame').hidden = !settings.frame;
   $('brightness-slider').value = settings.brightness; $('brightness-value').textContent = `${settings.brightness}%`;
   document.documentElement.style.setProperty('--user-brightness', String(settings.brightness / 100));
-  sceneView.setMotion(settings.motion); updateSolar(); wake();
+  sceneView.setMotion(settings.motion && desktopVisible); updateSolar(); wake();
 }
 function setFullscreenState(state) {
   const leaving = currentFullscreen && !state.fullscreen; currentFullscreen = Boolean(state.fullscreen);
+  const wasVisible = desktopVisible;
+  desktopVisible = state.visible !== false && state.minimized !== true;
+  sceneView.setMotion(settings.motion && desktopVisible);
+  if (!desktopVisible) atmosphere.update({ motion: false });
+  else if (!wasVisible) updateSolar();
   document.body.classList.toggle('fullscreen', currentFullscreen);
   $('fullscreen-label').textContent = currentFullscreen ? '退出全屏' : '进入全屏';
   if (leaving) { closePanel(false); closeMenu(); $('menu-button').focus(); }
@@ -263,7 +271,7 @@ for (const [key, id] of [['motion', 'motion-toggle'], ['frame', 'frame-toggle']]
 $('brightness-slider').addEventListener('input', (event) => { settings.brightness = Number(event.target.value); applyPreferences(); }); $('brightness-slider').addEventListener('change', save);
 $('view-azimuth').addEventListener('input', (event) => { settings.bearings[activeScene.id] = Number(event.target.value); updateSolar(); }); $('view-azimuth').addEventListener('change', save);
 $('import-button').addEventListener('click', () => $('media-input').click()); $('media-input').addEventListener('change', (event) => { void importMedia(event.target.files[0]); });
-document.addEventListener('visibilitychange', () => sceneView.setMotion(settings.motion));
+document.addEventListener('visibilitychange', () => sceneView.setMotion(settings.motion && desktopVisible));
 document.addEventListener('pointermove', wake, { passive: true }); document.addEventListener('pointerdown', wake, { passive: true });
 document.addEventListener('click', (event) => { if (!$('main-menu').hidden && !event.target.closest('#main-menu, #menu-button')) closeMenu(); });
 document.addEventListener('fullscreenchange', () => { if (!window.digitalWindow) setFullscreenState({ fullscreen: Boolean(document.fullscreenElement) }); });
@@ -306,7 +314,7 @@ if (window.digitalWindow) {
   window.digitalWindow.getWindowState().then(setFullscreenState).catch(() => {}); window.digitalWindow.onWindowState(setFullscreenState);
 }
 window.addEventListener('resize', updateSolar);
-setInterval(() => { if (!document.hidden) updateSolar(); }, 250);
+setInterval(() => { if (!document.hidden && desktopVisible) updateSolar(); }, 250);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) updateSolar(); });
-window.__digitalWindowSmoke = () => ({ ready: Boolean(sceneView.ready && solar && relighting.ready), sceneId: activeScene.id, timeZone: currentCity().zone, sceneCount: scenes.length, hasSolar: Number.isFinite(solar?.altitude), canvasReady: atmosphere.ready, phase: blend?.phase, weights: blend?.weights, lighting, celestial, relighting: relighting.diagnostics(), atmosphere: atmosphere.lastDraw, locationSource: settings.sceneTimezone ? 'scene' : 'override', visibleMainButtons: [...$('window-view').querySelectorAll('button')].filter((button) => button.getClientRects().length).map((button) => button.id), ...sceneView.diagnostics() });
+window.__digitalWindowSmoke = () => ({ ready: Boolean(sceneView.ready && solar && relighting.ready), sceneId: activeScene.id, timeZone: currentCity().zone, sceneCount: scenes.length, photoReal: Boolean(activeScene.photoReal), hasSolar: Number.isFinite(solar?.altitude), canvasReady: atmosphere.ready, phase: blend?.phase, weights: blend?.weights, lighting, celestial, relighting: relighting.diagnostics(), atmosphere: atmosphere.lastDraw, locationSource: settings.sceneTimezone ? 'scene' : 'override', visibleMainButtons: [...$('window-view').querySelectorAll('button')].filter((button) => button.getClientRects().length).map((button) => button.id), ...sceneView.diagnostics() });
 wake();

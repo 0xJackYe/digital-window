@@ -12,3 +12,4 @@
 @media(max-height:720px){.settings-panel{top:68px;bottom:14px}.panel-head{padding-top:20px;padding-bottom:15px}.panel-content{padding-bottom:19px}.section-intro{margin:18px 0 17px}.setting-row{padding-top:15px;padding-bottom:15px}.location-row{padding-top:0}.city-field{padding-top:17px;padding-bottom:15px}.sun-card{min-height:100px;padding:16px}.panel-footer{padding-top:11px;padding-bottom:11px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 .relighting-canvas{position:absolute;inset:0;display:block;width:100%;height:100%;pointer-events:none}.graded-scene.relit:after{display:none}
+.graded-scene.relit .scene-photo{filter:none;transition:none}.photo-real .scene-photo{filter:none;animation:none!important;transform:none!important}.photo-real:after{display:none}

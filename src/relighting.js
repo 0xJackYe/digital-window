@@ -15,9 +15,10 @@ precision mediump float;
 varying vec2 vUv;
 uniform sampler2D uDawn,uMorning,uNoon,uEvening,uNight,uGeometry,uMaterial;
 uniform vec4 uWeights;
-uniform float uNightWeight,uHasPhases,uExposure,uNightFactor,uTime,uHorizon,uSunGain,uMoonGain,uMoonPhase,uMoonIllumination,uMoonAngle,uMoonRadius,uSunVisibility,uMoonVisibility,uMotion;
+uniform float uNightWeight,uHasPhases,uExposure,uNightFactor,uTime,uHorizon,uSunGain,uMoonGain,uMoonPhase,uMoonIllumination,uMoonAngle,uMoonRadius,uSunVisibility,uMoonVisibility,uMotion,uPhotoReal;
 uniform vec2 uCrop,uTanFov;
 uniform vec3 uSunDirection,uMoonDirection,uSunColor,uMoonColor,uAmbientColor;
+uniform vec3 uPhotoBaseTint,uPhotoSunTint,uPhotoMoonTint;
 vec2 imageUv(vec2 uv){return (uv-.5)*uCrop+.5;}
 vec3 rayAt(vec2 uv){return normalize(vec3((uv.x-.5)*2.*uTanFov.x,(uHorizon-uv.y)*2.*uTanFov.y,1.));}
 vec3 pointAt(vec2 uv,float z){return vec3((uv.x-.5)*2.*uTanFov.x*z,(uHorizon-uv.y)*2.*uTanFov.y*z,z);}
@@ -61,12 +62,24 @@ vec3 moonDisc(vec3 ray,vec3 direction,float sky){
 }
 void main(){
   vec2 uv=imageUv(vUv);
-  vec4 geom=texture2D(uGeometry,uv),mat=texture2D(uMaterial,uv);
-  vec3 normal=normalize(geom.rgb*2.-1.);
-  float sky=mat.r,water=mat.g,roughness=mat.b;
   vec3 dawn=texture2D(uDawn,uv).rgb,morning=texture2D(uMorning,uv).rgb;
   vec3 noon=texture2D(uNoon,uv).rgb,evening=texture2D(uEvening,uv).rgb,night=texture2D(uNight,uv).rgb;
   vec3 source=dawn*uWeights.x+morning*uWeights.y+noon*uWeights.z+evening*uWeights.w+night*uNightWeight;
+  if(uPhotoReal>.5){
+    // A real photograph already contains the scene's illumination. Preserve
+    // its architecture and texture; never apply another image's proxy shadows
+    // or add a second photographed Sun/Moon. This gentle grade is continuous,
+    // but deliberately does not claim to reconstruct unobserved geometry.
+    vec3 ray=rayAt(vUv);
+    float sunFacing=pow(max(0.,dot(ray,uSunDirection)),3.);
+    float moonFacing=pow(max(0.,dot(ray,uMoonDirection)),3.);
+    vec3 response=uPhotoBaseTint+uPhotoSunTint*sunFacing+uPhotoMoonTint*moonFacing;
+    gl_FragColor=vec4(clamp(source*response,0.,1.),1.);
+    return;
+  }
+  vec4 geom=texture2D(uGeometry,uv),mat=texture2D(uMaterial,uv);
+  vec3 normal=normalize(geom.rgb*2.-1.);
+  float sky=mat.r,water=mat.g,roughness=mat.b;
   // The five photos supply color, sky and lamps; lighting within every interval
   // is continuously evaluated from Sun/Moon vectors and surface orientation.
   vec3 color=pow(max(source,vec3(.001)),vec3(2.2));
@@ -110,6 +123,35 @@ export function cameraForScene(scene, bearing, aspect = window.innerWidth / wind
   return { viewAzimuth: bearing ?? scene.camera?.azimuth ?? 0, fieldOfView: horizontal / RAD, verticalFieldOfView: vertical / RAD, horizon: Math.max(0, Math.min(1, .5 + ((scene.camera?.horizon ?? .5) - .5) / crop[1])), crop };
 }
 
+/** Physical output pixels, limited only by the renderer's supported dimensions. */
+export function computeRenderSize(cssWidth, cssHeight, devicePixelRatio = 1, limits = {}) {
+  if (!(Number.isFinite(cssWidth) && cssWidth > 0 && Number.isFinite(cssHeight) && cssHeight > 0)) throw new RangeError('Render dimensions must be positive finite numbers');
+  const dpr = Number.isFinite(devicePixelRatio) && devicePixelRatio > 0 ? devicePixelRatio : 1;
+  const maxWidth = Number.isFinite(limits.maxWidth) && limits.maxWidth >= 1 ? Math.floor(limits.maxWidth) : 16384;
+  const maxHeight = Number.isFinite(limits.maxHeight) && limits.maxHeight >= 1 ? Math.floor(limits.maxHeight) : 16384;
+  const requestedWidth = Math.max(1, Math.round(cssWidth * dpr)), requestedHeight = Math.max(1, Math.round(cssHeight * dpr));
+  const scale = Math.min(1, maxWidth / requestedWidth, maxHeight / requestedHeight);
+  const width = Math.max(1, Math.min(maxWidth, Math.round(requestedWidth * scale)));
+  const height = Math.max(1, Math.min(maxHeight, Math.round(requestedHeight * scale)));
+  return { width, height, outputScale: width / cssWidth, devicePixelRatio: dpr, limited: scale < 1, requestedWidth, requestedHeight };
+}
+
+/** Mild display-referred corrections; these preserve the lighting in a photo. */
+export function photographicGrade(lighting) {
+  const bounded = (value, min, max, fallback = min) => Number.isFinite(value) ? Math.max(min, Math.min(max, value)) : fallback;
+  const daylight = bounded(lighting?.daylight, 0, 1, 1);
+  const night = bounded(lighting?.nightFactor, 0, 1, 1 - daylight);
+  const altitude = bounded(lighting?.sun?.altitude, -90, 90, 45);
+  const warmth = Math.exp(-Math.pow((altitude + 1) / 10, 2)) * daylight * .026;
+  const exposure = bounded(lighting?.exposure, .1, 4, 1);
+  const gain = (.58 + .42 * daylight) * Math.pow(exposure, 1 / 2.2);
+  const baseTint = [gain, gain * (1 - warmth * .4 + night * .004), gain * (1 - warmth + night * .012)];
+  const sunGain = bounded(lighting?.sun?.strength, 0, 1) * .075;
+  const moonGain = bounded(lighting?.moon?.strength, 0, 1) * .9;
+  const tint = (color, strength) => [0, 1, 2].map((index) => bounded(color?.[index], 0, 1, 1) * strength);
+  return { baseTint, sunTint: tint(lighting?.sun?.color, sunGain), moonTint: tint(lighting?.moon?.color, moonGain), daylight, night };
+}
+
 /** A local GPU compositor; its depth/normals are authored visual approximations. */
 export class RelightingRenderer {
   constructor(provider) {
@@ -125,6 +167,9 @@ export class RelightingRenderer {
       const gl = canvas.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, preserveDrawingBuffer: true, powerPreference: 'low-power' });
       if (!gl) { this.enableFallback('WebGL unavailable'); return; }
       this.gl = gl; this.gpuCanvas = canvas;
+      const viewport = gl.getParameter(gl.MAX_VIEWPORT_DIMS), textureLimit = gl.getParameter(gl.MAX_TEXTURE_SIZE), bufferLimit = gl.getParameter(gl.MAX_RENDERBUFFER_SIZE);
+      this.renderLimits = { maxWidth: Math.min(textureLimit, bufferLimit, viewport[0]), maxHeight: Math.min(textureLimit, bufferLimit, viewport[1]) };
+      this.maxTextureSize = textureLimit;
       const compile = (type, source) => { const shader = gl.createShader(type); gl.shaderSource(shader, source); gl.compileShader(shader); if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(shader)); return shader; };
       this.program = gl.createProgram(); gl.attachShader(this.program, compile(gl.VERTEX_SHADER, vertexShader)); gl.attachShader(this.program, compile(gl.FRAGMENT_SHADER, fragmentShader)); gl.linkProgram(this.program);
       if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(this.program));
@@ -148,12 +193,25 @@ export class RelightingRenderer {
       const replacement = document.createElement('canvas'); replacement.className = 'relighting-canvas'; replacement.id = 'relighting-canvas'; replacement.setAttribute('aria-hidden', 'true');
       this.canvas.replaceWith(replacement); this.canvas = replacement;
     }
-    this.context = this.canvas.getContext('2d', { willReadFrequently: true }); this.renderer = 'canvas'; this.resize();
+    this.context = this.canvas.getContext('2d'); this.renderer = 'canvas'; this.resize();
   }
   resize() {
-    const cap = this.renderer === 'canvas' ? 960 : 1600;
-    const ratio = Math.min(1.25, cap / Math.max(window.innerWidth, window.innerHeight));
-    this.canvas.width = Math.max(1, Math.round(window.innerWidth * ratio)); this.canvas.height = Math.max(1, Math.round(window.innerHeight * ratio));
+    if (this.scene?.id === 'procedural') {
+      // The separate Atmosphere canvas renders this scene. Do not retain a
+      // hidden 4K photographic framebuffer while it remains selected.
+      this.canvas.width = this.canvas.height = 1;
+      if (this.gpuCanvas && this.gpuCanvas !== this.canvas) this.gpuCanvas.width = this.gpuCanvas.height = 1;
+      this.outputSize = null;
+      return;
+    }
+    // Real photography remains native-resolution even without WebGL. Only the
+    // older per-pixel CPU relighter retains its deliberately small work buffer.
+    const legacyCanvas = this.renderer === 'canvas' && !this.scene?.photoReal;
+    const ratio = legacyCanvas ? Math.min(1.25, 960 / Math.max(window.innerWidth, window.innerHeight)) : window.devicePixelRatio || 1;
+    const size = computeRenderSize(window.innerWidth, window.innerHeight, ratio, this.renderer === 'webgl' ? this.renderLimits : {});
+    this.outputSize = size;
+    if (this.canvas.width !== size.width) this.canvas.width = size.width;
+    if (this.canvas.height !== size.height) this.canvas.height = size.height;
     if (this.renderer === 'webgl' && !this.contextLost) this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
     if (this.ready) this.draw();
   }
@@ -165,7 +223,13 @@ export class RelightingRenderer {
       } catch { /* Original image layers remain underneath every rendering fallback. */ }
     }
     this.scene = scene; this.deck = deck;
-    if (scene.id === 'procedural') { this.canvas.remove(); this.ready = true; this.rendererBeforeProcedural = this.renderer; return; }
+    deck.classList.toggle('photo-real', scene.photoReal === true);
+    if (scene.id === 'procedural') {
+      // The outgoing deck owns the independent snapshot above until SceneView
+      // removes it. Its image/video elements must not be mutated here.
+      this.releaseSourceResources(); this.canvas.remove(); this.resize();
+      this.ready = true; this.rendererBeforeProcedural = this.renderer; return;
+    }
     const phaseImages = PHASES.map((phase) => deck.querySelector(`[data-phase="${phase}"]`));
     this.hasPhases = phaseImages.every(Boolean);
     const single = deck.querySelector('img,video');
@@ -180,20 +244,52 @@ export class RelightingRenderer {
     try { this.uploadSources(); } catch (error) { this.enableFallback(String(error.message)); }
     this.ready = true; this.resize(); this.draw(); this.schedule();
   }
+  releaseTextureScratch(unit) {
+    const scratch = this.textureResizers?.[unit];
+    if (scratch) { scratch.width = scratch.height = 1; this.textureResizers[unit] = null; }
+  }
+  releaseTexture(unit) {
+    const texture = this.textures?.[unit];
+    if (texture && this.gl && !this.contextLost) this.gl.deleteTexture(texture);
+    if (this.textures) this.textures[unit] = null;
+    if (this.textureSizes) this.textureSizes[unit] = null;
+    this.releaseTextureScratch(unit);
+  }
+  releaseSourceResources() {
+    for (let unit = 0; unit < 7; unit++) this.releaseTexture(unit);
+    for (const map of [this.geometry?.normalDepth, this.geometry?.material]) if (map) map.width = map.height = 1;
+    this.sources = []; this.sourceWidth = this.sourceHeight = 0; this.hasPhases = false;
+    this.geometry = this.geometryPixels = this.materialPixels = null;
+    this.textureSizes = []; this.textureResizers = []; this.validateNextFrame = false;
+  }
   uploadTexture(unit, source) {
     const gl = this.gl; gl.activeTexture(gl.TEXTURE0 + unit);
     const texture = this.textures[unit] || gl.createTexture(); this.textures[unit] = texture; gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
+    const width = source.naturalWidth || source.videoWidth || source.width, height = source.naturalHeight || source.videoHeight || source.height;
+    const scale = Math.min(1, this.maxTextureSize / width, this.maxTextureSize / height);
+    let input = source;
+    if (scale < 1) {
+      this.textureResizers ||= [];
+      input = this.textureResizers[unit] ||= document.createElement('canvas');
+      const targetWidth = Math.max(1, Math.floor(width * scale)), targetHeight = Math.max(1, Math.floor(height * scale));
+      if (input.width !== targetWidth) input.width = targetWidth;
+      if (input.height !== targetHeight) input.height = targetHeight;
+      const context = input.getContext('2d'); context.imageSmoothingEnabled = true; context.imageSmoothingQuality = 'high';
+      context.clearRect(0, 0, targetWidth, targetHeight);
+      context.drawImage(source, 0, 0, targetWidth, targetHeight);
+    } else this.releaseTextureScratch(unit);
+    this.textureSizes ||= [];
+    this.textureSizes[unit] = { width: scale < 1 ? input.width : width, height: scale < 1 ? input.height : height };
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, input);
   }
   uploadSources() {
     if (this.renderer !== 'webgl' || this.contextLost || !this.sources?.length) return;
     const gl = this.gl; gl.useProgram(this.program);
-    const maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-    if (this.sourceWidth > maxSize || this.sourceHeight > maxSize) throw new Error('Source exceeds GPU texture size; using Canvas');
     for (let i = 0; i < this.sources.length; i++) this.uploadTexture(i, this.sources[i]);
+    for (let i = this.sources.length; i < 5; i++) this.releaseTexture(i);
     PHASES.forEach((phase, index) => gl.uniform1i(this.location(`u${phase[0].toUpperCase()}${phase.slice(1)}`), this.hasPhases ? index : 0));
     this.uploadTexture(5, this.geometry.normalDepth); this.uploadTexture(6, this.geometry.material);
     gl.uniform1i(this.location('uGeometry'), 5); gl.uniform1i(this.location('uMaterial'), 6);
@@ -203,7 +299,7 @@ export class RelightingRenderer {
   location(name) { if (!this.locations.has(name)) this.locations.set(name, this.gl.getUniformLocation(this.program, name)); return this.locations.get(name); }
   draw() {
     if (!this.ready || !this.scene || this.scene.id === 'procedural' || document.hidden) return;
-    const state = this.provider(); if (!state?.lighting) return;
+    const state = this.provider(); if (!state?.lighting || state.visible === false) return;
     this.utcMillis = state.utcMillis; this.lastLighting = state.lighting;
     try { if (this.renderer === 'webgl' && !this.contextLost) this.drawWebGL(state); else this.drawCanvas(state); }
     catch (error) { this.enableFallback(String(error.message)); this.drawCanvas(state); }
@@ -218,14 +314,17 @@ export class RelightingRenderer {
     gl.uniform1f(this.location('uNightWeight'), weights.night || 0);
     gl.uniform2fv(this.location('uCrop'), state.camera.crop);
     gl.uniform2f(this.location('uTanFov'), Math.tan(l.camera.fieldOfView * RAD / 2), Math.tan(l.camera.verticalFieldOfView * RAD / 2));
-    const scalars = { uHasPhases: Number(this.hasPhases), uExposure: l.exposure, uNightFactor: l.nightFactor, uTime: performance.now() / 1000 % 3600, uHorizon: l.camera.horizon, uSunGain: l.sun.strength, uMoonGain: l.moon.strength, uMoonPhase: l.moon.phase, uMoonIllumination: l.moon.illumination, uMoonAngle: (l.moon.brightLimbAngle - l.moon.parallacticAngle) * RAD, uMoonRadius: l.moon.angularRadius * RAD, uSunVisibility: l.sun.visibility, uMoonVisibility: l.moon.visibility, uMotion: Number(state.motion) };
+    const scalars = { uHasPhases: Number(this.hasPhases), uExposure: l.exposure, uNightFactor: l.nightFactor, uTime: performance.now() / 1000 % 3600, uHorizon: l.camera.horizon, uSunGain: l.sun.strength, uMoonGain: l.moon.strength, uMoonPhase: l.moon.phase, uMoonIllumination: l.moon.illumination, uMoonAngle: (l.moon.brightLimbAngle - l.moon.parallacticAngle) * RAD, uMoonRadius: l.moon.angularRadius * RAD, uSunVisibility: l.sun.visibility, uMoonVisibility: l.moon.visibility, uMotion: Number(state.motion), uPhotoReal: Number(this.scene.photoReal === true) };
     for (const [name, value] of Object.entries(scalars)) gl.uniform1f(this.location(name), value);
     for (const [name, value] of Object.entries({uSunDirection:l.sun.direction,uMoonDirection:l.moon.direction,uSunColor:l.sun.color,uMoonColor:l.moon.color,uAmbientColor:l.ambient.color})) gl.uniform3fv(this.location(name), value);
+    const grade = photographicGrade(l);
+    for (const [name, value] of Object.entries({uPhotoBaseTint:grade.baseTint,uPhotoSunTint:grade.sunTint,uPhotoMoonTint:grade.moonTint})) gl.uniform3fv(this.location(name), value);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     if (this.validateNextFrame) { this.validateNextFrame = false; const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`GPU drawing failed (${error}); using Canvas`); }
   }
   drawCanvas(state) {
     if (!this.context || !this.sources?.length) return;
+    if (this.scene.photoReal === true) { this.drawPhotographicCanvas(state); return; }
     const c = this.context, w = this.canvas.width, h = this.canvas.height, weights = this.hasPhases ? state.weights : { noon: 1 };
     c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; c.fillStyle = '#000'; c.fillRect(0,0,w,h); c.globalCompositeOperation = 'lighter';
     const crop = state.camera.crop, sx = (1-crop[0])/2*this.sourceWidth, sy=(1-crop[1])/2*this.sourceHeight;
@@ -244,6 +343,34 @@ export class RelightingRenderer {
     }
     c.putImageData(pixels,0,0);
     this.drawFallbackBodies(state);
+  }
+  drawPhotographicCanvas(state) {
+    // Native drawImage/filter/compositing keeps the original high-frequency
+    // image detail without reading or iterating over a 4K framebuffer on CPU.
+    const c = this.context, w = this.canvas.width, h = this.canvas.height, grade = photographicGrade(state.lighting);
+    const crop = state.camera.crop, sx = (1 - crop[0]) / 2 * this.sourceWidth, sy = (1 - crop[1]) / 2 * this.sourceHeight;
+    const gain = Math.max(...grade.baseTint);
+    c.globalAlpha = 1; c.globalCompositeOperation = 'source-over'; c.filter = 'none'; c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
+    c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high'; c.filter = `brightness(${gain})`;
+    const weights = this.hasPhases ? state.weights : { noon: 1 };
+    c.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < this.sources.length; i++) {
+      c.globalAlpha = this.hasPhases ? weights[PHASES[i]] || 0 : 1;
+      if (c.globalAlpha) c.drawImage(this.sources[i], sx, sy, this.sourceWidth * crop[0], this.sourceHeight * crop[1], 0, 0, w, h);
+    }
+    c.filter = 'none'; c.globalAlpha = 1; c.globalCompositeOperation = 'multiply';
+    c.fillStyle = `rgb(${grade.baseTint.map((channel) => Math.round(255 * channel / gain)).join(',')})`; c.fillRect(0, 0, w, h);
+    for (const [light, tint] of [[state.lighting.sun, grade.sunTint], [state.lighting.moon, grade.moonTint]]) {
+      const [x, y, z] = light.direction, front = Math.max(0, Math.min(1, z + .35));
+      const strength = Math.max(...tint) * front;
+      if (strength <= 0) continue;
+      const dx = x * w * .6, dy = -y * h * .6;
+      const gradient = c.createLinearGradient(w * .5 - dx, h * .5 - dy, w * .5 + dx + .001, h * .5 + dy + .001);
+      const color = tint.map((channel) => Math.round(255 * channel / Math.max(...tint))).join(',');
+      gradient.addColorStop(0, `rgba(${color},0)`); gradient.addColorStop(1, `rgba(${color},${strength})`);
+      c.globalCompositeOperation = 'screen'; c.fillStyle = gradient; c.fillRect(0, 0, w, h);
+    }
+    c.globalCompositeOperation = 'source-over';
   }
   drawFallbackBodies(state) {
     const c=this.context,w=this.canvas.width,h=this.canvas.height;
@@ -267,7 +394,10 @@ export class RelightingRenderer {
   update() { this.draw(); this.schedule(); }
   schedule() {
     const state=this.provider();
-    if(this.frame || document.hidden || !this.ready || this.scene?.id==='procedural' || (!state?.motion&&!state?.animating))return;
+    if(this.frame || document.hidden || state?.visible===false || !this.ready || this.scene?.id==='procedural' || (!state?.motion&&!state?.animating))return;
+    // Static photography is already refreshed by every celestial update. It
+    // needs RAF only while transitioning; video still follows its frame clock.
+    if(this.scene?.photoReal && !this.scene.isVideo && !state?.animating)return;
     this.frame=requestAnimationFrame((now)=>{this.frame=null;if(!this.lastFrame || now-this.lastFrame>=1000/(this.renderer==='canvas'?12:24)){this.lastFrame=now;this.draw();}this.schedule();});
   }
   diagnostics() {
@@ -279,6 +409,6 @@ export class RelightingRenderer {
       }
     }
     const hash=pixels.reduce((value,channel)=>Math.imul(value^channel,16777619)>>>0,2166136261).toString(16);
-    return {ready:this.ready,renderer:this.scene?.id==='procedural'?'procedural':this.renderer,sceneId:this.scene?.id,frameCount:this.frameCount,drawCount:this.drawCount,utcMillis:this.utcMillis,width:this.canvas.width,height:this.canvas.height,contextLost:this.contextLost,fallbackReason:this.fallbackReason,shaderError:this.shaderError,pixelHash:hash,pixels,geometryVersion:this.geometry?.version};
+    return {ready:this.ready,renderer:this.scene?.id==='procedural'?'procedural':this.renderer,sceneId:this.scene?.id,frameCount:this.frameCount,drawCount:this.drawCount,utcMillis:this.utcMillis,width:this.canvas.width,height:this.canvas.height,sourceWidth:this.sourceWidth,sourceHeight:this.sourceHeight,textureWidth:this.textureSizes?.[0]?.width,textureHeight:this.textureSizes?.[0]?.height,outputScale:this.outputSize?.outputScale,devicePixelRatio:window.devicePixelRatio||1,outputLimited:this.outputSize?.limited,photoReal:this.scene?.photoReal===true,contextLost:this.contextLost,fallbackReason:this.fallbackReason,shaderError:this.shaderError,pixelHash:hash,pixels,geometryVersion:this.geometry?.version};
   }
 }

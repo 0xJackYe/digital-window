@@ -1,0 +1,28 @@
+{
+  "id": "denver",
+  "asset": "denver.jpg",
+  "type": "photograph",
+  "author": "Shade",
+  "license": "Unsplash License",
+  "licenseURL": "https://unsplash.com/license",
+  "sourceURL": "https://unsplash.com/photos/a-city-skyline-with-tall-buildings-GPjse2kaUKA",
+  "originalURL": "https://images.unsplash.com/photo-1663786364368-8f9b133fcc45?auto=format&fm=jpg&q=92",
+  "nativeDimensions": { "width": 4272, "height": 2848 },
+  "sha256": "9d69829305f49e793834f42d69b2817aa218e88b1b97bdea3d88dd81e521695e",
+  "bytes": 1292897,
+  "dated": "2022-09-21",
+  "dateMeaning": "Publication date supplied by Unsplash; capture date is not established.",
+  "retrieved": "2026-11-12",
+  "location": "Denver, Colorado, United States (as identified by the photographer)",
+  "camera": "Canon EOS 450D (as reported on the source page)",
+  "description": "Real photographic view of dense downtown Denver buildings under naturally overcast light. Daniels & Fisher Tower is at the left, the Wells Fargo Center's curved top appears behind the central buildings, and Republic Plaza is at the right.",
+  "modifications": "No generative editing or AI upscaling. Served by Unsplash's image CDN as a high-quality JPEG. The application may crop the photograph, apply restrained real-time exposure/color adjustments, and place a separately rendered office-window foreground in front of it.",
+  "usage": "Bundled background of an offline digital-window application. The asset retains the Unsplash License rather than the repository's source-code license. It is not offered as a stock-photo catalog or sold as an unmodified image.",
+  "licenseAssessment": "The official license expressly permits copying, modification, distribution, display and use, including commercially. It excludes compiling images to replicate a similar or competing image service and selling unmodified images. Bundling this scene as part of the digital-window software is within the documented use permissions; attribution is retained voluntarily.",
+  "limitations": [
+    "The source establishes Denver as the subject but does not establish the exact camera location or that the original photograph was taken inside an office.",
+    "The office-window foreground is software-rendered; do not describe the entire composite as an unaltered interior photograph.",
+    "A single photograph contains baked light and shadows. Continuous color/exposure changes do not make it a physically captured day-and-night time-lapse or fully relightable three-dimensional scene.",
+    "The original file has no separately verified night view or fixed-camera companion exposures."
+  ]
+}
