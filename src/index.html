@@ -9,12 +9,10 @@
   <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./office-window.css">
-  <link rel="stylesheet" href="./natural-view.css">
 </head>
 <body>
   <main id="window-view" aria-label="数字窗户景观">
     <div id="scene-base" class="scene-base"></div>
-    <div id="natural-stage" class="natural-stage"></div>
     <canvas id="atmosphere" aria-hidden="true"></canvas>
     <div id="window-frame" class="window-frame" hidden aria-hidden="true"><i></i><i></i></div>
     <div id="drag-region" class="drag-region" aria-hidden="true"></div>
@@ -46,7 +44,7 @@
     <div class="panel-content">
       <section id="panel-landscapes" role="tabpanel" aria-labelledby="tab-landscapes">
         <p class="section-intro">选一扇窗，望向远方。</p>
-        <div class="city-field render-mode-field"><label class="field-label" for="render-mode">光影模式</label><div class="select-wrap"><select id="render-mode"><option value="natural">自然光仿真 · 三维场景</option><option value="photo">原始实拍 · 摄影光影</option></select></div><p id="render-mode-description" class="subtle-note">三维场景随日月实时受光、产生投影。场景为实景启发建模。</p></div>
+        <div class="city-field render-mode-field"><label class="field-label" for="render-mode">光影模式</label><div class="select-wrap"><select id="render-mode"><option value="daylight">连续自然光 · 实拍景观</option><option value="photo">原始实拍 · 摄影光影</option></select></div><p id="render-mode-description" class="subtle-note">保留真实照片细节，日光方向、色温与月光逐帧连续变化。</p></div>
         <div id="landscape-grid" class="landscape-grid"></div>
         <button id="import-button" class="import-button" type="button"><span class="import-plus" aria-hidden="true">＋</span><span>导入自己的景观<small>本地图片或视频</small></span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
         <input id="media-input" type="file" accept="image/jpeg,image/png,image/webp,image/avif,video/mp4,video/webm" hidden>

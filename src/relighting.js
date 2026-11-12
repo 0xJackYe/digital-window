@@ -1,8 +1,11 @@
 import { createSceneGeometry } from './scene-geometry.js';
+import { getCelestialState } from './celestial.js';
+import { getLightingState } from './lighting.js';
+import { ORIGINAL_PHOTO_GRADE, photographicGrade, samplePhotographicLight, photographicSkyLikelihood } from './photo-light.js';
+export { photographicGrade } from './photo-light.js';
 
 const PHASES = ['dawn', 'morning', 'noon', 'evening', 'night'];
 const RAD = Math.PI / 180;
-const ORIGINAL_PHOTO_GRADE = { baseTint: [1,1,1], sunTint: [0,0,0], moonTint: [0,0,0] };
 const vertexShader = `
 attribute vec2 aPosition;
 varying vec2 vUv;
@@ -14,12 +17,13 @@ precision highp float;
 precision mediump float;
 #endif
 varying vec2 vUv;
-uniform sampler2D uDawn,uMorning,uNoon,uEvening,uNight,uGeometry,uMaterial;
+uniform sampler2D uDawn,uMorning,uNoon,uEvening,uNight,uGeometry,uMaterial,uPhotoField;
 uniform vec4 uWeights;
-uniform float uNightWeight,uHasPhases,uExposure,uNightFactor,uTime,uHorizon,uSunGain,uMoonGain,uMoonPhase,uMoonIllumination,uMoonAngle,uMoonRadius,uSunVisibility,uMoonVisibility,uMotion,uPhotoReal;
+uniform float uNightWeight,uHasPhases,uExposure,uNightFactor,uTime,uHorizon,uSunGain,uMoonGain,uMoonPhase,uMoonIllumination,uMoonAngle,uMoonRadius,uSunVisibility,uMoonVisibility,uMotion,uPhotoReal,uPhotoOriginal;
 uniform vec2 uCrop,uTanFov;
 uniform vec3 uSunDirection,uMoonDirection,uSunColor,uMoonColor,uAmbientColor;
-uniform vec3 uPhotoBaseTint,uPhotoSunTint,uPhotoMoonTint;
+uniform vec3 uPhotoBaseTint,uPhotoSunTint,uPhotoMoonTint,uPhotoTwilightTint;
+uniform float uPhotoDaylight;
 vec2 imageUv(vec2 uv){return (uv-.5)*uCrop+.5;}
 vec3 rayAt(vec2 uv){return normalize(vec3((uv.x-.5)*2.*uTanFov.x,(uHorizon-uv.y)*2.*uTanFov.y,1.));}
 vec3 pointAt(vec2 uv,float z){return vec3((uv.x-.5)*2.*uTanFov.x*z,(uHorizon-uv.y)*2.*uTanFov.y*z,z);}
@@ -67,14 +71,18 @@ void main(){
   vec3 noon=texture2D(uNoon,uv).rgb,evening=texture2D(uEvening,uv).rgb,night=texture2D(uNight,uv).rgb;
   vec3 source=dawn*uWeights.x+morning*uWeights.y+noon*uWeights.z+evening*uWeights.w+night*uNightWeight;
   if(uPhotoReal>.5){
-    // A real photograph already contains the scene's illumination. Preserve
-    // its architecture and texture; never apply another image's proxy shadows
-    // or add a second photographed Sun/Moon. This gentle grade is continuous,
-    // but deliberately does not claim to reconstruct unobserved geometry.
-    vec3 ray=rayAt(vUv);
-    float sunFacing=pow(max(0.,dot(ray,uSunDirection)),3.);
-    float moonFacing=pow(max(0.,dot(ray,uMoonDirection)),3.);
-    vec3 response=uPhotoBaseTint+uPhotoSunTint*sunFacing+uPhotoMoonTint*moonFacing;
+    // Source-aligned photographic light field. Architectural detail stays in
+    // the original photo; this path does not use proxy city geometry/shadows.
+    float solar=clamp(.5+uSunDirection.x*(vUv.x-.5)*.72+uSunDirection.y*(.5-vUv.y)*.55+uSunDirection.z*.19,0.,1.);
+    float lunar=clamp(.5+uMoonDirection.x*(vUv.x-.5)*.72+uMoonDirection.y*(.5-vUv.y)*.55+uMoonDirection.z*.19,0.,1.);
+    float upper=1.-smoothstep(.15,.78,vUv.y);
+    float skyWeight=texture2D(uPhotoField,vUv).r*.75+upper*.25;
+    float horizon=exp(-pow((vUv.y-.43)/.31,2.));
+    vec3 direct=uPhotoSunTint*(.18+solar*.82)*(1.-skyWeight*.24);
+    vec3 lunarFill=uPhotoMoonTint*(.15+lunar*.85)*(1.-skyWeight*.30);
+    vec3 dusk=uPhotoTwilightTint*horizon*(.32+.68*solar)*(.18+skyWeight*.82);
+    vec3 skyFill=vec3(0.,.016,.038)*uPhotoDaylight*skyWeight;
+    vec3 response=uPhotoOriginal>.5?vec3(1.):clamp(uPhotoBaseTint+direct+lunarFill+dusk+skyFill,0.,1.);
     gl_FragColor=vec4(clamp(source*response,0.,1.),1.);
     return;
   }
@@ -137,22 +145,6 @@ export function computeRenderSize(cssWidth, cssHeight, devicePixelRatio = 1, lim
   return { width, height, outputScale: width / cssWidth, devicePixelRatio: dpr, limited: scale < 1, requestedWidth, requestedHeight };
 }
 
-/** Mild display-referred corrections; these preserve the lighting in a photo. */
-export function photographicGrade(lighting) {
-  const bounded = (value, min, max, fallback = min) => Number.isFinite(value) ? Math.max(min, Math.min(max, value)) : fallback;
-  const daylight = bounded(lighting?.daylight, 0, 1, 1);
-  const night = bounded(lighting?.nightFactor, 0, 1, 1 - daylight);
-  const altitude = bounded(lighting?.sun?.altitude, -90, 90, 45);
-  const warmth = Math.exp(-Math.pow((altitude + 1) / 10, 2)) * daylight * .026;
-  const exposure = bounded(lighting?.exposure, .1, 4, 1);
-  const gain = (.58 + .42 * daylight) * Math.pow(exposure, 1 / 2.2);
-  const baseTint = [gain, gain * (1 - warmth * .4 + night * .004), gain * (1 - warmth + night * .012)];
-  const sunGain = bounded(lighting?.sun?.strength, 0, 1) * .075;
-  const moonGain = bounded(lighting?.moon?.strength, 0, 1) * .9;
-  const tint = (color, strength) => [0, 1, 2].map((index) => bounded(color?.[index], 0, 1, 1) * strength);
-  return { baseTint, sunTint: tint(lighting?.sun?.color, sunGain), moonTint: tint(lighting?.moon?.color, moonGain), daylight, night };
-}
-
 /** A local GPU compositor; its depth/normals are authored visual approximations. */
 export class RelightingRenderer {
   constructor(provider) {
@@ -182,7 +174,7 @@ export class RelightingRenderer {
         canvas.addEventListener('webglcontextlost', (event) => { event.preventDefault(); this.contextLost = true; this.enableFallback('WebGL context lost'); if (this.scene) this.draw(); });
         canvas.addEventListener('webglcontextrestored', () => {
           this.setupWebGL();
-          if (this.renderer === 'webgl' && this.deck) { this.canvas.replaceWith(canvas); this.canvas = canvas; this.canvas.id = 'relighting-canvas'; this.uploadSources(); this.resize(); this.draw(); this.schedule(); }
+          if (this.renderer === 'webgl' && this.deck) { this.releasePhotoBase(); this.canvas.replaceWith(canvas); this.canvas = canvas; this.canvas.id = 'relighting-canvas'; this.photoMaskUpload=true; this.uploadSources(); this.resize(); this.draw(); this.schedule(); }
         });
         this.boundContextEvents = true;
       }
@@ -218,12 +210,13 @@ export class RelightingRenderer {
   }
   setScene(scene, deck) {
     cancelAnimationFrame(this.frame); this.frame = null;
-    if (this.deck && this.canvas.parentElement === this.deck && this.ready && this.scene?.id !== 'procedural') {
+    if (this.deck && this.deck !== deck && this.canvas.parentElement === this.deck && this.ready && this.scene?.id !== 'procedural') {
       try {
         const snapshot = document.createElement('canvas'); snapshot.width = this.canvas.width; snapshot.height = this.canvas.height; snapshot.className = 'relighting-canvas'; snapshot.setAttribute('aria-hidden', 'true'); snapshot.getContext('2d').drawImage(this.canvas, 0, 0); this.deck.append(snapshot);
       } catch { /* Original image layers remain underneath every rendering fallback. */ }
     }
-    this.scene = scene; this.deck = deck;
+    if (this.deck !== deck || this.scene?.id !== scene.id) this.releasePhotoBase();
+    this.scene = scene; this.deck = deck; this.photoFeatureKey = null;
     deck.classList.toggle('photo-real', scene.photoReal === true);
     if (scene.id === 'procedural') {
       // The outgoing deck owns the independent snapshot above until SceneView
@@ -257,11 +250,14 @@ export class RelightingRenderer {
     this.releaseTextureScratch(unit);
   }
   releaseSourceResources() {
-    for (let unit = 0; unit < 7; unit++) this.releaseTexture(unit);
+    this.releasePhotoBase();
+    for (let unit = 0; unit < 8; unit++) this.releaseTexture(unit);
     for (const map of [this.geometry?.normalDepth, this.geometry?.material]) if (map) map.width = map.height = 1;
     this.sources = []; this.sourceWidth = this.sourceHeight = 0; this.hasPhases = false;
     this.geometry = this.geometryPixels = this.materialPixels = null;
     this.textureSizes = []; this.textureResizers = []; this.validateNextFrame = false;
+    for (const map of [this.photoField, this.photoFeatures, this.photoSkyMap]) if (map) map.width = map.height = 1;
+    this.photoField = this.photoFeatures = this.photoSkyMap = this.photoSky = this.photoFeatureKey = null;
   }
   uploadTexture(unit, source) {
     const gl = this.gl; gl.activeTexture(gl.TEXTURE0 + unit);
@@ -298,12 +294,60 @@ export class RelightingRenderer {
     this.validateNextFrame = true;
   }
   location(name) { if (!this.locations.has(name)) this.locations.set(name, this.gl.getUniformLocation(this.program, name)); return this.locations.get(name); }
+  resolveState(state) {
+    const now = performance.now(), target = state.realtime ? Date.now() : (Number.isFinite(state.utcMillis) ? state.utcMillis : Date.now());
+    let instant = target;
+    if (!state.realtime && !state.originalPhoto) {
+      if (this.manualTarget !== target || this.wasRealtime || this.wasOriginalPhoto || !Number.isFinite(this.manualStart) || !Number.isFinite(this.manualFrom)) {
+        this.manualFrom = this.renderUtcMillis ?? target; this.manualTarget = target; this.manualStart = now;
+      }
+      const t = Math.max(0, Math.min(1, (now - this.manualStart) / 220));
+      instant = this.manualFrom + (target - this.manualFrom) * t * t * (3 - 2 * t);
+      this.transitioningTime = t < 1 && Math.abs(target - this.manualFrom) > .001;
+    } else { this.manualTarget = target; this.transitioningTime = false; }
+    this.wasRealtime = Boolean(state.realtime); this.wasOriginalPhoto = Boolean(state.originalPhoto); this.renderUtcMillis = instant; this.targetUtcMillis = target;
+    const lighting = !state.originalPhoto && state.place && state.camera
+      ? { ...getLightingState(getCelestialState(new Date(instant), state.place), state.camera), utcMillis: instant }
+      : state.lighting;
+    return { ...state, utcMillis: instant, lighting };
+  }
+  updatePhotoField(state) {
+    this.lastGrade = state.originalPhoto ? ORIGINAL_PHOTO_GRADE : photographicGrade(state.lighting);
+    if (state.originalPhoto) { this.lightFieldSamples = []; return; }
+    const width = 128, height = Math.max(48, Math.round(width * this.canvas.height / this.canvas.width));
+    if (!this.photoField) this.photoField = document.createElement('canvas');
+    if (this.photoField.width !== width || this.photoField.height !== height) { this.photoField.width = width; this.photoField.height = height; this.photoFeatureKey = null; }
+    const crop = state.camera.crop, key = `${this.scene.id}:${width}:${height}:${crop.join(',')}`;
+    if (this.photoFeatureKey !== key) {
+      this.photoFeatures ||= document.createElement('canvas'); this.photoFeatures.width = width; this.photoFeatures.height = height;
+      const context = this.photoFeatures.getContext('2d', { willReadFrequently: true });
+      context.drawImage(this.sources[0], (1-crop[0])/2*this.sourceWidth, (1-crop[1])/2*this.sourceHeight, this.sourceWidth*crop[0], this.sourceHeight*crop[1], 0, 0, width, height);
+      const pixels = context.getImageData(0, 0, width, height).data; this.photoSky = new Float32Array(width*height);
+      for (let y=0;y<height;y++) for (let x=0;x<width;x++) { const i=y*width+x,p=i*4; this.photoSky[i]=photographicSkyLikelihood(pixels[p]/255,pixels[p+1]/255,pixels[p+2]/255,y/(height-1)); }
+      this.photoSkyMap ||= document.createElement('canvas'); this.photoSkyMap.width=width;this.photoSkyMap.height=height;
+      const maskContext=this.photoSkyMap.getContext('2d'),mask=maskContext.createImageData(width,height);
+      for(let i=0;i<this.photoSky.length;i++){mask.data[i*4]=mask.data[i*4+1]=mask.data[i*4+2]=Math.round(this.photoSky[i]*255);mask.data[i*4+3]=255;}
+      maskContext.putImageData(mask,0,0);this.photoMaskUpload=true;
+      this.photoFeatureKey = key;
+    }
+    const context = this.photoField.getContext('2d'); this.photoFieldPixels ||= context.createImageData(width, height);
+    if (this.photoFieldPixels.width !== width || this.photoFieldPixels.height !== height) this.photoFieldPixels = context.createImageData(width, height);
+    const pixels = this.photoFieldPixels.data;
+    if(this.renderer==='canvas')for (let y=0;y<height;y++) for (let x=0;x<width;x++) {
+      const i=y*width+x,p=i*4, light=samplePhotographicLight(this.lastGrade,state.lighting,x/(width-1),y/(height-1),this.photoSky[i]);
+      pixels[p]=Math.round(light[0]*255);pixels[p+1]=Math.round(light[1]*255);pixels[p+2]=Math.round(light[2]*255);pixels[p+3]=255;
+    }
+    if(this.renderer==='canvas')context.putImageData(this.photoFieldPixels,0,0);
+    this.lightFieldSamples = [[.16,.2],[.5,.2],[.84,.2],[.16,.55],[.5,.55],[.84,.55],[.3,.85],[.7,.85]].map(([u,v])=>samplePhotographicLight(this.lastGrade,state.lighting,u,v,this.photoSky[Math.round(v*(height-1))*width+Math.round(u*(width-1))]));
+  }
   draw() {
     if (!this.ready || !this.scene || this.scene.id === 'procedural' || document.hidden) return;
-    const state = this.provider(); if (!state?.lighting || state.visible === false) return;
-    this.utcMillis = state.utcMillis; this.lastLighting = state.lighting;
+    const provided = this.provider(); if (!provided?.lighting || provided.visible === false) return;
+    const state = this.resolveState(provided);
+    this.utcMillis = state.utcMillis; this.lastLighting = state.lighting; this.lastOriginalPhoto = Boolean(state.originalPhoto); this.lastRealtime = Boolean(state.realtime);
+    if (this.scene.photoReal) this.updatePhotoField(state);
     try { if (this.renderer === 'webgl' && !this.contextLost) this.drawWebGL(state); else this.drawCanvas(state); }
-    catch (error) { this.enableFallback(String(error.message)); this.drawCanvas(state); }
+    catch (error) { this.enableFallback(String(error.message)); if(this.scene.photoReal)this.updatePhotoField(state); this.drawCanvas(state); }
     this.frameCount++; this.drawCount++;
   }
   drawWebGL(state) {
@@ -319,7 +363,10 @@ export class RelightingRenderer {
     for (const [name, value] of Object.entries(scalars)) gl.uniform1f(this.location(name), value);
     for (const [name, value] of Object.entries({uSunDirection:l.sun.direction,uMoonDirection:l.moon.direction,uSunColor:l.sun.color,uMoonColor:l.moon.color,uAmbientColor:l.ambient.color})) gl.uniform3fv(this.location(name), value);
     const grade = state.originalPhoto ? ORIGINAL_PHOTO_GRADE : photographicGrade(l);
-    for (const [name, value] of Object.entries({uPhotoBaseTint:grade.baseTint,uPhotoSunTint:grade.sunTint,uPhotoMoonTint:grade.moonTint})) gl.uniform3fv(this.location(name), value);
+    for (const [name, value] of Object.entries({uPhotoBaseTint:grade.baseTint,uPhotoSunTint:grade.sunTint,uPhotoMoonTint:grade.moonTint,uPhotoTwilightTint:grade.twilightTint})) gl.uniform3fv(this.location(name), value);
+    gl.uniform1f(this.location('uPhotoDaylight'),grade.daylight);
+    gl.uniform1f(this.location('uPhotoOriginal'), Number(state.originalPhoto));
+    if (this.scene.photoReal && !state.originalPhoto) { if(this.photoMaskUpload){this.uploadTexture(7,this.photoSkyMap);this.photoMaskUpload=false;} gl.uniform1i(this.location('uPhotoField'), 7); }
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     if (this.validateNextFrame) { this.validateNextFrame = false; const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`GPU drawing failed (${error}); using Canvas`); }
   }
@@ -348,30 +395,39 @@ export class RelightingRenderer {
   drawPhotographicCanvas(state) {
     // Native drawImage/filter/compositing keeps the original high-frequency
     // image detail without reading or iterating over a 4K framebuffer on CPU.
-    const c = this.context, w = this.canvas.width, h = this.canvas.height, grade = state.originalPhoto ? ORIGINAL_PHOTO_GRADE : photographicGrade(state.lighting);
+    const c = this.context, w = this.canvas.width, h = this.canvas.height;
     const crop = state.camera.crop, sx = (1 - crop[0]) / 2 * this.sourceWidth, sy = (1 - crop[1]) / 2 * this.sourceHeight;
-    const gain = Math.max(...grade.baseTint);
     c.globalAlpha = 1; c.globalCompositeOperation = 'source-over'; c.filter = 'none'; c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
-    c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high'; c.filter = `brightness(${gain})`;
-    const weights = this.hasPhases ? state.weights : { noon: 1 };
-    c.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < this.sources.length; i++) {
-      c.globalAlpha = this.hasPhases ? weights[PHASES[i]] || 0 : 1;
-      if (c.globalAlpha) c.drawImage(this.sources[i], sx, sy, this.sourceWidth * crop[0], this.sourceHeight * crop[1], 0, 0, w, h);
+    c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
+    if (!this.scene.isVideo && !this.hasPhases && this.sources.length === 1) {
+      // Resample a static high-resolution photograph only once. Each light
+      // frame copies this native-resolution base 1:1, avoiding repeated costly
+      // interpolation and GPU/CPU readback backend resampling differences.
+      const key = `${this.scene.id}:${w}:${h}:${this.sourceWidth}:${this.sourceHeight}:${crop.join(',')}`;
+      if (this.photoBaseKey !== key || this.photoBaseSource !== this.sources[0]) {
+        this.releasePhotoBase(); this.photoBase = document.createElement('canvas');
+        this.photoBase.width = w; this.photoBase.height = h;
+        const base = this.photoBase.getContext('2d', { alpha: false });
+        base.imageSmoothingEnabled = true; base.imageSmoothingQuality = 'high';
+        base.drawImage(this.sources[0],sx,sy,this.sourceWidth*crop[0],this.sourceHeight*crop[1],0,0,w,h);
+        this.photoBaseKey = key; this.photoBaseSource = this.sources[0];
+      }
+      c.drawImage(this.photoBase,0,0);
+    } else {
+      const weights = this.hasPhases ? state.weights : { noon: 1 };
+      c.globalCompositeOperation = this.hasPhases ? 'lighter' : 'source-over';
+      for (let i = 0; i < this.sources.length; i++) {
+        c.globalAlpha = this.hasPhases ? weights[PHASES[i]] || 0 : 1;
+        if (c.globalAlpha) c.drawImage(this.sources[i], sx, sy, this.sourceWidth * crop[0], this.sourceHeight * crop[1], 0, 0, w, h);
+      }
     }
-    c.filter = 'none'; c.globalAlpha = 1; c.globalCompositeOperation = 'multiply';
-    c.fillStyle = `rgb(${grade.baseTint.map((channel) => Math.round(255 * channel / gain)).join(',')})`; c.fillRect(0, 0, w, h);
-    for (const [light, tint] of [[state.lighting.sun, grade.sunTint], [state.lighting.moon, grade.moonTint]]) {
-      const [x, y, z] = light.direction, front = Math.max(0, Math.min(1, z + .35));
-      const strength = Math.max(...tint) * front;
-      if (strength <= 0) continue;
-      const dx = x * w * .6, dy = -y * h * .6;
-      const gradient = c.createLinearGradient(w * .5 - dx, h * .5 - dy, w * .5 + dx + .001, h * .5 + dy + .001);
-      const color = tint.map((channel) => Math.round(255 * channel / Math.max(...tint))).join(',');
-      gradient.addColorStop(0, `rgba(${color},0)`); gradient.addColorStop(1, `rgba(${color},${strength})`);
-      c.globalCompositeOperation = 'screen'; c.fillStyle = gradient; c.fillRect(0, 0, w, h);
-    }
+    c.filter = 'none'; c.globalAlpha = 1;
+    if (!state.originalPhoto) { c.globalCompositeOperation = 'multiply'; c.drawImage(this.photoField,0,0,w,h); }
     c.globalCompositeOperation = 'source-over';
+  }
+  releasePhotoBase() {
+    if (this.photoBase) this.photoBase.width = this.photoBase.height = 1;
+    this.photoBase = this.photoBaseKey = this.photoBaseSource = null;
   }
   drawFallbackBodies(state) {
     const c=this.context,w=this.canvas.width,h=this.canvas.height;
@@ -395,11 +451,12 @@ export class RelightingRenderer {
   update() { this.draw(); this.schedule(); }
   schedule() {
     const state=this.provider();
-    if(this.frame || document.hidden || state?.visible===false || !this.ready || this.scene?.id==='procedural' || (!state?.motion&&!state?.animating))return;
-    // Static photography is already refreshed by every celestial update. It
-    // needs RAF only while transitioning; video still follows its frame clock.
-    if(this.scene?.photoReal && !this.scene.isVideo && !state?.animating)return;
-    this.frame=requestAnimationFrame((now)=>{this.frame=null;if(!this.lastFrame || now-this.lastFrame>=1000/(this.renderer==='canvas'?12:24)){this.lastFrame=now;this.draw();}this.schedule();});
+    const liveLight = this.scene?.photoReal && !state?.originalPhoto && (state?.realtime || this.transitioningTime || state?.utcMillis !== this.manualTarget);
+    if(this.frame || document.hidden || state?.visible===false || !this.ready || this.scene?.id==='procedural' || (!liveLight&&!state?.motion&&!state?.animating))return;
+    // Celestial illumination has its own frame clock, including when decorative
+    // motion is disabled. Manual time changes ease continuously for 220ms.
+    if(this.scene?.photoReal && !this.scene.isVideo && !liveLight && !state?.animating)return;
+    this.frame=requestAnimationFrame((now)=>{this.frame=null;if(!this.lastFrame || now-this.lastFrame>=1000/(this.renderer==='canvas'?12:30)){this.lastFrame=now;this.draw();}this.schedule();});
   }
   diagnostics() {
     let pixels=[];
@@ -410,6 +467,6 @@ export class RelightingRenderer {
       }
     }
     const hash=pixels.reduce((value,channel)=>Math.imul(value^channel,16777619)>>>0,2166136261).toString(16);
-    return {ready:this.ready,renderer:this.scene?.id==='procedural'?'procedural':this.renderer,sceneId:this.scene?.id,frameCount:this.frameCount,drawCount:this.drawCount,utcMillis:this.utcMillis,width:this.canvas.width,height:this.canvas.height,sourceWidth:this.sourceWidth,sourceHeight:this.sourceHeight,textureWidth:this.textureSizes?.[0]?.width,textureHeight:this.textureSizes?.[0]?.height,outputScale:this.outputSize?.outputScale,devicePixelRatio:window.devicePixelRatio||1,outputLimited:this.outputSize?.limited,photoReal:this.scene?.photoReal===true,contextLost:this.contextLost,fallbackReason:this.fallbackReason,shaderError:this.shaderError,pixelHash:hash,pixels,geometryVersion:this.geometry?.version};
+    return {ready:this.ready,renderer:this.scene?.id==='procedural'?'procedural':this.renderer,sceneId:this.scene?.id,frameCount:this.frameCount,drawCount:this.drawCount,utcMillis:this.utcMillis,targetUtcMillis:this.targetUtcMillis,transitioningTime:this.transitioningTime,realtime:this.lastRealtime,originalPhoto:this.lastOriginalPhoto,lighting:this.lastLighting,photoGrade:this.lastGrade,lightFieldSamples:this.lightFieldSamples,lightModel:'continuous-photo-field-1.0',width:this.canvas.width,height:this.canvas.height,sourceWidth:this.sourceWidth,sourceHeight:this.sourceHeight,textureWidth:this.textureSizes?.[0]?.width,textureHeight:this.textureSizes?.[0]?.height,outputScale:this.outputSize?.outputScale,devicePixelRatio:window.devicePixelRatio||1,outputLimited:this.outputSize?.limited,photoReal:this.scene?.photoReal===true,contextLost:this.contextLost,fallbackReason:this.fallbackReason,shaderError:this.shaderError,pixelHash:hash,pixels,geometryVersion:this.geometry?.version};
   }
 }

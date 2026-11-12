@@ -13,3 +13,4 @@
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 .relighting-canvas{position:absolute;inset:0;display:block;width:100%;height:100%;pointer-events:none}.graded-scene.relit:after{display:none}
 .graded-scene.relit .scene-photo{filter:none;transition:none}.photo-real .scene-photo{filter:none;animation:none!important;transform:none!important}.photo-real:after{display:none}
+.render-mode-field{padding-top:0!important;padding-bottom:20px!important}.photographic-scene .scene-photo{filter:none!important;animation:none!important;transform:none!important}.photographic-scene:after{display:none!important}

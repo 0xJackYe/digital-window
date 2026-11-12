@@ -31,20 +31,13 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
-## Three.js
-
-The offline three-dimensional renderer vendors Three.js 0.187.0 (r187),
-Copyright 2010-2026 Three.js Authors, under the MIT License. The original
-license is included at `vendor/THREE-LICENSE.txt` and as `THREE-LICENSE.txt`
-beside the portable executable. Both `three.module.js` and `three.core.js`
-are unmodified files from the pinned official npm package.
-
-## Photographs and modelled scenery
+## Photographs
 
 See [ASSET_CREDITS.md](ASSET_CREDITS.md) for the Commons and Unsplash
 photographs, their independent licenses and runtime presentation changes.
-The new procedural three-dimensional scene studies do not contain municipal
-photogrammetry, Google 3D tiles, or unlicensed commercial city models.
+The application displays the photographs directly. Continuous lighting is
+calculated by the application's own photographic compositor; it does not
+include a reconstructed three-dimensional city or an external 3D engine.
 
 ## Electron and Chromium
 

@@ -74,7 +74,7 @@ async function verifyPackageFreshness() {
     const asarModule = await import('@electron/asar');
     const asar = asarModule.default || asarModule;
     const archive = path.join(path.dirname(executable), 'resources', 'app.asar');
-    const files = ['src', 'electron', 'assets', 'vendor'].flatMap((folder) => filesWithin(path.join(root, folder)).map((filename) => path.relative(root, filename).replaceAll('\\', '/')));
+    const files = ['src', 'electron', 'assets'].flatMap((folder) => filesWithin(path.join(root, folder)).map((filename) => path.relative(root, filename).replaceAll('\\', '/')));
     const mismatches = [];
     const hashes = [];
     const sourceManifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));

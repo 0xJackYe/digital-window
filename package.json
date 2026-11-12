@@ -1,6 +1,6 @@
 {
   "name": "digital-window",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "一扇跟随世界日光变化的数字窗户",
   "private": true,
   "type": "module",
@@ -17,8 +17,5 @@
   "devDependencies": {
     "@electron/packager": "^20.3.0",
     "electron": "^45.3.0"
-  },
-  "dependencies": {
-    "three": "0.187.0"
   }
 }

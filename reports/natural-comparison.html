@@ -1,1 +1,18 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>数字窗户 · 三维光照四时对照</title><style>body{margin:0;background:#111820;color:#e9eef2;font:15px/1.8 system-ui,"Microsoft YaHei",sans-serif}main{max-width:1400px;margin:auto;padding:32px 24px}h1{font-size:25px;font-weight:550;margin:0 0 8px}p{max-width:950px;color:#b8c3cc}section{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;background:#1a252f;border:1px solid #33414b;border-radius:12px;overflow:hidden}img{display:block;width:100%;height:auto}figcaption{padding:10px 15px;color:#d0dce4}a{color:#b2d7f5}footer{padding:22px 0;font-size:13px;color:#9daebc}@media(max-width:760px){section{grid-template-columns:1fr}}</style><main><h1>丹佛 · 同一镜头的自然光对照</h1><p>以下均为软件实际运行截图。建筑与窗框是程序化三维模型，光照、几何阴影、天空和夜灯由渲染器计算；不是实拍照片的四个调色版本，也不是照片级城市测绘复原。时间为当次测试所选日期的丹佛当地时间。</p><section><figure><img src="natural-denver-morning.png" alt="早晨三维光照"><figcaption>08:00 · 低角度晨光</figcaption></figure><figure><img src="natural-denver-noon.png" alt="正午三维光照"><figcaption>12:00 · 楼体与窗台投影改变</figcaption></figure><figure><img src="natural-denver-evening.png" alt="傍晚三维光照"><figcaption>17:00 · 暮光、天空散射与窗灯</figcaption></figure><figure><img src="natural-denver-night.png" alt="夜间三维光照"><figcaption>22:00 · 日光消失，窗灯与街灯实际受光</figcaption></figure></section><footer>独立验证固定光强、颜色和曝光，仅翻转太阳方向：方块在地面上的投影差分质心改变约89像素。见<a href="software-tests.json">完整软件测试报告</a>。模型和天气均有近似，未宣称完全复现现实。</footer></main></html>
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>数字窗户 · 实拍连续日光对照</title>
+<style>body{margin:0;background:#111820;color:#e9eef2;font:15px/1.8 system-ui,"Microsoft YaHei",sans-serif}main{max-width:1400px;margin:auto;padding:32px 24px}h1{font-size:25px;font-weight:550;margin:0 0 8px}p{max-width:950px;color:#b8c3cc}section{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;background:#1a252f;border:1px solid #33414b;border-radius:12px;overflow:hidden}img{display:block;width:100%;height:auto}figcaption{padding:10px 15px;color:#d0dce4}a{color:#b2d7f5}footer{padding:22px 0;font-size:13px;color:#9daebc}@media(max-width:760px){section{grid-template-columns:1fr}}</style>
+<main>
+<h1>丹佛 · 同一张实拍的连续日光</h1>
+<p>以下为软件实际运行截图：背景始终是同一张高清丹佛照片，前景为写字楼窗框。光照方向、冷暖和局部明暗根据所选时刻连续计算；这四张图只展示变化过程中的四个时刻，渲染器没有四个时段节点，也没有用三维城市替换照片。</p>
+<section>
+<figure><img src="photo-denver-morning.png" alt="丹佛照片上的清晨日光模拟"><figcaption>07:30 · 晨间光色</figcaption></figure>
+<figure><img src="photo-denver-noon.png" alt="丹佛照片上的正午日光模拟"><figcaption>12:00 · 日间光色</figcaption></figure>
+<figure><img src="photo-denver-evening.png" alt="丹佛照片上的傍晚日光模拟"><figcaption>16:50 · 暮光过渡</figcaption></figure>
+<figure><img src="photo-denver-night.png" alt="丹佛照片上的夜间月光模拟"><figcaption>22:00 · 夜间环境光与月光</figcaption></figure>
+</section>
+<footer>时间为测试日期的丹佛当地时间。原片中的既有投影属于拍摄时刻。连续参数与实际渲染验证见<a href="software-tests.json">完整软件测试报告</a>。照片作者与许可见<a href="../ASSET_CREDITS.md">素材来源</a>。</footer>
+</main>
+</html>
