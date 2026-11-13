@@ -2,6 +2,7 @@ const photo = (name) => `../assets/landscapes/photos/${name}.jpg`;
 // Bearings are adjustable camera estimates, not surveyed calibration. Fuji is
 // based on the Hirano camera coordinates; NYC looks north from 32 Avenue of the Americas.
 const CAMERAS = {
+  cuhk: { azimuth: 310, fieldOfView: 65, horizon: .35 },
   manhattan: { azimuth: 30, fieldOfView: 70, horizon: .47, skyLimit: .48 },
   denver: { azimuth: 120, fieldOfView: 62, horizon: .52, skyLimit: .58 },
   medieval: { azimuth: 15, fieldOfView: 115, horizon: .35, skyLimit: .39 },
@@ -13,6 +14,7 @@ const CAMERAS = {
   procedural: { azimuth: 180, fieldOfView: 85, horizon: .53 },
 };
 export const CITIES = [
+  { id: 'hong-kong', name: '香港 · 中国', zone: 'Asia/Hong_Kong', latitude: 22.414, longitude: 114.214 },
   { id: 'new-york', name: '纽约 · 美国', zone: 'America/New_York', latitude: 40.720406, longitude: -74.004900 },
   { id: 'denver', name: '丹佛 · 美国', zone: 'America/Denver', latitude: 39.748, longitude: -104.996 },
   { id: 'prague', name: '布拉格 · 捷克', zone: 'Europe/Prague', latitude: 50.087131, longitude: 14.420708 },
@@ -32,6 +34,7 @@ export const CITIES = [
   { id: 'tromso', name: '特罗姆瑟 · 挪威', zone: 'Europe/Oslo', latitude: 69.6492, longitude: 18.9553 },
 ];
 export const SCENES = [
+  { id: 'cuhk', title: '香港，一天的窗景', subtitle: '真实昼夜 · 1424 帧 · 720p', location: 'hong-kong', kind: '全天实拍', photoReal: true, image: '../assets/cycles/cuhk/poster.jpg', resolution: [1280, 720], alt: '固定机位实拍香港中文大学和吐露港，夜间灯光与倒影、晨曦及白昼来自原始摄影', cycle: { video: '../assets/cycles/cuhk/cuhk.mp4', fps: 24000 / 1001, frameCount: 1424, intervalSeconds: 60, captureDurationSeconds: 1423 * 60, startLocalSecond: 18 * 3600 + 14 * 60 + 1, sourceDate: '2013-03-12', sourcePlace: { latitude: 22.414, longitude: 114.214, zone: 'Asia/Hong_Kong' }, width: 1280, height: 720 }, atmosphere: 'captured' },
   { id: 'manhattan', title: '曼哈顿，窗外', subtitle: '纽约 · 21 层实拍窗景', location: 'new-york', kind: '实拍', photoReal: true, image: photo('manhattan'), resolution: [4048, 3036], alt: '从纽约美洲大道32号21层真实窗内望向帝国大厦与曼哈顿楼群', atmosphere: 'city' },
   { id: 'denver', title: '丹佛，云端办公', subtitle: '科罗拉多 · 写字楼窗景', location: 'denver', kind: '实拍', photoReal: true, interior: 'office', image: photo('denver'), resolution: [4272, 2848], alt: '透过写字楼窗框望向实拍丹佛市中心楼群、富国银行中心与共和广场', atmosphere: 'city' },
   { id: 'medieval', title: '旧城，慢时光', subtitle: '布拉格 · 老城广场实拍', location: 'prague', kind: '实拍', photoReal: true, image: photo('medieval'), resolution: [10919, 3659], alt: '布拉格老城广场的真实全景，红瓦屋顶、圣尼古拉教堂与泰恩教堂', atmosphere: 'city' },

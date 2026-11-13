@@ -23,7 +23,7 @@ test('4K and high-DPI output retain the full physical pixel dimensions', () => {
 test('all eight photographic scenes use original JPEGs with verified provenance and dimensions', () => {
   const sources = JSON.parse(fs.readFileSync(new URL('../assets/landscapes/photos/sources.json', import.meta.url)));
   const denver = JSON.parse(fs.readFileSync(new URL('../assets/landscapes/photos/denver-source.json', import.meta.url)));
-  const photos = SCENES.filter((scene) => scene.photoReal);
+  const photos = SCENES.filter((scene) => scene.photoReal && !scene.cycle);
   assert.equal(photos.length, 8);
   assert.equal(new Set(photos.map((scene) => scene.id)).size, 8);
   for (const scene of photos) {
@@ -47,6 +47,18 @@ test('Denver uses Mountain Time with daylight saving and the office foreground',
   assert.ok(Math.abs(city.latitude - 39.74) < .1 && Math.abs(city.longitude + 104.99) < .1);
   assert.equal(getZonedDateParts(new Date('2026-01-15T12:00:00Z'), city.zone).hour, 5);
   assert.equal(getZonedDateParts(new Date('2026-07-15T12:00:00Z'), city.zone).hour, 6);
+});
+
+test('captured cycle uses a verified real day-night video and truthfully declares its native detail', () => {
+  const scene = SCENES.find(scene => scene.id === 'cuhk');
+  const record = JSON.parse(fs.readFileSync(new URL('../assets/cycles/cuhk/source.json', import.meta.url)));
+  const bytes = fs.readFileSync(new URL(scene.cycle.video, new URL('../src/', import.meta.url)));
+  assert.equal(createHash('sha256').update(bytes).digest('hex'), record.bundledSHA256);
+  assert.equal(scene.cycle.frameCount, record.bundledFrameCount);
+  assert.deepEqual(scene.resolution, [record.nativeDimensions.width, record.nativeDimensions.height]);
+  assert.equal(scene.cycle.frameCount, 1424);
+  assert.deepEqual(scene.resolution, [1280, 720]);
+  assert.match(record.license, /CC BY 3.0/);
 });
 
 test('photographic grading preserves neutral detail and changes continuously with actual light', () => {

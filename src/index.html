@@ -44,7 +44,7 @@
     <div class="panel-content">
       <section id="panel-landscapes" role="tabpanel" aria-labelledby="tab-landscapes">
         <p class="section-intro">选一扇窗，望向远方。</p>
-        <div class="city-field render-mode-field"><label class="field-label" for="render-mode">光影模式</label><div class="select-wrap"><select id="render-mode"><option value="daylight">连续自然光 · 实拍景观</option><option value="photo">原始实拍 · 摄影光影</option></select></div><p id="render-mode-description" class="subtle-note">保留真实照片细节，日光方向、色温与月光逐帧连续变化。</p></div>
+        <div class="city-field render-mode-field"><label class="field-label" for="render-mode">景观呈现</label><div class="select-wrap"><select id="render-mode"><option value="daylight">真实昼夜 · 连续实拍</option><option value="photo">原始照片 · 固定拍摄时刻</option></select></div><p id="render-mode-description" class="subtle-note">同机位全天实拍，包含真实夜景与灯光。</p></div>
         <div id="landscape-grid" class="landscape-grid"></div>
         <button id="import-button" class="import-button" type="button"><span class="import-plus" aria-hidden="true">＋</span><span>导入自己的景观<small>本地图片或视频</small></span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
         <input id="media-input" type="file" accept="image/jpeg,image/png,image/webp,image/avif,video/mp4,video/webm" hidden>
@@ -73,7 +73,7 @@
 
       <section id="panel-preferences" role="tabpanel" aria-labelledby="tab-preferences" hidden>
         <p class="section-intro">把画面，调到舒服的样子。</p>
-        <div class="setting-row"><div><label for="motion-toggle">景观动态</label><p>程序景观与视频；日月光线始终实时变化</p></div><input id="motion-toggle" class="switch" type="checkbox" checked></div>
+        <div class="setting-row"><div><label for="motion-toggle">景观动态</label><p>程序景观与导入视频；全天实拍始终同步时间</p></div><input id="motion-toggle" class="switch" type="checkbox" checked></div>
         <div class="setting-row"><div><label for="frame-toggle">极简窗框</label><p>为风景添一道细致的边界</p></div><input id="frame-toggle" class="switch" type="checkbox"></div>
         <div class="brightness-setting"><div class="range-label"><label for="brightness-slider">景观亮度</label><output id="brightness-value" for="brightness-slider">100%</output></div><input id="brightness-slider" type="range" min="50" max="130" value="100" step="5"></div>
         <div class="keyboard-help"><span class="field-label">快捷键</span><div><kbd>Esc</kbd><p>退出全屏</p></div><div><kbd>F11</kbd><p>切换全屏</p></div><div><kbd>Alt F4</kbd><p>退出应用</p></div></div>

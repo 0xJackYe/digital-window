@@ -35,9 +35,22 @@ POSSIBILITY OF SUCH DAMAGE.
 
 See [ASSET_CREDITS.md](ASSET_CREDITS.md) for the Commons and Unsplash
 photographs, their independent licenses and runtime presentation changes.
-The application displays the photographs directly. Continuous lighting is
-calculated by the application's own photographic compositor; it does not
-include a reconstructed three-dimensional city or an external 3D engine.
+The application displays still photographs with their original illumination.
+The default captured sequence interpolates actual recorded day/night frames;
+it does not include a reconstructed city or an external 3D engine.
+
+Version 1.6 defaults to the captured day/night video "CUHK in a day" by
+See-ming Lee / SML Photography / SML Universe Limited, Copyright 2013
+See-ming Lee, licensed CC BY 3.0 Unported. Source and author statement:
+https://www.flickr.com/photos/seeminglee/8555883879/
+License: https://creativecommons.org/licenses/by/3.0/
+The end credit slate and soundtrack were removed; scene frames were
+re-encoded for seeking, with attribution retained in the app and bundled
+ASSET_CREDITS.md and assets/cycles/cuhk/source.json. Original still-photo
+scenes now preserve their original illumination instead of claiming that
+grading can create authentic night scenes. The captured-cycle implementation
+was written independently; no GPL code from the researched wallpaper apps
+was copied into this MIT project.
 
 ## Electron and Chromium
 

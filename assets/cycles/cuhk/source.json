@@ -1,0 +1,21 @@
+{
+  "title": "中文大學的一天 CUHK in a day",
+  "creator": "See-ming Lee 李思明 / SML Photography / SML Universe Limited",
+  "copyright": "2013 See-ming Lee",
+  "sourceURL": "https://www.flickr.com/photos/seeminglee/8555883879/",
+  "downloadURL": "https://www.flickr.com/video_download.gne?id=8555883879",
+  "license": "CC BY 3.0 Unported",
+  "licenseURL": "https://creativecommons.org/licenses/by/3.0/",
+  "retrieved": "2026-11-13",
+  "nativeDimensions": { "width": 1280, "height": 720 },
+  "originalDownloadedBytes": 20799551,
+  "originalDownloadedSHA256": "0f050f065f82872955bba1baf0a9d24ad7d5805176a4274935cda404ac3da63c",
+  "bundledSHA256": "28ab2241b10f49ace0c84b468b83bfa187a9ce036549c42cfc3ce9d513225e9d",
+  "bundledFrameCount": 1424,
+  "fps": "24000/1001",
+  "videoDurationSeconds": 59.392667,
+  "authorCaptureRange": "2013-03-12 18:14:01 to 2013-03-13 18:00:01 GMT+08:00, one minute intervals, 1427 original RAW photographs",
+  "playbackMapping": "Uses a nominal 60-second source interval for each of 1424 clean public video frames, followed by a 17-minute interpolation between the last and first photograph. The transcoded public video does not retain original per-photo timestamps.",
+  "modifications": "Kept clean scene frames 0..1423; removed the end credit slate and soundtrack; re-encoded for local precise frame seeking. Credits are retained here, in the application description and ASSET_CREDITS.md. Poster is actual source frame 1000. No AI image generation, upscaling or city reconstruction.",
+  "limitations": "The creator describes a 1080p master, but the publicly downloadable Flickr file is only 720p. We do not claim native 4K detail. The sequence records one day's weather, light, artificial lamps and Moon; solar-time mapping changes timing, not the recorded solar angle, season, weather or lunar phase. Coordinates are a playback daylight reference, not a surveyed camera position."
+}

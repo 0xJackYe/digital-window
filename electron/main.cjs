@@ -465,8 +465,8 @@ async function runSoftwareTest() {
     }
     checks.push({ name: 'restoring resumes enabled video', passed: !resumeState.hidden && !resumeState.paused, ...resumeState });
     await mainWindow.webContents.executeJavaScript(`localStorage.setItem('digital-window.settings.v2', '{broken-json')`);
-    const recoveredSettings = await reloadForTest('manhattan');
-    checks.push({ name: 'corrupt saved preferences recover to a working default scene', passed: recoveredSettings.imageLoaded && recoveredSettings.timeZone === 'America/New_York' });
+    const recoveredSettings = await reloadForTest('cuhk');
+    checks.push({ name: 'corrupt saved preferences recover to a working default scene', passed: recoveredSettings.imageLoaded && recoveredSettings.timeZone === 'Asia/Hong_Kong' });
     await mainWindow.webContents.executeJavaScript(`(async () => {
       localStorage.removeItem('digital-window.settings.v2'); localStorage.removeItem('digital-window.settings.v1');
       await new Promise((resolve, reject) => {
@@ -478,8 +478,8 @@ async function runSoftwareTest() {
         // completes. The application closes that connection on completion.
       });
     })()`, true);
-    const defaults = await reloadForTest('manhattan');
-    checks.push({ name: 'software tests restore first-launch defaults', passed: defaults.timeZone === 'America/New_York' && defaults.visibleMainButtons?.length === 1 && defaults.visibleMainButtons[0] === 'menu-button' });
+    const defaults = await reloadForTest('cuhk');
+    checks.push({ name: 'software tests restore first-launch defaults', passed: defaults.timeZone === 'Asia/Hong_Kong' && defaults.visibleMainButtons?.length === 1 && defaults.visibleMainButtons[0] === 'menu-button' });
     finishInstrumentedTest('DIGITAL_WINDOW_SOFTWARE', checks);
   } catch (error) { finishInstrumentedTest('DIGITAL_WINDOW_SOFTWARE', checks, error); }
 }
@@ -765,7 +765,7 @@ async function runRendererIntegration() {
     if (defaultsRestored?.ready && defaultsRestored.imageLoaded && defaultsRestored.canvasReady) break;
     await delay(100);
   }
-  results.push({ name: 'default scene and time zone restored', passed: defaultsRestored?.sceneId === 'manhattan' && defaultsRestored.timeZone === 'America/New_York' && defaultsRestored.imageLoaded && defaultsRestored.visibleMainButtons?.length === 1 && defaultsRestored.visibleMainButtons[0] === 'menu-button', ui: defaultsRestored });
+  results.push({ name: 'default captured scene and time zone restored', passed: defaultsRestored?.sceneId === 'cuhk' && defaultsRestored.timeZone === 'Asia/Hong_Kong' && defaultsRestored.imageLoaded && defaultsRestored.visibleMainButtons?.length === 1 && defaultsRestored.visibleMainButtons[0] === 'menu-button', ui: defaultsRestored });
   return results;
 }
 
