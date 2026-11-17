@@ -7,3 +7,6 @@ release/
 .test-results/
 captures/
 *.zip
+.venv-imagegen/
+tmp/imagegen/
+output/imagegen/

@@ -1,4 +1,6 @@
-const photo = (name) => `../assets/landscapes/photos/${name}.jpg`;
+export const GENERATED_PHASES = Object.freeze(['dawn', 'morning', 'noon', 'afternoon', 'evening', 'night']);
+// Native dimensions come from the decoded assets, never from a requested size.
+const generatedScene = (id, title, subtitle, location, atmosphere) => ({ id, title, subtitle, location, atmosphere, generated: true, kind: 'AI 景观', image: `../assets/landscapes/generated/${id}/noon.png`, variants: Object.fromEntries(GENERATED_PHASES.map(phase => [phase, `../assets/landscapes/generated/${id}/${phase}.png`])), alt: `${title}，AI 生成的六时段高细节窗外景观，无窗框及室内边缘` });
 // Bearings are adjustable camera estimates, not surveyed calibration. Fuji is
 // based on the Hirano camera coordinates; NYC looks north from 32 Avenue of the Americas.
 const CAMERAS = {
@@ -34,14 +36,12 @@ export const CITIES = [
   { id: 'tromso', name: '特罗姆瑟 · 挪威', zone: 'Europe/Oslo', latitude: 69.6492, longitude: 18.9553 },
 ];
 export const SCENES = [
-  { id: 'cuhk', title: '香港，一天的窗景', subtitle: '真实昼夜 · 1424 帧 · 720p', location: 'hong-kong', kind: '全天实拍', photoReal: true, image: '../assets/cycles/cuhk/poster.jpg', resolution: [1280, 720], alt: '固定机位实拍香港中文大学和吐露港，夜间灯光与倒影、晨曦及白昼来自原始摄影', cycle: { video: '../assets/cycles/cuhk/cuhk.mp4', fps: 24000 / 1001, frameCount: 1424, intervalSeconds: 60, captureDurationSeconds: 1423 * 60, startLocalSecond: 18 * 3600 + 14 * 60 + 1, sourceDate: '2013-03-12', sourcePlace: { latitude: 22.414, longitude: 114.214, zone: 'Asia/Hong_Kong' }, width: 1280, height: 720 }, atmosphere: 'captured' },
-  { id: 'manhattan', title: '曼哈顿，窗外', subtitle: '纽约 · 21 层实拍窗景', location: 'new-york', kind: '实拍', photoReal: true, image: photo('manhattan'), resolution: [4048, 3036], alt: '从纽约美洲大道32号21层真实窗内望向帝国大厦与曼哈顿楼群', atmosphere: 'city' },
-  { id: 'denver', title: '丹佛，云端办公', subtitle: '科罗拉多 · 写字楼窗景', location: 'denver', kind: '实拍', photoReal: true, interior: 'office', image: photo('denver'), resolution: [4272, 2848], alt: '透过写字楼窗框望向实拍丹佛市中心楼群、富国银行中心与共和广场', atmosphere: 'city' },
-  { id: 'medieval', title: '旧城，慢时光', subtitle: '布拉格 · 老城广场实拍', location: 'prague', kind: '实拍', photoReal: true, image: photo('medieval'), resolution: [10919, 3659], alt: '布拉格老城广场的真实全景，红瓦屋顶、圣尼古拉教堂与泰恩教堂', atmosphere: 'city' },
-  { id: 'kyoto', title: '京都，巷深处', subtitle: '东山 · 八坂通实拍', location: 'kyoto', kind: '实拍', photoReal: true, image: photo('kyoto'), resolution: [5550, 3700], alt: '京都清晨真实八坂通、灯笼、木造町屋与八坂塔', atmosphere: 'street' },
-  { id: 'fuji', title: '富士，映湖间', subtitle: '山中湖 · 平野之滨实拍', location: 'hirano', kind: '实拍', photoReal: true, image: photo('fuji'), resolution: [6660, 2055], alt: '从山中湖平野之滨拍摄的真实富士山、湖岸与湖水', atmosphere: 'lake' },
-  { id: 'lake', title: '山湖之间', subtitle: '加拿大 · 梦莲湖实拍', location: 'banff', kind: '实拍', photoReal: true, image: photo('lake'), resolution: [7759, 3512], alt: '雪山与针叶林环抱碧绿色梦莲湖的摄影全景', atmosphere: 'lake' },
-  { id: 'coast', title: '海风来信', subtitle: '马尔代夫 · 艾瑞雅度实拍', location: 'maldives', kind: '实拍', photoReal: true, image: photo('coast'), resolution: [5887, 3929], alt: '马尔代夫艾瑞雅度岛真实海岸的棕榈树、码头与碧蓝海水', atmosphere: 'coast' },
-  { id: 'forest', title: '林间有光', subtitle: '晨雾森林 · 实拍', location: 'beijing', locationUnspecified: true, kind: '实拍', photoReal: true, image: photo('forest'), resolution: [4550, 2879], alt: 'Peter Heeling摄影的森林日出，晨雾与阳光穿过树冠照亮林间小径', atmosphere: 'forest' },
-  { id: 'procedural', title: '云山镜湖', subtitle: '实时绘制 · 昼夜流转', location: 'beijing', kind: '动态', image: null, alt: '随真实太阳位置变化的云山、湖水与星空', atmosphere: 'procedural' },
+  generatedScene('denver', '丹佛，云端视野', '高层办公视角 · 无窗框', 'denver', 'city'),
+  generatedScene('manhattan', '曼哈顿，窗外', '纽约高层视角 · 无窗框', 'new-york', 'city'),
+  generatedScene('medieval', '旧城，慢时光', '布拉格老城 · 六时段', 'prague', 'city'),
+  generatedScene('kyoto', '京都，巷深处', '东山街巷 · 六时段', 'kyoto', 'street'),
+  generatedScene('fuji', '富士，映湖间', '富士山与山中湖 · 六时段', 'hirano', 'lake'),
+  generatedScene('lake', '山湖之间', '落基山湖 · 六时段', 'banff', 'lake'),
+  generatedScene('coast', '海风来信', '马尔代夫海岸 · 六时段', 'maldives', 'coast'),
+  generatedScene('forest', '林间有光', '林间小径 · 六时段', 'beijing', 'forest'),
 ].map((scene) => ({ ...scene, camera: CAMERAS[scene.id] }));

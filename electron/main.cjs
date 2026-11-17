@@ -242,8 +242,7 @@ const testDelay = (milliseconds) => new Promise((resolve) => setTimeout(resolve,
 
 async function usePhotographicTestMode() {
   await waitRendererReady();
-  await mainWindow.webContents.executeJavaScript(`(() => { const select=document.getElementById('render-mode'); select.value='photo'; select.dispatchEvent(new Event('change',{bubbles:true})); })()`, true);
-  await testDelay(200);
+  // Generated scenes always use their six source images; no legacy mode selector.
 }
 
 async function waitRendererReady(expectedScene) {
@@ -304,8 +303,8 @@ async function verifyPhotographicQuality() {
   try {
     for (const sceneId of ['denver', 'manhattan', 'medieval', 'kyoto', 'fuji', 'lake', 'coast', 'forest']) {
       const details = await mainWindow.webContents.executeJavaScript(`(${inspectPhotographicScene.toString()})(${JSON.stringify(sceneId)})`, true);
-      checks.push({ name: `${sceneId} preserves real photo detail at 4K without legacy proxy shadows or duplicate filters`, passed: details.ready && details.photoReal && details.sourceWidth >= 3840 && details.outputWidth === 3840 && details.outputHeight === 2160 && Math.abs(details.dpr - 2) < .001 && details.layers === 0 && details.filter === 'none' && details.animation === 'none' && details.geometryVersion === 'photographic-preserved-1.0' && details.noAtmosphereOverlay, ...details });
-      if (sceneId === 'denver') checks.push({ name: 'Denver displays an office-window foreground and follows Mountain Time', passed: details.officeForeground && details.timeZone === 'America/Denver', officeForeground: details.officeForeground, timeZone: details.timeZone });
+      checks.push({ name: `${sceneId} decodes six landscape sources and renders a physical 4K framebuffer`, passed: details.ready && details.generated && details.outputWidth === 3840 && details.outputHeight === 2160 && Math.abs(details.dpr - 2) < .001 && details.layers === 6 && details.allLayersDecoded && details.allLandscapeSize && details.filter === 'none' && details.animation === 'none' && details.lightModel === 'six-phase-image-blend-1.0' && details.phaseCount === 6 && details.noFrames && details.noAtmosphereOverlay, ...details });
+      if (sceneId === 'denver') checks.push({ name: 'Denver displays only the exterior view and follows Mountain Time', passed: details.noFrames && details.timeZone === 'America/Denver', noFrames: details.noFrames, timeZone: details.timeZone });
       if (!process.argv.includes('--disable-webgl')) {
         const output = path.resolve(process.cwd(), '.test-results', `${app.isPackaged ? 'packaged' : 'source'}-quality-${sceneId}.png`);
         fs.mkdirSync(path.dirname(output), { recursive: true });
@@ -339,92 +338,44 @@ async function inspectPhotographicScene(sceneId) {
   byId('close-panel').click();
   await delay(350);
   const state = ui(), deck = document.querySelector(`.scene-deck[data-scene="${sceneId}"].is-visible`), photo = deck?.querySelector('.scene-photo');
-  return { ready: state.ready && state.sceneId === sceneId, photoReal: state.photoReal, sourceWidth: state.relighting.sourceWidth, sourceHeight: state.relighting.sourceHeight, outputWidth: state.relighting.width, outputHeight: state.relighting.height, dpr: devicePixelRatio, renderer: state.relighting.renderer, layers: state.layerImages.length, filter: photo && getComputedStyle(photo).filter, animation: photo && getComputedStyle(photo).animationName, geometryVersion: state.relighting.geometryVersion, noAtmosphereOverlay: state.atmosphere.photoReal && !state.atmosphere.sunDrawn && !state.atmosphere.moonDrawn && state.atmosphere.glintSources.length === 0, officeForeground: Boolean(deck?.querySelector('.office-interior .office-sill') && deck?.querySelector('.office-interior .office-mullion')), timeZone: state.timeZone };
+  const layers = [...(deck?.querySelectorAll('[data-phase]') || [])];
+  const allLandscapeSize = layers.every(image => image.naturalWidth >= 1600 && image.naturalHeight >= 900 && Math.abs(image.naturalWidth / image.naturalHeight / (16 / 9) - 1) <= .01);
+  return { ready: state.ready && state.sceneId === sceneId, generated: state.generated, sourceWidth: state.relighting.sourceWidth, sourceHeight: state.relighting.sourceHeight, outputWidth: state.relighting.width, outputHeight: state.relighting.height, dpr: devicePixelRatio, renderer: state.relighting.renderer, layers: layers.length, allLayersDecoded: layers.every(image => image.complete && image.naturalWidth > 0), allLandscapeSize, filter: photo && getComputedStyle(photo).filter, animation: photo && getComputedStyle(photo).animationName, lightModel: state.relighting.lightModel, phaseCount: state.relighting.phaseCount, noAtmosphereOverlay: !state.atmosphere.sunDrawn && !state.atmosphere.moonDrawn && state.atmosphere.glintSources.length === 0, noFrames: !document.querySelector('.office-interior,#window-frame,#frame-toggle'), timeZone: state.timeZone };
 }
 
 async function lightingBrowserFlows() {
   const checks = [], check = (name, passed, details = {}) => checks.push({ name, passed: Boolean(passed), ...details });
-  const byId = (id) => document.getElementById(id), ui = () => window.__digitalWindowSmoke();
-  const delay = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
-  const waitFor = async (predicate, timeout = 5000) => {
-    const end = Date.now() + timeout;
-    while (Date.now() < end) { if (predicate()) return true; await delay(80); }
-    return predicate();
-  };
-  const change = (id, value) => {
-    const element = byId(id); if (element.type === 'checkbox') element.checked = value; else element.value = value;
-    element.dispatchEvent(new Event('input', { bubbles: true })); element.dispatchEvent(new Event('change', { bubbles: true }));
-  };
-  const preview = async (minute) => { change('time-slider', minute); await delay(1150); return ui(); };
-  const unitVector = (vector) => {
-    const values = Array.isArray(vector) ? vector : vector && [vector.x, vector.y, vector.z];
-    return values?.length === 3 && values.every(Number.isFinite) && Math.abs(Math.hypot(...values) - 1) < 0.005;
-  };
-  const angleDifference = (a, b) => Math.abs(((a - b + 540) % 360) - 180);
-  await waitFor(() => ui().relighting?.ready && ui().lighting && ui().imageLoaded, 12000);
-  const initial = ui();
-  check('photographic relighting initializes a real rendering path', initial.relighting?.ready && ['webgl', 'canvas'].includes(initial.relighting.renderer) && initial.relighting.width > 0 && initial.relighting.height > 0, { relighting: initial.relighting });
-  check('solar ephemeris and normalized light direction are finite', Number.isFinite(initial.lighting?.sun?.altitude) && Number.isFinite(initial.lighting?.sun?.azimuth) && unitVector(initial.lighting?.sun?.direction), { sun: initial.lighting?.sun });
-  check('lunar ephemeris and illuminated fraction are finite', Number.isFinite(initial.lighting?.moon?.altitude) && Number.isFinite(initial.lighting?.moon?.azimuth) && initial.lighting?.moon?.illumination >= 0 && initial.lighting?.moon?.illumination <= 1 && unitVector(initial.lighting?.moon?.direction), { moon: initial.lighting?.moon });
-
+  const byId = id => document.getElementById(id), ui = () => window.__digitalWindowSmoke();
+  const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+  const wait = async predicate => { for(let i=0;i<120;i++){if(predicate())return true;await delay(60);}return false; };
+  const phases = ['dawn','morning','noon','afternoon','evening','night'];
+  check('six-image compositor initializes', ui().generated && ui().relighting.ready && ui().relighting.phaseCount === 6 && ui().relighting.lightModel === 'six-phase-image-blend-1.0');
+  check('window frames and the legacy mode selector are absent', !document.querySelector('.office-interior,#window-frame,#frame-toggle,#render-mode'));
   byId('menu-button').click(); document.querySelector('#main-menu [data-panel="daylight"]').click();
-  const morning = await preview(480), afternoon = await preview(960);
-  check('manual morning to afternoon changes the actual Sun direction', angleDifference(morning.lighting.sun.azimuth, afternoon.lighting.sun.azimuth) > 15, { morning: morning.lighting.sun, afternoon: afternoon.lighting.sun });
-  const midnight = await preview(0);
-  check('Sun below the horizon contributes no direct light', midnight.lighting.sun.altitude < 0 && midnight.lighting.sun.visible === false && midnight.lighting.sun.strength <= 0.00001, { sun: midnight.lighting.sun });
-  const noon = await preview(720);
-  check('local noon produces direct daylight even outside the camera view', noon.lighting.sun.altitude > 0 && noon.lighting.sun.strength > 0, { sun: noon.lighting.sun });
-  const shadow = noon.lighting.shadow, solarDirection = noon.lighting.sun.direction;
-  check('ground shadows point away from the direct Sun', shadow?.source === 'sun' && shadow.length > 0 && shadow.direction[0] * solarDirection[0] - shadow.direction[1] * solarDirection[2] < -0.1, { shadow });
-
-  change('view-azimuth', 90); await delay(650); const eastView = ui();
-  change('view-azimuth', 270); await delay(650); const westView = ui();
-  check('camera bearing changes projected sunlight', JSON.stringify(eastView.lighting.sun.direction) !== JSON.stringify(westView.lighting.sun.direction) || Math.abs(eastView.lighting.sun.screenX - westView.lighting.sun.screenX) > 0.05, { east: eastView.lighting.sun, west: westView.lighting.sun });
-  check('original-photo mode preserves photographic pixels instead of pretending to recast shadows', eastView.relighting.pixelHash === westView.relighting.pixelHash && eastView.relighting.pixels?.length > 0, { eastHash: eastView.relighting.pixelHash, westHash: westView.relighting.pixelHash });
-
-  const celestialModule = await import(new URL('./celestial.js', location.href).href);
-  const lightingModule = await import(new URL('./lighting.js', location.href).href);
-  const place = { latitude: 40.7484, longitude: -73.9857, timeZone: 'America/New_York' };
-  // Independent primary references: NASA UTC phase table / US Naval Observatory.
-  // https://eclipse.gsfc.nasa.gov/phase/phase2001gmt.html
-  // https://aa.usno.navy.mil/calculated/moon/phases?date=2024-4-08&format=p&nump=5&submit=Get+Data
-  const full = celestialModule.getCelestialState(new Date('2024-03-25T07:00:00Z'), place);
-  const fresh = celestialModule.getCelestialState(new Date('2024-04-08T18:21:00Z'), place);
-  check('known NASA full Moon is nearly fully illuminated', full.moon.illumination > 0.97, { illumination: full.moon.illumination });
-  check('known USNO new Moon is nearly unilluminated', fresh.moon.illumination < 0.03, { illumination: fresh.moon.illumination });
-  let belowMoon;
-  for (let hour = 0; hour < 24; hour += 1) {
-    const celestial = celestialModule.getCelestialState(new Date(Date.UTC(2024, 2, 25, hour)), place);
-    if (celestial.moon.altitude < -5) { belowMoon = lightingModule.getLightingState(celestial, { viewAzimuth: 90 }); break; }
+  const hashes = [];
+  for(const phase of phases){
+    document.querySelector('#phase-presets [data-preview-phase="'+phase+'"]').click();
+    const settled=await wait(()=>!ui().transitioning);
+    const state=ui(); hashes.push(state.relighting.pixelHash);
+    check(phase+' preset blends its actual generated source', settled && !byId('realtime-toggle').checked && state.weights[phase] > .8 && state.relighting.sources.length === 6 && state.layerImages.every(image=>image.loaded), {phase,weight:state.weights[phase],pixelHash:state.relighting.pixelHash});
   }
-  check('Moon below the horizon contributes no moonlight', belowMoon?.moon?.visible === false && belowMoon.moon.strength <= 0.00001, { moon: belowMoon?.moon });
-  const moonA = celestialModule.getCelestialState(new Date('2024-03-25T00:00:00Z'), place).moon;
-  const moonB = celestialModule.getCelestialState(new Date('2024-03-25T06:00:00Z'), place).moon;
-  check('lunar direction evolves during the night', angleDifference(moonA.azimuth, moonB.azimuth) > 15 && Math.abs(moonA.altitude - moonB.altitude) > 5, { start: moonA, end: moonB });
-
-  byId('tab-preferences').click(); change('motion-toggle', false);
-  byId('tab-daylight').click(); change('realtime-toggle', true);
-  const beforeTick = ui(); await delay(2300); const afterTick = ui();
-  check('realtime astronomy keeps ticking with landscape motion off', !byId('motion-toggle').checked && afterTick.lighting.utcMillis - beforeTick.lighting.utcMillis >= 1200 && angleDifference(afterTick.lighting.sun.azimuth, beforeTick.lighting.sun.azimuth) > 0.000001, { beforeUtc: beforeTick.lighting.utcMillis, afterUtc: afterTick.lighting.utcMillis });
-  check('light renderer repaints with landscape motion off', afterTick.relighting.frameCount > beforeTick.relighting.frameCount && afterTick.relighting.utcMillis > beforeTick.relighting.utcMillis, { before: beforeTick.relighting.frameCount, after: afterTick.relighting.frameCount, renderer: afterTick.relighting.renderer });
-  const frozen = await preview(720); await delay(1350); const stillFrozen = ui();
-  check('manual preview remains at the selected instant', frozen.lighting.utcMillis === stillFrozen.lighting.utcMillis && !byId('realtime-toggle').checked);
-
-  if (ui().relighting.renderer === 'webgl') {
-    const canvas = byId('relighting-canvas');
-    const context = canvas.getContext('webgl') || canvas.getContext('webgl2');
-    const extension = context?.getExtension('WEBGL_lose_context');
-    if (extension) {
-      extension.loseContext();
-      await waitFor(() => ui().relighting.contextLost || ui().relighting.renderer === 'canvas', 4000);
-      const lost = ui().relighting;
-      check('WebGL context loss retains a working light renderer', lost.ready && lost.contextLost && lost.renderer === 'canvas' && lost.pixels?.length > 0, { relighting: lost });
-      extension.restoreContext();
-      await waitFor(() => ui().relighting.ready && !ui().relighting.contextLost, 6000);
-      const recovered = ui().relighting;
-      check('light rendering recovers after context restoration', recovered.ready && !recovered.contextLost && recovered.renderer === 'webgl' && recovered.drawCount > lost.drawCount && recovered.pixels?.length > 0, { relighting: recovered });
-    } else check('WebGL context-loss exercise', true, { skipped: true, reason: 'WEBGL_lose_context extension is unavailable' });
-  } else check('WebGL context-loss exercise', true, { skipped: true, reason: 'This launch is exercising the Canvas renderer' });
+  check('all six generated phases produce distinct displayed pixels', new Set(hashes).size === 6, {hashes});
+  byId('motion-toggle').checked=false; byId('motion-toggle').dispatchEvent(new Event('change',{bubbles:true}));
+  byId('realtime-toggle').checked=true; byId('realtime-toggle').dispatchEvent(new Event('change',{bubbles:true}));
+  const before=ui(); await delay(1300); const after=ui();
+  check('six-phase playback continues with video motion disabled', after.relighting.frameCount>before.relighting.frameCount && after.relighting.utcMillis>before.relighting.utcMillis+800);
+  const slider=byId('time-slider'); slider.value=720.123; slider.dispatchEvent(new Event('input',{bubbles:true}));
+  await wait(()=>!ui().transitioning); const manual=ui(); await delay(500);
+  check('fractional manual preview remains fixed', !byId('realtime-toggle').checked && manual.lighting.utcMillis===ui().lighting.utcMillis && Math.abs(Number(slider.value)-720.123)<.001);
+  if(ui().relighting.renderer==='webgl'){
+    const canvas=byId('relighting-canvas'),context=canvas.getContext('webgl'),extension=context.getExtension('WEBGL_lose_context');
+    if(extension){
+      extension.loseContext(); await wait(()=>ui().relighting.renderer==='canvas');
+      check('WebGL loss retains all six images in Canvas', ui().relighting.renderer==='canvas' && ui().relighting.phaseCount===6 && ui().relighting.pixels.length===32);
+      extension.restoreContext(); await wait(()=>ui().relighting.renderer==='webgl'&&!ui().relighting.contextLost);
+      check('WebGL restoration reloads all six image textures', ui().relighting.renderer==='webgl' && ui().relighting.sources.length===6 && ui().relighting.pixels.length===32);
+    }else check('WebGL loss extension unavailable',true,{skipped:true});
+  }
   return checks;
 }
 
@@ -440,7 +391,7 @@ async function runSoftwareTest() {
     checks.push(...await mainWindow.webContents.executeJavaScript(`(async () => {
       const checks = [], ui = window.__digitalWindowSmoke();
       const stored = JSON.parse(localStorage.getItem('digital-window.settings.v2') || '{}');
-      checks.push({ name: 'video and full preferences survive reload', passed: ui.sceneId === 'custom' && ui.imageLoaded && ui.timeZone === 'Europe/London' && ui.locationSource === 'override' && stored.realtime === false && stored.previewMinute === 540 && stored.brightness === 80 && stored.frame === true });
+      checks.push({ name: 'video and full preferences survive reload', passed: ui.sceneId === 'custom' && ui.imageLoaded && ui.timeZone === 'Europe/London' && ui.locationSource === 'override' && stored.realtime === false && stored.previewMinute === 540 && stored.brightness === 80 && !document.getElementById('window-frame') });
       document.getElementById('menu-button').click(); document.querySelector('#main-menu [data-panel="preferences"]').click();
       const motion = document.getElementById('motion-toggle'); motion.checked = true; motion.dispatchEvent(new Event('change', { bubbles: true }));
       await new Promise(resolve => setTimeout(resolve, 700));
@@ -465,8 +416,8 @@ async function runSoftwareTest() {
     }
     checks.push({ name: 'restoring resumes enabled video', passed: !resumeState.hidden && !resumeState.paused, ...resumeState });
     await mainWindow.webContents.executeJavaScript(`localStorage.setItem('digital-window.settings.v2', '{broken-json')`);
-    const recoveredSettings = await reloadForTest('cuhk');
-    checks.push({ name: 'corrupt saved preferences recover to a working default scene', passed: recoveredSettings.imageLoaded && recoveredSettings.timeZone === 'Asia/Hong_Kong' });
+    const recoveredSettings = await reloadForTest('denver');
+    checks.push({ name: 'corrupt saved preferences recover to a working default scene', passed: recoveredSettings.imageLoaded && recoveredSettings.timeZone === 'America/Denver' });
     await mainWindow.webContents.executeJavaScript(`(async () => {
       localStorage.removeItem('digital-window.settings.v2'); localStorage.removeItem('digital-window.settings.v1');
       await new Promise((resolve, reject) => {
@@ -478,8 +429,8 @@ async function runSoftwareTest() {
         // completes. The application closes that connection on completion.
       });
     })()`, true);
-    const defaults = await reloadForTest('cuhk');
-    checks.push({ name: 'software tests restore first-launch defaults', passed: defaults.timeZone === 'Asia/Hong_Kong' && defaults.visibleMainButtons?.length === 1 && defaults.visibleMainButtons[0] === 'menu-button' });
+    const defaults = await reloadForTest('denver');
+    checks.push({ name: 'software tests restore first-launch defaults', passed: defaults.timeZone === 'America/Denver' && defaults.visibleMainButtons?.length === 1 && defaults.visibleMainButtons[0] === 'menu-button' });
     finishInstrumentedTest('DIGITAL_WINDOW_SOFTWARE', checks);
   } catch (error) { finishInstrumentedTest('DIGITAL_WINDOW_SOFTWARE', checks, error); }
 }
@@ -506,19 +457,19 @@ async function softwareBrowserFlows() {
     return ui().sceneId === sceneId && ui().imageLoaded && deck?.dataset.scene === sceneId && Number(getComputedStyle(deck).opacity) > 0.99;
   };
   byId('menu-button').click(); document.querySelector('#main-menu [data-panel="landscapes"]').click();
-  for (const sceneId of ['manhattan', 'denver', 'medieval', 'kyoto', 'fuji', 'lake', 'coast', 'forest', 'procedural']) {
+  for (const sceneId of ['manhattan', 'denver', 'medieval', 'kyoto', 'fuji', 'lake', 'coast', 'forest']) {
     document.querySelector('.landscape-card[data-scene="' + sceneId + '"]').click();
     const loaded = await waitFor(() => sceneSettled(sceneId), 12000);
     check('all-scenes: ' + sceneId + ' loads', loaded && ui().canvasReady && ui().hasSolar, { sceneId: ui().sceneId });
   }
   for (const sceneId of ['lake', 'manhattan', 'forest', 'fuji', 'kyoto']) document.querySelector('.landscape-card[data-scene="' + sceneId + '"]').click();
   await waitFor(() => sceneSettled('kyoto'), 12000); await delay(300);
-  check('rapid scene switches keep the final request', ui().sceneId === 'kyoto' && document.querySelectorAll('#scene-image').length === 1 && document.querySelectorAll('#scene-layers').length === 0 && document.querySelectorAll('.scene-deck').length === 1);
+  check('rapid scene switches keep the final request', ui().sceneId === 'kyoto' && document.querySelectorAll('#scene-image').length === 1 && document.querySelectorAll('#scene-layers').length === 1 && ui().layerImages.length === 6 && document.querySelectorAll('.scene-deck').length === 1);
 
   const { SceneView } = await import(new URL('./scene-view.js', location.href).href);
   const host = document.createElement('div'); host.style.cssText = 'position:fixed;left:-20000px;width:128px;height:80px'; document.body.append(host);
   const isolated = new SceneView(host);
-  await isolated.show({ id: 'test-valid', image: '../assets/landscapes/photos/forest.jpg', kind: '静态' });
+  await isolated.show({ id: 'test-valid', image: '../assets/landscapes/generated/forest/noon.png', kind: '静态' });
   const retained = isolated.current;
   let rejected = false;
   try { await isolated.show({ id: 'test-corrupt', image: 'data:image/png;base64,YmFk', kind: '静态' }); } catch { rejected = true; }
@@ -594,10 +545,10 @@ async function softwareBrowserFlows() {
   check('motion on resumes imported video', !!video && !video.paused);
   byId('tab-daylight').click(); change('city-select', 'london'); change('realtime-toggle', false);
   byId('time-slider').value = 540; byId('time-slider').dispatchEvent(new Event('input', { bubbles: true })); byId('time-slider').dispatchEvent(new Event('change', { bubbles: true }));
-  byId('tab-preferences').click(); change('frame-toggle', true);
+  byId('tab-preferences').click(); check('no window-frame setting or foreground remains', !byId('frame-toggle') && !byId('window-frame') && !document.querySelector('.office-interior'));
   byId('brightness-slider').value = 80; byId('brightness-slider').dispatchEvent(new Event('input', { bubbles: true })); byId('brightness-slider').dispatchEvent(new Event('change', { bubbles: true }));
   const stored = JSON.parse(localStorage.getItem('digital-window.settings.v2') || '{}');
-  check('video and preference configuration persist before reload', stored.scene === 'custom' && stored.city === 'london' && stored.sceneTimezone === false && stored.previewMinute === 540 && stored.frame === true && stored.brightness === 80);
+  check('video and preference configuration persist before reload', stored.scene === 'custom' && stored.city === 'london' && stored.sceneTimezone === false && stored.previewMinute === 540 && !document.getElementById('window-frame') && stored.brightness === 80);
   return checks;
 }
 
@@ -633,7 +584,7 @@ async function runRendererIntegration() {
     check('three-dot menu opens', !byId('main-menu').hidden && byId('menu-button').getAttribute('aria-expanded') === 'true');
     document.querySelector('#main-menu [data-panel="landscapes"]').click();
     check('settings opens while dots remain available', !byId('settings-panel').hidden && !byId('panel-landscapes').hidden && !byId('window-view').inert && byId('menu-button').getClientRects().length > 0);
-    const phases = ['dawn', 'morning', 'noon', 'evening', 'night'];
+    const phases = ['dawn', 'morning', 'noon', 'afternoon', 'evening', 'night'];
     const sceneZones = { manhattan: 'America/New_York', denver: 'America/Denver', medieval: 'Europe/Prague', kyoto: 'Asia/Tokyo', fuji: 'Asia/Tokyo' };
     for (const [sceneId, zone] of Object.entries(sceneZones)) {
       byId('tab-landscapes').click();
@@ -644,7 +595,7 @@ async function runRendererIntegration() {
       }, 10000);
       const scene = diagnostic();
       check(sceneId + ' follows its own time zone', scene.sceneId === sceneId && scene.timeZone === zone && byId('scene-timezone-toggle').checked, { timeZone: scene.timeZone });
-      check(sceneId + ' decodes its full-resolution real photograph', scene.photoReal && scene.imageLoaded && scene.layerImages?.length === 0 && scene.relighting?.sourceWidth >= 3840, { sourceWidth: scene.relighting?.sourceWidth, sourceHeight: scene.relighting?.sourceHeight });
+      check(sceneId + ' decodes all six native-resolution AI sources', scene.generated && scene.imageLoaded && scene.layerImages?.length === 6 && scene.layerImages.every(image => image.loaded && image.width >= 1600 && image.height >= 900), { sourceWidth: scene.relighting?.sourceWidth, sourceHeight: scene.relighting?.sourceHeight });
       byId('tab-daylight').click();
       for (const phase of phases) {
         document.querySelector('#phase-presets [data-preview-phase="' + phase + '"]').click();
@@ -654,7 +605,7 @@ async function runRendererIntegration() {
         await new Promise(resolve => setTimeout(resolve, 80));
         const current = diagnostic();
         const weight = Number(current.weights?.[phase] || 0);
-        check(sceneId + ' ' + phase + ' preset updates astronomy while retaining the original photograph', !byId('realtime-toggle').checked && weight > 0.8 && current.imageLoaded && current.relighting.ready && current.relighting.utcMillis === current.lighting.utcMillis && current.relighting.pixelHash === scene.relighting.pixelHash, { weight, phase: current.phase, pixelHash: current.relighting.pixelHash });
+        check(sceneId + ' ' + phase + ' preset selects its generated time-of-day source', !byId('realtime-toggle').checked && weight > 0.8 && current.imageLoaded && current.relighting.ready && current.relighting.utcMillis === current.lighting.utcMillis && current.relighting.phaseCount === 6 && current.relighting.lightModel === 'six-phase-image-blend-1.0', { weight, phase: current.phase, pixelHash: current.relighting.pixelHash });
       }
       change('realtime-toggle', true);
       check(sceneId + ' returns to live solar lighting', byId('realtime-toggle').checked && diagnostic().timeZone === zone);
@@ -668,9 +619,8 @@ async function runRendererIntegration() {
     check('realtime preference restores and saves', byId('realtime-toggle').checked && JSON.parse(localStorage.getItem('digital-window.settings.v2') || '{}').realtime === true);
     change('scene-timezone-toggle', true);
     check('scene time zone can be restored', diagnostic().timeZone === 'Asia/Tokyo' && byId('scene-timezone-toggle').checked);
-    byId('tab-landscapes').click(); document.querySelector('.landscape-card[data-scene="procedural"]').click();
-    await waitFor(() => diagnostic().sceneId === 'procedural' && diagnostic().canvasReady);
-    check('procedural scene renders', diagnostic().sceneId === 'procedural' && diagnostic().canvasReady && Boolean(document.querySelector('.scene-deck[data-scene="procedural"].is-visible.procedural-deck')));
+    byId('tab-landscapes').click();
+    check('window frames are not exposed or rendered', !byId('frame-toggle') && !byId('window-frame') && !document.querySelector('.office-interior'));
     document.querySelector('.landscape-card[data-scene="forest"]').click();
     await waitFor(() => diagnostic().sceneId === 'forest' && diagnostic().imageLoaded);
     const forestDeck = byId('scene-image')?.closest('.scene-deck');
@@ -765,7 +715,7 @@ async function runRendererIntegration() {
     if (defaultsRestored?.ready && defaultsRestored.imageLoaded && defaultsRestored.canvasReady) break;
     await delay(100);
   }
-  results.push({ name: 'default captured scene and time zone restored', passed: defaultsRestored?.sceneId === 'cuhk' && defaultsRestored.timeZone === 'Asia/Hong_Kong' && defaultsRestored.imageLoaded && defaultsRestored.visibleMainButtons?.length === 1 && defaultsRestored.visibleMainButtons[0] === 'menu-button', ui: defaultsRestored });
+  results.push({ name: 'default generated Denver scene and time zone restored', passed: defaultsRestored?.sceneId === 'denver' && defaultsRestored.timeZone === 'America/Denver' && defaultsRestored.imageLoaded && defaultsRestored.visibleMainButtons?.length === 1 && defaultsRestored.visibleMainButtons[0] === 'menu-button', ui: defaultsRestored });
   return results;
 }
 

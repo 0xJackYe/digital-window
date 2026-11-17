@@ -1,5 +1,5 @@
 /**
- * Five photographic light states driven by the astronomical solar state.
+ * Six image states driven by the astronomical solar state.
  * Twilight follows solar altitude, while the middle of the day follows the
  * day's own sunrise/noon/sunset span. A low winter Sun can therefore still
  * reach the noon image. These are visual blends, not weather predictions.
@@ -8,6 +8,7 @@ export const DAYLIGHT_PHASES = Object.freeze([
   Object.freeze({ id: 'dawn', label: '黎明' }),
   Object.freeze({ id: 'morning', label: '早晨' }),
   Object.freeze({ id: 'noon', label: '中午' }),
+  Object.freeze({ id: 'afternoon', label: '下午' }),
   Object.freeze({ id: 'evening', label: '傍晚' }),
   Object.freeze({ id: 'night', label: '晚上' }),
 ]);
@@ -24,7 +25,7 @@ const timestamp = (value) => value == null ? NaN : new Date(value).getTime();
  * @param {object} solar A state from getSolarState (altitude/hourAngle required).
  * @param {Date|number|string} [date] The state’s real instant, including previews.
  * Omit date to infer solar-day progress from hour angle and the event spans.
- * @returns {{phase:string,label:string,weights:{dawn:number,morning:number,noon:number,evening:number,night:number}}}
+ * @returns {{phase:string,label:string,weights:{dawn:number,morning:number,noon:number,afternoon:number,evening:number,night:number}}}
  */
 export function getDaylightBlend(solar, date) {
   if (!Number.isFinite(solar?.altitude) || !Number.isFinite(solar?.hourAngle)) {
@@ -55,10 +56,24 @@ export function getDaylightBlend(solar, date) {
     dawn: dawnVisible * (1 - morningVisible),
     morning: dawnVisible * morningVisible,
     noon: 0,
+    afternoon: 0,
     evening: 0,
     night: 1 - dawnVisible,
   };
-  const falling = { dawn: 0, morning: 0, noon: 0, evening: eveningVisible, night: 1 - eveningVisible };
+  // Afternoon has its own image instead of using an evening image throughout
+  // the second half of the day. Both altitude and the local sunset span matter:
+  // a short winter afternoon still reaches dusk before the Sun sets.
+  // Near polar midnight both rising and falling branches remain visible. Use
+  // the mirrored falling span on the morning side so wrapping +180° to -180°
+  // cannot reset the afternoon weight to its early-day value.
+  const fallingProgress = hourAngle < 0 ? clamp(-hourAngle / (15 * setSpan)) : setProgress;
+  const afternoonAmount = smoothstep(2, 10, altitude) * (1 - smoothstep(0.64, 0.90, fallingProgress));
+  const falling = {
+    dawn: 0, morning: 0, noon: 0,
+    afternoon: eveningVisible * afternoonAmount,
+    evening: eveningVisible * (1 - afternoonAmount),
+    night: 1 - eveningVisible,
+  };
 
   // Smooth the direction around solar noon and midnight. At ordinary night
   // both sides are the night image; this also avoids polar-day discontinuities.
@@ -68,7 +83,7 @@ export function getDaylightBlend(solar, date) {
   ]));
   const noonProgress = hourAngle <= 0
     ? smoothstep(0.45, 0.92, riseProgress)
-    : 1 - smoothstep(0.08, 0.8, setProgress);
+    : 1 - smoothstep(0.04, 0.42, setProgress);
   const noonWeight = noonProgress * smoothstep(-3, 3, altitude);
   for (const { id } of DAYLIGHT_PHASES) weights[id] *= 1 - noonWeight;
   weights.noon += noonWeight;

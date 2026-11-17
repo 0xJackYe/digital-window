@@ -31,13 +31,18 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
-## Photographs
+## Landscape assets and historical photographs
 
-See [ASSET_CREDITS.md](ASSET_CREDITS.md) for the Commons and Unsplash
-photographs, their independent licenses and runtime presentation changes.
-The application displays still photographs with their original illumination.
-The default captured sequence interpolates actual recorded day/night frames;
-it does not include a reconstructed city or an external 3D engine.
+Version 1.7.0 includes 48 AI-generated images in `assets/landscapes/generated/`.
+Generation prompts and file provenance are in `prompts.json` and `manifest.json`.
+The landscapes have a photographic appearance. The renderer continuously blends
+the six lighting variants, so the spatial lighting follows the source images.
+
+See [ASSET_CREDITS.md](ASSET_CREDITS.md) for current generation records and the
+historical Commons, Unsplash and captured-sequence attribution. The older asset
+directories remain historical source material and are excluded from the new
+portable package. Their original licenses still apply whenever those files are
+redistributed.
 
 Version 1.6 defaults to the captured day/night video "CUHK in a day" by
 See-ming Lee / SML Photography / SML Universe Limited, Copyright 2013

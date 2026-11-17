@@ -14,6 +14,8 @@ async function main() {
     throw new Error('Packaging output must remain inside this project.');
   }
   const manifest = JSON.parse(fs.readFileSync(path.join(projectRoot, 'package.json'), 'utf8'));
+  const assets = require('./verify-generated-assets.cjs').inspectGeneratedAssets();
+  if (!assets.passed) throw new Error(`AI landscape images are incomplete (${assets.ready}/${assets.expected}). Generate and inspect all 48 native-resolution images before packaging.`);
   let packagerModule;
   let electronVersion;
   try {
@@ -44,8 +46,10 @@ async function main() {
     overwrite: true,
     junk: true,
     ignore: [
-      /[\\/](?:release|node_modules|tests|\.git|scripts|reports|captures|logs|\.test-results)(?:[\\/]|$)/i,
-      /[\\/](?:\.gitignore|package-lock\.json|npm-debug\.log|.*\.log|.*\.tmp|.*\.bak)$/i,
+      /[\\/](?:release|node_modules|tests|\.git|scripts|reports|captures|logs|\.test-results|\.venv-imagegen|tmp|output)(?:[\\/]|$)/i,
+      /[\\/](?:\.env(?:\..*)?|\.gitignore|package-lock\.json|npm-debug\.log|.*\.log|.*\.tmp|.*\.bak)$/i,
+      /[\\/]assets[\\/](?:cycles|references|research)(?:[\\/]|$)/i,
+      /[\\/]assets[\\/]landscapes[\\/]photos(?:[\\/]|$)/i,
       /[\\/]启动数字窗户\.cmd$/,
     ],
     win32metadata: {
@@ -67,14 +71,8 @@ async function main() {
     const source = path.join(projectRoot, filename);
     if (fs.existsSync(source)) fs.copyFileSync(source, path.join(expectedOutput, filename));
   }
-  // Make photo provenance readable beside the portable EXE without duplicating
-  // the full-resolution JPEGs that are already bundled inside app.asar.
-  const photoSource = path.join(projectRoot, 'assets', 'landscapes', 'photos');
-  const photoOutput = path.join(expectedOutput, 'assets', 'landscapes', 'photos');
-  fs.mkdirSync(photoOutput, { recursive: true });
-  for (const filename of fs.readdirSync(photoSource).filter((name) => /\.(?:json|md)$/i.test(name))) {
-    fs.copyFileSync(path.join(photoSource, filename), path.join(photoOutput, filename));
-  }
+  // Make asset provenance readable beside the portable EXE without duplicating
+  // the native-resolution images already bundled inside app.asar.
   const reportsSource = path.join(projectRoot, 'reports');
   if (fs.existsSync(reportsSource)) {
     const reportsOutput = path.join(expectedOutput, 'reports');
@@ -82,8 +80,6 @@ async function main() {
     fs.cpSync(reportsSource, reportsOutput, { recursive: true });
   }
   const sourceLicense = path.join(projectRoot, 'LICENSE');
-  const cycleCredits = path.join(projectRoot, 'assets', 'cycles', 'cuhk', 'source.json');
-  if (fs.existsSync(cycleCredits)) { const target = path.join(expectedOutput, 'assets', 'cycles', 'cuhk'); fs.mkdirSync(target, { recursive: true }); fs.copyFileSync(cycleCredits, path.join(target, 'source.json')); }
   if (fs.existsSync(sourceLicense)) fs.copyFileSync(sourceLicense, path.join(expectedOutput, 'PROJECT_LICENSE.txt'));
   console.log(`Portable Windows application ready:\n${executable}\nKeep the entire ${path.basename(expectedOutput)} folder together.`);
 }

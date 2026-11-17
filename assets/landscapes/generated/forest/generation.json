@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "scene": "forest",
+  "route": "built-in image_gen",
+  "generatedAt": "2026-11-18",
+  "referencePolicy": "The newly generated noon master was the sole local edit reference for every other phase. No old real photographs used. Original PNG bytes preserved without resampling.",
+  "assets": [
+    {
+      "scene": "forest",
+      "phase": "dawn",
+      "file": "assets/landscapes/generated/forest/dawn.png",
+      "route": "built-in image_gen",
+      "generatedAt": "2026-11-18",
+      "referencedImagePaths": [
+        "assets/landscapes/generated/forest/noon.png"
+      ],
+      "prompt": "Use case: lighting-weather. Input image 1 is the exact NOON MASTER EDIT TARGET for this temperate forest trail. Generate ONE separate borderless16:9 image at exactly the same native1672x941 composition. Keep EVERY tree trunk, branch, leaf cluster silhouette, trail edge, moss patch, foreground rock, distant tree, canopy opening and camera position exactly unchanged and pixel registered. This is a relighting edit ONLY: never rebuild, crop, reframe, move, reshape or add geometry. Preserve sharp full-frame natural photographic texture, subtle optical realism, believable bark, leaves and leaf litter. Change only physically plausible illumination, cast shadow directions, sky appearance and exposure. No visible window, frame, room, glass reflection, railing, text, watermark, collage, CGI, painting, theatrical shafts, HDR, excessive saturation or oversharpening. PREDAWN / DAWN, before sunrise. Very dim cool woodland with softly readable unchanged trunk silhouettes, faint gray-blue diffuse sky light entering the same canopy opening. No direct sunshine, hard cast solar shadow, warm rays or bright green sunlit leaves. Forest floor and path dim natural color and subtle bark detail, not bright day with blue tint. At most a very faint distant veil, never glowing fog.",
+      "nativeWidth": 1672,
+      "nativeHeight": 941,
+      "bytes": 3105245,
+      "sha256": "d17f29713d4ac622d7d203756f0d3973f0241646ac27873d7c93eebf453c8697"
+    },
+    {
+      "scene": "forest",
+      "phase": "morning",
+      "file": "assets/landscapes/generated/forest/morning.png",
+      "route": "built-in image_gen",
+      "generatedAt": "2026-11-18",
+      "referencedImagePaths": [
+        "assets/landscapes/generated/forest/noon.png"
+      ],
+      "prompt": "Use case: lighting-weather. Input image 1 is the exact NOON MASTER EDIT TARGET for this temperate forest trail. Generate ONE separate borderless16:9 image at exactly the same native1672x941 composition. Keep EVERY tree trunk, branch, leaf cluster silhouette, trail edge, moss patch, foreground rock, distant tree, canopy opening and camera position exactly unchanged and pixel registered. This is a relighting edit ONLY: never rebuild, crop, reframe, move, reshape or add geometry. Preserve sharp full-frame natural photographic texture, subtle optical realism, believable bark, leaves and leaf litter. Change only physically plausible illumination, cast shadow directions, sky appearance and exposure. No visible window, frame, room, glass reflection, railing, text, watermark, collage, CGI, painting, theatrical shafts, HDR, excessive saturation or oversharpening. EARLY MORNING with LOW sun OFF CAMERA from the LEFT. Filter natural low sunlight through exactly the existing canopy, making LIMITED warm light patches on appropriate left-facing bark and foliage and LONG trunk shadows extending RIGHT across the trail. Cool sky fill in the opposite surfaces and shaded foliage. Clearly different patch positions and shadow lengths from noon. No theatrical rays, glitter or luminous mist.",
+      "nativeWidth": 1672,
+      "nativeHeight": 941,
+      "bytes": 3479224,
+      "sha256": "a08c0725ecc22d84536b6fc61e40d0c37f3541a144cb2244ac5492321d730459"
+    },
+    {
+      "scene": "forest",
+      "phase": "noon",
+      "file": "assets/landscapes/generated/forest/noon.png",
+      "route": "built-in image_gen",
+      "generatedAt": "2026-11-18",
+      "referencedImagePaths": [],
+      "prompt": "Use case: photorealistic-natural. Generate one borderless landscape photograph for a fullscreen Digital Window background. Highest available native resolution, widescreen16:9, target3840x2160. Scene: plausible quiet temperate forest trail with mature varied mixed tree trunks, natural undergrowth, subtle moss and leaf litter, and a small canopy opening toward the background. Fixed eye-level composition, natural normal-wide lens perspective, convincing varied organic detail, restrained greens and realistic depth. Clear mild weather with only a very light distant atmospheric veil. Outdoor scenery fills EVERY edge. No people, wildlife, lamps, cabins, window frames, room edges, glass, railing, border, text or watermark. Professional full-frame natural forest photography, crisp realistic bark and foliage with optical detail, no CGI, painting, luminous leaves, excessive HDR or artificial oversharpening. MIDDAY MASTER: high natural daylight filters through the fixed canopy, producing small coherent dappled highlights and compact local shadows. Keep greens subdued and varied, with no theatrical shafts or persistent sunbeam across the image. This is the exact composition master to preserve for five later time-of-day relighting edits. Make geometry clean and stable.",
+      "nativeWidth": 1672,
+      "nativeHeight": 941,
+      "bytes": 4042908,
+      "sha256": "aad0afb373fca17e4f0fee84598b0e5d4e33be8ee5d6f8d67c11e904eb0cd77e"
+    },
+    {
+      "scene": "forest",
+      "phase": "afternoon",
+      "file": "assets/landscapes/generated/forest/afternoon.png",
+      "route": "built-in image_gen",
+      "generatedAt": "2026-11-18",
+      "referencedImagePaths": [
+        "assets/landscapes/generated/forest/noon.png"
+      ],
+      "prompt": "Use case: lighting-weather. Input image 1 is the exact NOON MASTER EDIT TARGET for this temperate forest trail. Generate ONE separate borderless16:9 image at exactly the same native1672x941 composition. Keep EVERY tree trunk, branch, leaf cluster silhouette, trail edge, moss patch, foreground rock, distant tree, canopy opening and camera position exactly unchanged and pixel registered. This is a relighting edit ONLY: never rebuild, crop, reframe, move, reshape or add geometry. Preserve sharp full-frame natural photographic texture, subtle optical realism, believable bark, leaves and leaf litter. Change only physically plausible illumination, cast shadow directions, sky appearance and exposure. No visible window, frame, room, glass reflection, railing, text, watermark, collage, CGI, painting, theatrical shafts, HDR, excessive saturation or oversharpening. MID AFTERNOON with sunlight OFF CAMERA from the RIGHT, opposite to morning. Move dappled highlights to different forest-floor and trail locations, illuminate the RIGHT-facing sides of the existing trunks, and cast longer coherent trunk shadows LEFT across the fixed path. Modestly warm natural sun, cool forest shade. No global orange grading, no merely recoloring the noon patches. Exactly fixed tree and leaf geometry.",
+      "nativeWidth": 1672,
+      "nativeHeight": 941,
+      "bytes": 3842423,
+      "sha256": "0e03f4f97186bf5380d11fadb98d96f4a88610c182082572790dd39ade610970"
+    },
+    {
+      "scene": "forest",
+      "phase": "evening",
+      "file": "assets/landscapes/generated/forest/evening.png",
+      "route": "built-in image_gen",
+      "generatedAt": "2026-11-18",
+      "referencedImagePaths": [
+        "assets/landscapes/generated/forest/noon.png"
+      ],
+      "prompt": "Use case: lighting-weather. Input image 1 is the exact NOON MASTER EDIT TARGET for this temperate forest trail. Generate ONE separate borderless16:9 image at exactly the same native1672x941 composition. Keep EVERY tree trunk, branch, leaf cluster silhouette, trail edge, moss patch, foreground rock, distant tree, canopy opening and camera position exactly unchanged and pixel registered. This is a relighting edit ONLY: never rebuild, crop, reframe, move, reshape or add geometry. Preserve sharp full-frame natural photographic texture, subtle optical realism, believable bark, leaves and leaf litter. Change only physically plausible illumination, cast shadow directions, sky appearance and exposure. No visible window, frame, room, glass reflection, railing, text, watermark, collage, CGI, painting, theatrical shafts, HDR, excessive saturation or oversharpening. LATE EVENING / DUSK. Last weak warm light touches only a few UPPER leaves by the existing canopy opening, while the floor, trail, lower trunks and understory fall into natural cool dim dusk. Daytime dappled patches must largely disappear. Muted blue-gray sky opening with very faint warm low glow if visible. Dark natural bark texture remains. No lanterns, decorative glow, theatrical rays or fluorescent green foliage.",
+      "nativeWidth": 1672,
+      "nativeHeight": 941,
+      "bytes": 3072518,
+      "sha256": "f877b02b2c1c4bbbeee9bea46253ecce73c3f2fb4d9c844778f409f7a4925304"
+    },
+    {
+      "scene": "forest",
+      "phase": "night",
+      "file": "assets/landscapes/generated/forest/night.png",
+      "route": "built-in image_gen",
+      "generatedAt": "2026-11-18",
+      "referencedImagePaths": [
+        "assets/landscapes/generated/forest/noon.png"
+      ],
+      "prompt": "Use case: lighting-weather. Input image 1 is the exact NOON MASTER EDIT TARGET for this temperate forest trail. Generate ONE separate borderless16:9 image at exactly the same native1672x941 composition. Keep EVERY tree trunk, branch, leaf cluster silhouette, trail edge, moss patch, foreground rock, distant tree, canopy opening and camera position exactly unchanged and pixel registered. This is a relighting edit ONLY: never rebuild, crop, reframe, move, reshape or add geometry. Preserve sharp full-frame natural photographic texture, subtle optical realism, believable bark, leaves and leaf litter. Change only physically plausible illumination, cast shadow directions, sky appearance and exposure. No visible window, frame, room, glass reflection, railing, text, watermark, collage, CGI, painting, theatrical shafts, HDR, excessive saturation or oversharpening. GENUINE DARK WOODLAND NIGHT after astronomical twilight. Only faint diffuse off-camera moonlight through the existing canopy opening softly reveals a few trunk edges and a dimly readable trail. Deep dark subdued natural foliage, navy-charcoal sky through canopy. Completely REMOVE ALL daytime sunbeams, bright dappled patches, hard solar shadows, warm sunshine and luminous green leaves. Not exposed like daylight, not a blue daytime filter. No lamps, cabins, fireflies, glowing plants, large visible moon, fantasy blue fog or dramatic star sky.",
+      "nativeWidth": 1671,
+      "nativeHeight": 941,
+      "bytes": 2623981,
+      "sha256": "612ca8eb6e953acc6a2a399d631af556793a454de45ecefa71c20c3b1d5610f1"
+    }
+  ]
+}

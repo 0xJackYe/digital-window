@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "scene": "coast",
+  "route": "built-in image_gen",
+  "generatedAt": "2026-11-18",
+  "referencePolicy": "The newly generated noon master was the sole local edit reference for every other phase. No old real photographs used. Original PNG bytes preserved without resampling.",
+  "assets": [
+    {
+      "scene": "coast",
+      "phase": "dawn",
+      "file": "assets/landscapes/generated/coast/dawn.png",
+      "route": "built-in image_gen",
+      "generatedAt": "2026-11-18",
+      "referencedImagePaths": [
+        "assets/landscapes/generated/coast/noon.png"
+      ],
+      "prompt": "Use case: lighting-weather. Input image 1 is the exact NOON MASTER EDIT TARGET for this Maldives coast. Generate ONE separate borderless16:9 image at exactly the same native1672x941 composition. Keep EVERY palm trunk, frond tip, coconut, shrub, shoreline, sand detail, wave edge, distant island outline, cloud position, horizon and camera position exactly unchanged and pixel registered. This is a relighting edit ONLY, never rebuild, crop, reframe, move or add geometry. Preserve sharp full-frame natural photographic texture, subtle optical realism and believable water optics. Change only physically plausible illumination, cast shadow directions, sky color, reflections and exposure. No window, frame, room, glass reflection, railing, text, watermark, collage, CGI, painting, exaggerated HDR, saturation or oversharpening. PREDAWN / DAWN, before sunrise. Subdued blue-gray sea and sand under a softly paling low horizon, cool dim sky. Palms are dark natural silhouettes. Remove all direct solar lighting, hard noon palm shadows, bright white sand, cyan lagoon glow, and noon glitter. Natural dim readable exposure, not a daytime image with a blue filter. No sun disc, lights or invented objects.",
+      "nativeWidth": 1672,
+      "nativeHeight": 941,
+      "bytes": 2569754,
+      "sha256": "e0b89903baaebe93e45fb56070e221b3b84a159a20ffa79d8a483932155d84f4"
+    },
+    {
+      "scene": "coast",
+      "phase": "morning",
+      "file": "assets/landscapes/generated/coast/morning.png",
+      "route": "built-in image_gen",
+      "generatedAt": "2026-11-18",
+      "referencedImagePaths": [
+        "assets/landscapes/generated/coast/noon.png"
+      ],
+      "prompt": "Use case: lighting-weather. Input image 1 is the exact NOON MASTER EDIT TARGET for this Maldives coast. Generate ONE separate borderless16:9 image at exactly the same native1672x941 composition. Keep EVERY palm trunk, frond tip, coconut, shrub, shoreline, sand detail, wave edge, distant island outline, cloud position, horizon and camera position exactly unchanged and pixel registered. This is a relighting edit ONLY, never rebuild, crop, reframe, move or add geometry. Preserve sharp full-frame natural photographic texture, subtle optical realism and believable water optics. Change only physically plausible illumination, cast shadow directions, sky color, reflections and exposure. No window, frame, room, glass reflection, railing, text, watermark, collage, CGI, painting, exaggerated HDR, saturation or oversharpening. EARLY MORNING, low fresh sun OFF CAMERA on the LEFT. Show coherent long palm shadows extending RIGHT across the same fixed sand, warm light on appropriate left-facing palm trunk surfaces and foliage, cool soft sky fill in other faces. Small natural directional ripple highlights with transparent believable shallow water. Sky pale natural blue, moderate gentle warmth, not entire-scene orange. Retain the exact shoreline and wave shapes from master.",
+      "nativeWidth": 1672,
+      "nativeHeight": 941,
+      "bytes": 2773964,
+      "sha256": "bb9292807d677469b1f3ae802611bf76d7f8b9d1855a93ea3279241c1e719021"
+    },
+    {
+      "scene": "coast",
+      "phase": "noon",
+      "file": "assets/landscapes/generated/coast/noon.png",
+      "route": "built-in image_gen",
+      "generatedAt": "2026-11-18",
+      "referencedImagePaths": [],
+      "prompt": "Use case: photorealistic-natural. Generate one borderless landscape photograph for a fullscreen Digital Window background. Highest available native resolution, widescreen16:9, target3840x2160. Scene: a plausible peaceful Maldives island coast with pale textured sand, a few naturally varied coconut palms at the left and foreground, clear shallow lagoon water grading toward deeper blue sea, simple low distant shoreline, level horizon, fixed normal perspective. Outdoor landscape fills EVERY edge. No deck, railing, window, frame, glass reflections, indoor objects, buildings, people, text or watermark. Professional natural landscape photography, full-frame optical realism, fine sand grains and palm-frond detail, no CGI, painterly forms, plastic surfaces, neon saturation, HDR halos or over-sharpening. MIDDAY MASTER: ordinary bright tropical midday with high neutral sunlight, short coherent palm shadows, realistic pale sand, detailed restrained turquoise water and natural gentle ripples. Not glowing cyan. Calm clear sky with a few thin high clouds. This is the exact composition master to preserve for five later time-of-day relighting edits. Make geometry clean and stable.",
+      "nativeWidth": 1672,
+      "nativeHeight": 941,
+      "bytes": 2873244,
+      "sha256": "57eb06e4740e9d911cf4dcc6e96f04dc7960872939c7936bcef0dca35e1af6d4"
+    },
+    {
+      "scene": "coast",
+      "phase": "afternoon",
+      "file": "assets/landscapes/generated/coast/afternoon.png",
+      "route": "built-in image_gen",
+      "generatedAt": "2026-11-18",
+      "referencedImagePaths": [
+        "assets/landscapes/generated/coast/noon.png"
+      ],
+      "prompt": "Use case: lighting-weather. Input image 1 is the exact NOON MASTER EDIT TARGET for this Maldives coast. Generate ONE separate borderless16:9 image at exactly the same native1672x941 composition. Keep EVERY palm trunk, frond tip, coconut, shrub, shoreline, sand detail, wave edge, distant island outline, cloud position, horizon and camera position exactly unchanged and pixel registered. This is a relighting edit ONLY, never rebuild, crop, reframe, move or add geometry. Preserve sharp full-frame natural photographic texture, subtle optical realism and believable water optics. Change only physically plausible illumination, cast shadow directions, sky color, reflections and exposure. No window, frame, room, glass reflection, railing, text, watermark, collage, CGI, painting, exaggerated HDR, saturation or oversharpening. MID AFTERNOON, sunlight OFF CAMERA on the RIGHT, opposite to morning. Clearly move the directional palm lighting and long cast palm shadows so they extend LEFT over the same fixed sand. Slightly warm sunshine with realistic cool fill, clearly daytime. Move localized water glare to match the right-hand illumination. Do not merely recolor original noon light patches. Keep every palm and frond outline registered exactly.",
+      "nativeWidth": 1672,
+      "nativeHeight": 941,
+      "bytes": 2811318,
+      "sha256": "d64b94cb9b0799cfd8dbbbed1a7af04847840e7b6227895968fd6dbb86d54ccc"
+    },
+    {
+      "scene": "coast",
+      "phase": "evening",
+      "file": "assets/landscapes/generated/coast/evening.png",
+      "route": "built-in image_gen",
+      "generatedAt": "2026-11-18",
+      "referencedImagePaths": [
+        "assets/landscapes/generated/coast/noon.png"
+      ],
+      "prompt": "Use case: lighting-weather. Edit target: the attached EXACT NOON MASTER of the Maldives coast. Generate ONE separate clean borderless16:9 image, preserving precisely its1672x941 composition. Keep every palm trunk, palm frond, shrub, sand detail, shoreline edge, distant island, horizon, cloud placement and perspective FIXED; only relight. EVENING / LATE SUNSET toward blue hour. Crucial directional constraint: western sky glow is on the FAR RIGHT of the picture, and the weak last sunlight arrives FROM THE RIGHT, making RIGHT sides of palm trunks and frond edges subtly warm, with long soft shadows running LEFT. The LEFT sky MUST NOT have a sunrise-like bright warm glow. Warmth limited to lower right horizon, a few right-facing palm edges, and a narrow subdued water reflection to the right. Forested island and most water and sand lie in cool dim evening shade. Remove midday white sand, bright cyan lagoon, noon sunlit palm patches and high noon shadows. Muted natural peach-gray right horizon to cool blue-gray upper sky, no visible sun disc, no dramatic new clouds, no lamps, no moon. Fine real photographic textures and believable exposure, not orange color wash, notCGI. No changes to geometry. No room/window/frame/railing/glass/text/watermark/collage.",
+      "revisionNote": "Regenerated directly from noon master to keep sunset glow and illumination on the right, consistent with afternoon.",
+      "nativeWidth": 1672,
+      "nativeHeight": 941,
+      "bytes": 2603180,
+      "sha256": "28a80a91235fa14560c82ad6d1f3c774a4c5429a90f72f0143689a2afe7c0343"
+    },
+    {
+      "scene": "coast",
+      "phase": "night",
+      "file": "assets/landscapes/generated/coast/night.png",
+      "route": "built-in image_gen",
+      "generatedAt": "2026-11-18",
+      "referencedImagePaths": [
+        "assets/landscapes/generated/coast/noon.png"
+      ],
+      "prompt": "Use case: lighting-weather. Input image 1 is the exact NOON MASTER EDIT TARGET for this Maldives coast. Generate ONE separate borderless16:9 image at exactly the same native1672x941 composition. Keep EVERY palm trunk, frond tip, coconut, shrub, shoreline, sand detail, wave edge, distant island outline, cloud position, horizon and camera position exactly unchanged and pixel registered. This is a relighting edit ONLY, never rebuild, crop, reframe, move or add geometry. Preserve sharp full-frame natural photographic texture, subtle optical realism and believable water optics. Change only physically plausible illumination, cast shadow directions, sky color, reflections and exposure. No window, frame, room, glass reflection, railing, text, watermark, collage, CGI, painting, exaggerated HDR, saturation or oversharpening. GENUINE TROPICAL NIGHT after astronomical twilight. Dark navy sky, dark palm silhouettes, the sand dimly visible under faint soft off-camera moonlight, lagoon nearly black-blue with very restrained broken silver reflection. Eliminate EVERY bright daytime sand patch, solar glare, cyan water glow, hard noon solar shadow and sunlit palm surface. Natural night exposure, not bright daylight tinted blue. No lamps, decorative lights, bioluminescence, large moon or fantasy stars.",
+      "nativeWidth": 1672,
+      "nativeHeight": 941,
+      "bytes": 2122904,
+      "sha256": "a9f70235c6f1c712faff7dce512d619b9441ff238422c9f94b2b3b8bf66abe06"
+    }
+  ]
+}

@@ -74,7 +74,7 @@ async function verifyPackageFreshness() {
     const asarModule = await import('@electron/asar');
     const asar = asarModule.default || asarModule;
     const archive = path.join(path.dirname(executable), 'resources', 'app.asar');
-    const files = ['src', 'electron', 'assets'].flatMap((folder) => filesWithin(path.join(root, folder)).map((filename) => path.relative(root, filename).replaceAll('\\', '/')));
+    const files = ['src', 'electron', 'assets'].flatMap((folder) => filesWithin(path.join(root, folder)).map((filename) => path.relative(root, filename).replaceAll('\\', '/'))).filter((filename) => !/^assets\/(?:cycles|references|research|landscapes\/photos)\//.test(filename));
     const mismatches = [];
     const hashes = [];
     const sourceManifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
@@ -114,6 +114,16 @@ async function main() {
   results.push({ name: 'all-javascript-syntax', passed: syntaxFailures.length === 0, files: javascriptFiles.length, failures: syntaxFailures });
   const testFiles = filesWithin(path.join(root, 'tests')).filter((filename) => filename.endsWith('.test.js'));
   await command('unit-tests', process.execPath, ['--test', ...testFiles], null);
+  const generatedAssets = require('./verify-generated-assets.cjs').inspectGeneratedAssets();
+  results.push({ name: 'generated-image-assets-ready', ...generatedAssets });
+  if (!generatedAssets.passed) {
+    const report = { passed: false, status: 'awaiting-image-generation', generatedAt: new Date().toISOString(), version: manifest.version, target, platform: process.platform, architecture: process.arch, elapsedMs: Date.now() - started, results };
+    fs.mkdirSync(path.dirname(reportPath), { recursive: true });
+    fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n');
+    console.log(`DIGITAL_WINDOW_SOFTWARE_REPORT ${JSON.stringify({ passed: false, report: path.relative(root, reportPath), reason: 'New generated images are missing; GUI verification and release are blocked.', readyImages: generatedAssets.ready, expectedImages: generatedAssets.expected })}`);
+    process.exitCode = 1;
+    return;
+  }
 
   if (target === 'all' || target === 'source') {
     const electron = require('electron');

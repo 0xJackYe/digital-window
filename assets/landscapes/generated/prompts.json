@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "status": "generation plan; actual downloaded asset inventory and native dimensions are recorded in manifest.json",
+  "assetKind": "AI-generated landscape illustrations with a photographic appearance",
+  "requestedResolution": { "width": 3840, "height": 2160 },
+  "aspectRatio": "16:9",
+  "phases": ["dawn", "morning", "noon", "afternoon", "evening", "night"],
+  "phaseLabels": { "dawn": "黎明", "morning": "早晨", "noon": "中午", "afternoon": "下午", "evening": "傍晚", "night": "晚上" },
+  "outputTemplate": "assets/landscapes/generated/{scene}/{phase}.png",
+  "generationPlan": {
+    "masterPhase": "noon",
+    "masterMode": "Generate a new image from the commonBasePrompt, scene basePrompt and its noon phasePrompt. Do not use an old real photograph or legacy AI asset as the master.",
+    "variantMode": "Edit the approved noon master separately for dawn, morning, afternoon, evening and night. Each edit uses that same noon master as its reference, never the preceding phase, to avoid cumulative geometry drift.",
+    "promptComposition": "Master: commonBasePrompt + scene.basePrompt + scene.phasePrompts.noon + commonAvoid. Edit: commonEditPrompt + scene.phasePrompts[phase] + commonAvoid.",
+    "referenceTemplate": "assets/landscapes/generated/{scene}/noon.png",
+    "finalAssetCount": 48,
+    "acceptance": "Inspect all six variants together. Require an unchanged camera, crop, skyline, building edges, roof lines, terrain silhouettes and object placement. Require actual changes in light direction, cast shadows, sky illumination and applicable practical lights. A night result must remove daytime sunlight and its bright reflected patches. Reject visible window borders or interiors. Record returned pixel dimensions after generation instead of inferring them from this requested size."
+  },
+  "commonBasePrompt": "Use case: photorealistic-natural. Asset type: full-screen digital-window landscape background, one borderless image. Create a new scene with the visual fidelity of a carefully exposed full-frame architectural or landscape photograph: plausible optics, straight geometry, fine natural surface detail, restrained color, realistic atmospheric depth, recoverable highlights and credible shadow detail. Wide 16:9 landscape composition at the requested native output size. Fill every edge with the outdoor scene. This is an AI-generated scene inspired by the named location, not a documented surveyed camera position. Show only the landscape; do not depict a computer screen, photo print or a room.",
+  "commonEditPrompt": "Use case: lighting-weather. Edit target: the approved generated noon master for this same scene. Create one full-frame time-of-day variant. Preserve the exact camera position, focal length, perspective, framing, horizon, architectural and terrain silhouettes, every building, tree, shoreline and fixed object's location, and all material identities. Preserve fine photographic detail. Change illumination, cast-shadow direction and length, sky radiance, reflection intensity and practical-light emission as the requested phase requires. Replace the noon master's baked illumination completely where necessary; preserving geometry does not mean preserving its noon shadows or sunlit patches. Keep the weather class and cloud layout coherent. Do not move, rebuild, add or remove scene objects. No border or interior may appear anywhere.",
+  "commonAvoid": "Avoid: any visible window frame, mullion, sill, curtain, glass edge, room, wall edge, desk, monitor, balcony, railing or indoor reflection; captions, labels, logos, watermarks or a collage; CGI or game-render appearance, illustration strokes, plastic materials, excessive HDR, oversharpening halos, artificial orange-and-teal grading, fantasy architecture, warped facades, melted masonry, duplicated buildings, uniformly repeated window textures, impossible reflections, oversized suns or moons, dramatic fake god rays, fluorescent vegetation, glowing unlit water, and daylight illumination surviving in the night variant. Deliver a single clean outdoor image without text.",
+  "scenes": [
+    {
+      "id": "manhattan",
+      "title": "曼哈顿，窗外",
+      "basePrompt": "Scene: a plausible view north over dense Manhattan rooftops from the height of a mid-to-high office floor in lower Manhattan. The Empire State Building is recognizable in the middle distance among a credible New York skyline. Show varied older masonry, dark rooftop equipment, water tanks and modern glass towers, with fine nonuniform facade detail and modest distant haze. Natural moderate-wide architectural lens, level verticals, skyline in the middle of the frame and sky across the upper third. The camera height suggests an office, but no part of that office or its window is visible. The entire image is an unobstructed outdoor city view.",
+      "phasePrompts": {
+        "dawn": "黎明: before sunrise, a dim cool blue city under a gently pale eastern sky. No direct sun reaches the facades. Some office and street lights are still visible, with restrained warm highlights. Buildings retain naturally subdued dark detail, not daytime exposure beneath a blue filter.",
+        "morning": "早晨: fresh low-angle morning sunlight enters from the eastern side of the established view, giving selected building faces a pale warm tone and producing long, coherent architectural shadows. Other faces receive cool sky fill. The sky is a natural light blue; most street lights have switched off.",
+        "noon": "中午 master: clear-to-lightly-hazy midday in ordinary bright weather. High, near-neutral sunlight, short architectural shadows, detailed sky-lit shade and balanced glass reflections. Every building surface has realistic texture without brightening all facades equally. Keep a simple thin-cloud sky suitable for the other five phases.",
+        "afternoon": "下午: distinctly later than noon but before golden hour. Sunlight arrives from the opposite, western side compared with the morning image, illuminating different building faces and extending their shadows. Light remains mostly neutral with a mild warmth. Preserve every rooftop, facade and skyline edge exactly.",
+        "evening": "傍晚: late sunset into early blue hour, with a restrained warm glow close to the horizon and cool upper sky. Direct daylight recedes from lower streets; a few higher faces retain the final warm light. Warm office windows and street lamps begin to become prominent. Do not make every window glow.",
+        "night": "晚上: genuine urban night, dark navy-to-charcoal sky softened by city light pollution. Remove every noon sunlit patch, blue daytime sky, daylight reflection and daylight shadow. Buildings are mostly dark, with irregular believable lit office windows, modest street lighting and small reflected highlights. Preserve silhouettes and texture without exposing the scene as daytime. No large moon or star-filled fantasy sky."
+      }
+    },
+    {
+      "id": "denver",
+      "title": "丹佛，云端办公",
+      "basePrompt": "Scene: a plausible unobstructed downtown Denver view from approximately the height of a 20th-to-25th office floor, looking toward the central business district. Include the recognizable Wells Fargo Center's double-curved cash-register roof in the middle distance, the restrained rectangular mass of Republic Plaza, and a lower historic clock-tower or masonry district toward one side. Surround them with convincing Denver office buildings and detailed rooftops. Use sensible building scale and a moderate architectural lens, level vertical lines, ordinary clear Colorado air with slight distance haze. Avoid an invented dramatic mountain wall behind an eastward downtown view. The viewpoint suggests a high office but the frame contains only outdoor cityscape: no office foreground, window border, glass reflection or sill.",
+      "phasePrompts": {
+        "dawn": "黎明: the skyline is dim before sunrise, under a cool gradually brightening sky. No sunbeam or direct daylight is present on the office facades. Sparse warm windows and street lights remain lit. Keep the original city layout absolutely unchanged.",
+        "morning": "早晨: low eastern sunlight from the left side of this established downtown view warms appropriate east-facing facades and leaves long shadows between buildings. Clear cool sky light fills the opposite faces. Reflective glass shows plausible localized highlights, not a uniform golden tint over the whole image.",
+        "noon": "中午 master: bright ordinary Colorado midday, with high neutral sunlight, short building shadows, natural pale-blue sky and fine dry-air visibility. Detailed masonry, glass and rooftop equipment. Keep exposure and contrast credible, with no cinematic orange wash or unnaturally sparkling windows.",
+        "afternoon": "下午: mid-afternoon sunlight comes from the right-hand, western side of the fixed view, clearly changing which facades are lit compared with morning. Shadows are longer than at noon. Sunlight is only mildly warmer than neutral, before the sunset glow. Keep landmark shapes and every window-grid edge registered to the master.",
+        "evening": "傍晚: the sun is low and leaving the skyline. Selected upper facades catch restrained amber light while streets and lower buildings become cooler and darker. The horizon has a modest peach-to-blue transition. Irregular office windows and warm street lamps gradually dominate the shaded areas, with realistic intensity.",
+        "night": "晚上: authentic Denver city night. Dark sky and genuinely unlit building surfaces; eliminate the master's daytime sunlight and glass glare completely. Show plausible scattered office-window lights and warm street lighting in their actual fixed positions, not a checkerboard of uniformly glowing windows. Landmark outlines remain clear but softly dark. No daylight sky, sun disc, giant moon, office interior or visible frame."
+      }
+    },
+    {
+      "id": "medieval",
+      "title": "旧城，慢时光",
+      "basePrompt": "Scene: an elevated, unobstructed view across Prague's Old Town Square, layered red-tile rooftops, restrained pastel historic facades, the recognizable Gothic towers of the Church of Our Lady before Týn and a credible Baroque church dome. Photographic masonry and tile detail, believable scale and roof geometry, moderate wide lens with straight architecture. Use a stable slightly elevated rooftop perspective; no viewing platform, balcony or window is visible. Quiet everyday city atmosphere, not a fantasy medieval painting.",
+      "phasePrompts": {
+        "dawn": "黎明: soft cool predawn light over the fixed red roofs and church silhouettes. A pale low horizon and dim blue upper sky; no direct sunlight. A small number of real-looking street lamps remain warm against the subdued square.",
+        "morning": "早晨: clear low morning sunlight catches one side of the church towers and tiled roofs, with long coherent roof and street shadows. Warm stone highlights contrast with naturally cool shade. Most decorative lights are off.",
+        "noon": "中午 master: ordinary bright late-spring midday, neutral light, short shadows across rooftops and the square, restrained sky and legible natural masonry. Preserve a calm, credible architectural photograph rather than a highly saturated postcard.",
+        "afternoon": "下午: sunlight shifts to the opposite sides of the roofs and towers from the morning version. Longer angled shadows reveal the depth of the same fixed roof forms. A mild warm tone without golden-hour exaggeration; the scene remains clearly daytime.",
+        "evening": "傍晚: final warm light touches the upper church towers and a few roofs, with cooler shadow filling the square. Subtle sunset color low in the sky. Street lamps and restrained facade illumination begin to turn on, not every building at once.",
+        "night": "晚上: real-looking dark Old Town at night, with localized warm street lamps and measured architectural illumination on the same church and facades. Roof surfaces are dark and desaturated, sky dark blue-black. Remove all noon sunlight and bright daytime sky. Light sources illuminate nearby surfaces naturally instead of outlining every building."
+      }
+    },
+    {
+      "id": "kyoto",
+      "title": "京都，巷深处",
+      "basePrompt": "Scene: a quiet, gently sloping Kyoto Higashiyama lane with carefully proportioned timber machiya houses, tiled eaves, stone paving and the recognizable Yasaka Pagoda in the distance. A slightly elevated, fixed street-view perspective, empty of close people and vehicles so the six images can align. Fine weathered wood, plaster and stone texture, no artificial tourist signage or unreadable lettering. Natural lens perspective, unobstructed outdoor composition, no doorway, window frame or interior edge around the image.",
+      "phasePrompts": {
+        "dawn": "黎明: a quiet cool-blue lane just before sunrise, wood and paving dim but naturally readable. A few small lanterns still provide warm local light. No direct sun on the paving or timber walls; pagoda silhouette and all roof edges stay fixed.",
+        "morning": "早晨: low soft morning sunlight enters one side of the established lane, creating long shadows from eaves and a few warm highlights on timber and paving. Other surfaces remain in cool open shade. Lanterns are mostly off.",
+        "noon": "中午 master: balanced natural midday light with compact shadows beneath the deep eaves, neutral stone and wood, a simple light-blue sky and accurate fine textures. No excessively dramatic shafts of light or decorative mist.",
+        "afternoon": "下午: later sunlight reaches different wall and paving surfaces than in morning, with longer eave shadows moving in the opposite direction. Mild warmth, credible sky fill in the shaded lane, no changed buildings or newly added objects.",
+        "evening": "傍晚: fading warm daylight at the top of the lane, cool shade over most paving and timber. Small amber lanterns and a few interior lights behind existing openings start to glow locally. Keep the sky understated and the pagoda structure identical.",
+        "night": "晚上: genuinely dark Kyoto lane, lit by restrained lanterns and a few existing shop lights that cast warm pools onto the same paving and timber. Dark roof surfaces and subdued pagoda silhouette against a navy sky. Remove all daytime sunlight, bright sky and sunlit wall patches. Do not add new lanterns, signs or buildings."
+      }
+    },
+    {
+      "id": "fuji",
+      "title": "富士，映湖间",
+      "basePrompt": "Scene: a serene, believable view of Mount Fuji from the Lake Yamanaka shoreline near Hirano, with the mountain's natural conical profile and realistic snow distribution, a quiet foreground shore and subtly rippled water. Wide landscape lens without stretching the mountain. The mountain and shoreline are placed well inside the 16:9 frame with a useful expanse of natural sky. Late-spring conditions, stable clear weather with a few thin high clouds. Fine natural shore and water texture, no frame, railing, balcony or indoor reflections.",
+      "phasePrompts": {
+        "dawn": "黎明: predawn cool indigo air and a restrained pale band near the horizon. The mountain is a dim natural silhouette with faint cold snow detail. No direct sunlit snow, daytime blue water or bright midday reflections remain.",
+        "morning": "早晨: low morning sun gently warms the appropriate snow and mountain slopes, revealing directional terrain shading and subtle long shadows along the near shore. The lake reflects this same light direction with natural broken reflections, not a mirror-perfect duplicate.",
+        "noon": "中午 master: high neutral sunlight, realistic shaded slopes on Mount Fuji, clear but not oversaturated sky, naturally blue-gray lake water and detailed shore. Snow highlights retain texture instead of clipping to pure white.",
+        "afternoon": "下午: sunlight shifts across the fixed mountain to different slopes from the morning image. Mid-afternoon warmth is slight and the terrain's cast shadows deepen and lengthen naturally. Water reflections follow the new lighting without moving the shoreline or mountain.",
+        "evening": "傍晚: the last restrained warm light reaches a portion of the summit and cloud edges while the lake and shore cool into shadow. A quiet peach-gray horizon grades into blue. Avoid an exaggerated red mountain or a saturated orange sky.",
+        "night": "晚上: dark natural mountain lake at night, with faint cool off-camera lunar illumination on snow and very subdued water highlights. The shore and slopes remain genuinely dark. No daytime rays, bright turquoise water, giant moon, glowing snow or invented city lights. A few faint stars may show only where the thin clouds allow."
+      }
+    },
+    {
+      "id": "lake",
+      "title": "山湖之间",
+      "basePrompt": "Scene: a believable Moraine Lake-inspired Canadian alpine panorama with correctly scaled rugged gray peaks, persistent snow pockets, dark conifer slopes, a turquoise glacial lake and a modest rocky foreground. Natural high-resolution landscape-photography texture in rock, trees and water. Stable late-summer conditions with a few thin clouds; no new buildings, boats or people. A fixed unobstructed viewpoint and moderate-wide lens, no overlook railing or window edge.",
+      "phasePrompts": {
+        "dawn": "黎明: cold predawn mountain light, dark conifers and lake, a gently brightening blue-gray sky. Very faint natural detail remains in snow and rock, with no direct sun on peaks or bright turquoise midday water.",
+        "morning": "早晨: early directional sunlight touches selected peak faces and treetops, leaving the opposite slopes in cool shade. Coherent long shore and mountain shadows; the water's color and reflections respond to this low sun naturally.",
+        "noon": "中午 master: clear ordinary alpine midday. Neutral sunlight on rock and snow, compact local shadows, naturally turquoise water with fine ripples and realistic darker conifer reflections. Avoid excessive saturation or glowing water.",
+        "afternoon": "下午: mid-afternoon sunlight illuminates different rock faces and shoreline areas than in the morning view. Shadows extend across the fixed terrain, with a mild warm highlight tone and cool ambient shade. Keep all tree lines and peak edges precisely unchanged.",
+        "evening": "傍晚: a little final warm light remains high on a few peaks as the forest and lake enter cool dusk. Natural muted horizon colors, no decorative lamps or cabins. The lake loses its bright midday turquoise appearance as ambient light falls.",
+        "night": "晚上: dark alpine night, with subtle cool off-camera moonlight defining a few snow and rock surfaces. Deep dark conifers and a nearly black-blue lake with restrained faint reflection. Remove all sunlit peak faces and midday water glow. No invented camp lights, illuminated trees, enormous moon or vivid Milky Way."
+      }
+    },
+    {
+      "id": "coast",
+      "title": "海风来信",
+      "basePrompt": "Scene: a plausible Maldives island coast, with pale textured sand, a few naturally varied coconut palms, clear shallow lagoon water grading toward a deeper blue sea and a simple distant low shoreline. A fixed peaceful shore viewpoint, normal perspective and a level horizon. Preserve convincing palm fronds, sand grains, gentle wave detail and optically plausible underwater color; no resort buildings, signs or people. Outdoor scenery fills the entire frame without a deck, railing, room or window.",
+      "phasePrompts": {
+        "dawn": "黎明: subdued blue-gray predawn sea and sand under a softly paling horizon. Palm silhouettes are dark and natural. No direct sunshine, bright white sand or strong cyan lagoon glow survives from the noon image.",
+        "morning": "早晨: low fresh morning sunlight creates coherent long palm shadows over the fixed sand and reveals small water ripples with localized highlights. A gentle warm sun tone contrasts with cool sky illumination. Keep the water transparent and realistic.",
+        "noon": "中午 master: ordinary bright tropical midday with a high neutral sun, short palm shadows and realistic pale sand. Clear shallow water has detailed, restrained turquoise tones and natural ripple highlights, not luminous neon cyan.",
+        "afternoon": "下午: mid-afternoon light arrives from the opposite side compared with morning, changing the direction of palm shadows and water highlights. Sunlight is slightly warm while still clearly daytime. Every palm trunk, frond outline, shoreline and horizon remains registered to the master.",
+        "evening": "傍晚: low late sunlight softly warms the sand, palm edges and selected ripples, with long directional shadows and cooler ambient areas. A restrained warm horizon transitions to blue upper sky. Do not turn the entire scene orange or add dramatic clouds.",
+        "night": "晚上: genuine quiet tropical night, palms dark against a navy sky, sand dim under faint off-camera moonlight and water mostly dark with a small plausible broken reflection. Remove every bright daytime sand patch, sun glare and turquoise glow. No decorative lights, bioluminescent sea, giant moon or fantasy stars."
+      }
+    },
+    {
+      "id": "forest",
+      "title": "林间有光",
+      "basePrompt": "Scene: a plausible quiet temperate forest trail with mature mixed trunks, natural undergrowth, subtle moss and leaf litter, and a small canopy opening toward the background. The fixed eye-level composition has convincingly varied organic detail, restrained greens and realistic depth. Clear mild weather, a very light distant atmospheric veil only, no persistent theatrical rays. Keep the trail and tree silhouettes stable, without people, wildlife, lamps, cabins or any visible interior or frame.",
+      "phasePrompts": {
+        "dawn": "黎明: a very dim cool forest before sunrise, with softly readable trunk silhouettes and faint gray-blue light through the same canopy opening. Very slight low mist may be present but must not become a glowing beam. No direct sunshine or bright green sunlit leaves.",
+        "morning": "早晨: low morning sunlight from one side filters naturally through the fixed canopy, making a limited number of believable light patches and long trunk shadows on the trail. Restrained warm highlights and cool shaded foliage. Avoid theatrical shafts, glitter or luminous fog.",
+        "noon": "中午 master: high natural daylight filters through the canopy, producing small coherent dappled highlights, compact local shadows and photorealistic bark, moss and leaf texture. Keep greens subdued and varied, with no overly bright sunbeams baked across the entire image.",
+        "afternoon": "下午: sunlight now filters from the opposite side compared with morning, moving the dappled patches and lengthening trunk shadows over the same trail. A modest warm tone, realistic cool forest shade and unchanged tree geometry. Do not simply recolor the existing noon light patches.",
+        "evening": "傍晚: the last weak warm light touches a few upper leaves near the canopy opening while the forest floor and trail fall into cool dusk. Existing sun patches largely disappear. Keep dark natural texture and avoid adding lanterns or decorative glow.",
+        "night": "晚上: genuinely dark woodland, with only faint diffuse off-camera moonlight entering the canopy opening and tracing a few trunk edges. Remove all daytime sunbeams, bright dappled patches, hard solar shadows and luminous green leaves from the master. The path is dimly readable but not exposed like daytime. No fireflies, lamps, glowing plants or fantasy blue fog."
+      }
+    }
+  ]
+}

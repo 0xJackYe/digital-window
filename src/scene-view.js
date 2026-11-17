@@ -1,9 +1,10 @@
-const PHASES = ['dawn', 'morning', 'noon', 'evening', 'night'];
+export const IMAGE_PHASES = Object.freeze(['dawn', 'morning', 'noon', 'afternoon', 'evening', 'night']);
+const PHASES = IMAGE_PHASES;
 
 export function normalizeWeights(weights = {}) {
   const result = Object.fromEntries(PHASES.map((phase) => [phase, Number.isFinite(weights[phase]) ? Math.max(0, weights[phase]) : 0]));
   const total = Object.values(result).reduce((sum, value) => sum + value, 0);
-  if (!total) return { dawn: 0, morning: 0, noon: 1, evening: 0, night: 0 };
+  if (!total) return Object.fromEntries(PHASES.map(phase => [phase, Number(phase === 'noon')]));
   for (const phase of PHASES) result[phase] /= total;
   return result;
 }
@@ -41,20 +42,17 @@ export class SceneView {
     this.pendingVideo?.abort();
     clearTimeout(this.transitionTimer); this.sceneTransitioning = true;
     const deck = document.createElement('div'); deck.className = 'scene-deck'; deck.dataset.scene = scene.id;
-    if (scene.photoReal) deck.classList.add('photographic-scene');
+    if (scene.photoReal || scene.generated || scene.variants) deck.classList.add('photographic-scene');
+    if (scene.generated || scene.variants) deck.classList.add('generated-scene');
+    // Each deck owns its complete stacking context, including an outgoing
+    // frame snapshot. Foregrounds from an earlier scene cannot leak above it.
+    deck.style.isolation = 'isolate';
     const photo = document.createElement('div'); photo.className = 'scene-photo'; deck.append(photo);
-    if (scene.interior === 'office') {
-      // The real city photograph is unchanged; the separately rendered window
-      // foreground supplies the requested view from inside an office.
-      const interior = document.createElement('div'); interior.className = 'office-interior'; interior.setAttribute('aria-hidden', 'true');
-      for (const part of ['office-reveal', 'office-mullion', 'office-sill', 'office-glass']) {
-        const element = document.createElement('div'); element.className = part; interior.append(element);
-      }
-      deck.append(interior);
-    }
     const images = [];
     try {
       if (scene.variants) {
+        const missing = PHASES.filter(phase => typeof scene.variants[phase] !== 'string' || !scene.variants[phase]);
+        if (missing.length) throw new Error(`Missing time-of-day images: ${missing.join(', ')}`);
         deck.classList.add('has-phases');
         const layers = document.createElement('div'); layers.className = 'phase-layers';
         for (const phase of PHASES) {
@@ -87,6 +85,11 @@ export class SceneView {
         const image = new Image(); image.src = scene.image; image.alt = scene.alt; image.className = 'scene-image'; photo.append(image); images.push(image); deck.classList.add('graded-scene');
       } else deck.classList.add('procedural-deck');
       await Promise.all(images.map((image) => image.decode()));
+      if (scene.variants) {
+        const ratio = images[2].naturalWidth / images[2].naturalHeight;
+        // A generated variant can round the same crop by one pixel.
+        if (images.some(image => Math.abs(image.naturalWidth / image.naturalHeight - ratio) > .003)) throw new Error('Time-of-day images must share the same aspect ratio');
+      }
     } catch (error) {
       releaseVideo(deck.querySelector('video'));
       if (token !== this.token) return false;
@@ -167,7 +170,7 @@ export class SceneView {
     }
   }
   diagnostics() {
-    const layers = [...(this.current?.querySelectorAll('[data-phase]') || [])].map((image) => ({ phase: image.dataset.phase, loaded: image.complete && image.naturalWidth > 0, opacity: Number(image.style.opacity), weight: Number(image.dataset.weight) }));
+    const layers = [...(this.current?.querySelectorAll('[data-phase]') || [])].map((image) => ({ phase: image.dataset.phase, loaded: image.complete && image.naturalWidth > 0, width: image.naturalWidth, height: image.naturalHeight, opacity: Number(image.style.opacity), weight: Number(image.dataset.weight) }));
     const image = this.current?.querySelector('img'), video = this.current?.querySelector('video');
     return { imageLoaded: this.ready && (layers.length ? layers.every((layer) => layer.loaded) : image ? image.complete && image.naturalWidth > 0 : video ? video.readyState >= 2 : true), layerImages: layers, transitioning: this.transitioning, phaseAnimating: this.phaseAnimating };
   }

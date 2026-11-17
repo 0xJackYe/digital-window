@@ -1,101 +1,88 @@
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
+const { createHash } = require('node:crypto');
+const SCENES = ['denver','manhattan','medieval','kyoto','fuji','lake','coast','forest'];
+const PHASES = ['dawn','morning','noon','afternoon','evening','night'];
 
 async function runNaturalTests(mainWindow, { finish, delay, outputDirectory } = {}) {
-  const checks = [];
-  const pause = delay || ((ms) => new Promise(resolve => setTimeout(resolve, ms)));
-  const evaluate = script => mainWindow.webContents.executeJavaScript(script, true);
-  const folder = path.resolve(outputDirectory || '.test-results/captured');
-  fs.mkdirSync(folder, { recursive: true });
+  const checks = [], pause = delay || (ms => new Promise(resolve => setTimeout(resolve, ms)));
+  const evaluate = source => mainWindow.webContents.executeJavaScript(source, true);
+  const folder = path.resolve(outputDirectory || '.test-results/generated-six-phase');
   try {
-    let ui;
-    for (let i = 0; i < 250; i++) {
-      ui = await evaluate('window.__digitalWindowSmoke?.()');
-      if (ui?.ready && ui.captured?.pairReady) break;
-      await pause(80);
+    // Missing production assets are a failure, never a synthetic fixture or skip.
+    const missing = [], fingerprints = new Map(), nativeSizes = new Map();
+    for (const sceneId of SCENES) {
+      const hashes = [];
+      for (const phase of PHASES) {
+        const filename = path.join(__dirname,'..','assets','landscapes','generated',sceneId,phase+'.png');
+        if (!fs.existsSync(filename)) { missing.push(sceneId+'/'+phase+'.png'); continue; }
+        const bytes = fs.readFileSync(filename);
+        nativeSizes.set(`${sceneId}/${phase}`, {width:bytes.readUInt32BE(16),height:bytes.readUInt32BE(20)});
+        hashes.push(createHash('sha256').update(bytes).digest('hex'));
+      }
+      fingerprints.set(sceneId, hashes);
     }
-    if (!ui?.ready || !ui.captured?.pairReady) throw new Error(`Captured cycle did not initialize: ${JSON.stringify(ui)}`);
-    checks.push({ name: 'default scene uses actual captured day and night rather than a graded daytime JPEG', passed: ui.sceneId === 'cuhk' && ui.captured.renderer === 'captured-cycle' && ui.captured.noSyntheticLighting && ui.renderMode === 'daylight' });
-    checks.push(...await evaluate(`(${capturedBrowserChecks.toString()})()`));
-    for (let hour = 0; hour < 24; hour++) {
-      const sample = await evaluate(`(${prepareHour.toString()})(${hour})`);
-      const name = `cuhk-${String(hour).padStart(2, '0')}.jpg`;
-      fs.writeFileSync(path.join(folder, name), (await mainWindow.webContents.capturePage()).toJPEG(85));
-      checks.push({ name: `hour ${hour}: actual recorded frame pair is decoded and displayed`, passed: sample.ready && sample.pairReady && sample.noSyntheticLighting && sample.sourceWidth === 1280 && sample.sourceHeight === 720 && sample.cachedFrames <= 6 && sample.sourceFrameA !== sample.sourceFrameB, frameA: sample.sourceFrameA, frameB: sample.sourceFrameB, fraction: sample.fraction, sourceSecond: sample.sourceSecond, mapping: sample.mapping, image: name });
+    if (missing.length) throw new Error(`Missing ${missing.length}/48 generated images: ${missing.join(', ')}`);
+    checks.push({ name:'all eight scenes contain six distinct generated source files', passed:[...fingerprints.values()].every(hashes=>hashes.length===6&&new Set(hashes).size===6) });
+    let initial;
+    for(let i=0;i<200;i++){ initial=await evaluate('window.__digitalWindowSmoke?.()'); if(initial?.ready&&initial.generated)break;await pause(80); }
+    if(!initial?.ready)throw new Error('Generated scene did not initialize');
+    checks.push({name:'default scene is generated Denver with six phases',passed:initial.sceneId==='denver'&&initial.timeZone==='America/Denver'&&initial.generated&&initial.relighting.phaseCount===6});
+    checks.push(...await evaluate(`(${generatedBrowserChecks.toString()})()`));
+    fs.mkdirSync(folder,{recursive:true});
+    const figures=[];
+    for(const sceneId of SCENES){
+      const hasNativeSize = image => {
+        const expected = nativeSizes.get(`${sceneId}/${image.phase}`);
+        return expected && image.width === expected.width && image.height === expected.height;
+      };
+      for(const phase of PHASES){
+        const sample=await evaluate(`(${prepareGeneratedPhase.toString()})(${JSON.stringify(sceneId)},${JSON.stringify(phase)})`);
+        const filename=sceneId+'-'+phase+'.jpg';
+        fs.writeFileSync(path.join(folder,filename),(await mainWindow.webContents.capturePage()).toJPEG(88));
+        checks.push({name:sceneId+' '+phase+' displays six decoded sources at original sizes without window frames',passed:sample.ready&&sample.generated&&sample.layers.length===6&&sample.layers.every(image=>image.loaded&&hasNativeSize(image))&&sample.phaseCount===6&&sample.lightModel==='six-phase-image-blend-1.0'&&sample.selectedWeight>.8&&sample.noFrames&&sample.noOverlays,phase,sceneId,image:filename,selectedWeight:sample.selectedWeight,renderer:sample.renderer});
+        figures.push(`<figure><img src="${filename}"><figcaption>${sceneId} · ${phase}</figcaption></figure>`);
+      }
     }
-    checks.push(...await evaluate(`(${compareNightAndDay.toString()})()`));
-    mainWindow.webContents.enableDeviceEmulation({ screenPosition: 'desktop', screenSize: { width: 1920, height: 1080 }, viewPosition: { x: 0, y: 0 }, viewSize: { width: 1920, height: 1080 }, deviceScaleFactor: 2, scale: 1 });
+    mainWindow.webContents.enableDeviceEmulation({screenPosition:'desktop',screenSize:{width:1920,height:1080},viewPosition:{x:0,y:0},viewSize:{width:1920,height:1080},deviceScaleFactor:2,scale:1});
     await pause(300);
-    const physical = await evaluate('window.__digitalWindowSmoke().captured');
-    checks.push({ name: '4K output preserves honest 720p capture provenance instead of claiming native 4K detail', passed: physical.width === 3840 && physical.height === 2160 && physical.sourceWidth === 1280 && physical.sourceHeight === 720, width: physical.width, height: physical.height, sourceWidth: physical.sourceWidth, sourceHeight: physical.sourceHeight });
-    mainWindow.webContents.disableDeviceEmulation(); await pause(250);
-    await evaluate(`(() => { const key='digital-window.settings.v2'; const saved=JSON.parse(localStorage.getItem(key)||'{}'); saved.scene='denver'; saved.renderMode='daylight'; saved.photoLightingVersion=1; localStorage.setItem(key,JSON.stringify(saved)); })()`);
-    const reloaded = new Promise(resolve => mainWindow.webContents.once('did-finish-load', resolve));
-    mainWindow.webContents.reload(); await reloaded;
-    let migrated;
-    for (let attempt=0;attempt<180;attempt++) { migrated=await evaluate('window.__digitalWindowSmoke?.()'); if(migrated?.ready&&migrated.captured?.pairReady)break;await pause(60); }
-    checks.push({ name: 'previous single-photo grading preferences migrate to a working captured cycle', passed: migrated?.sceneId==='cuhk' && migrated.renderMode==='daylight' && migrated.captured?.pairReady && migrated.captured.noSyntheticLighting });
-    const state = await evaluate('window.digitalWindow.getWindowState()');
-    checks.push({ name: 'native fullscreen covers the entire monitor including taskbar bounds', passed: state.fullscreen && ['x', 'y', 'width', 'height'].every(key => state.bounds[key] === state.displayBounds[key]), bounds: state.bounds, displayBounds: state.displayBounds });
-    const images = Array.from({ length: 24 }, (_, hour) => `<figure><img src="cuhk-${String(hour).padStart(2, '0')}.jpg"><figcaption>${String(hour).padStart(2, '0')}:00</figcaption></figure>`).join('');
-    fs.writeFileSync(path.join(folder, '24-hours.html'), `<!doctype html><meta charset="utf-8"><title>真实昼夜 · 24 小时检查</title><style>body{background:#13171c;color:white;font:16px system-ui}main{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}figure{margin:0}img{width:100%}</style><h1>香港实拍 · 24 小时实际窗口截图</h1><p>原片1280×720，真实摄影帧连续插值；按所选日期日出日落映射拍摄时间。不是任意日期的物理重光照。</p><main>${images}</main>`);
-    finish('DIGITAL_WINDOW_NATURAL', checks);
-  } catch (error) { finish('DIGITAL_WINDOW_NATURAL', checks, error); }
+    const physical=await evaluate('window.__digitalWindowSmoke().relighting');
+    checks.push({name:'six-image compositor renders a physical 3840x2160 framebuffer',passed:physical.width===3840&&physical.height===2160&&physical.sources.length===6,width:physical.width,height:physical.height});
+    mainWindow.webContents.disableDeviceEmulation();
+    const native=await evaluate('window.digitalWindow.getWindowState()');
+    checks.push({name:'native fullscreen covers the complete monitor and taskbar',passed:native.fullscreen&&['x','y','width','height'].every(key=>native.bounds[key]===native.displayBounds[key])});
+    fs.writeFileSync(path.join(folder,'six-phase.html'),'<!doctype html><meta charset="utf-8"><title>AI六时段画面检查</title><style>body{background:#14191f;color:white;font:15px system-ui}main{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}figure{margin:0}img{width:100%}</style><h1>AI生成景观 · 六时段实际运行截图</h1><p>逐个检查八处景观的六个时段。所有源图均已按原始尺寸解码。写字楼视角只呈现窗外。</p><main>'+figures.join('')+'</main>');
+    finish('DIGITAL_WINDOW_NATURAL',checks);
+  }catch(error){finish('DIGITAL_WINDOW_NATURAL',checks,error);}
 }
 
-async function capturedBrowserChecks() {
-  const checks = [], check = (name, passed, details = {}) => checks.push({ name, passed: Boolean(passed), ...details });
-  const byId = id => document.getElementById(id), state = () => window.__digitalWindowSmoke().captured;
-  const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
-  const wait = async predicate => { for (let i = 0; i < 180; i++) { if (predicate()) return true; await pause(60); } return false; };
-  const toggle = (id, checked) => { byId(id).checked = checked; byId(id).dispatchEvent(new Event('change', { bubbles: true })); };
-  toggle('motion-toggle', false);
-  const before = state(); await pause(1200); const after = state();
-  check('recorded light continues advancing every frame with decorative motion disabled', after.frameCount > before.frameCount + 8 && after.utcMillis > before.utcMillis + 900 && (after.fraction !== before.fraction || after.sourceFrameA !== before.sourceFrameA), { frames: after.frameCount - before.frameCount, elapsedMs: after.utcMillis - before.utcMillis });
-  const handoff = Date.now(); toggle('realtime-toggle', false); await pause(400);
-  check('realtime to preview retains seconds instead of snapping to a minute', Math.abs(state().targetUtcMillis - handoff) < 1000);
-  const source = state().sourceVideo;
-  for (const minute of [100, 900, 450, 1250]) { byId('time-slider').value = minute; byId('time-slider').dispatchEvent(new Event('input', { bubbles: true })); }
-  const settled = await wait(() => state().pairReady && !state().transitioningTime && Math.abs(state().utcMillis - state().targetUtcMillis) < 2);
-  check('rapid time scrubbing shows the latest complete real frame pair without losing the source', settled && state().sourceVideo === source && state().cachedFrames <= 6 && !state().lastError, { state: state() });
-  const scene = document.querySelector('.landscape-card[data-scene="denver"]'); scene.click();
-  await wait(() => window.__digitalWindowSmoke().sceneId === 'denver');
-  check('a single Denver photograph is explicitly original-only and no longer advertised as a true night view', window.__digitalWindowSmoke().renderMode === 'photo' && byId('time-preview').hidden && byId('render-mode').querySelector('[value="daylight"]').disabled && window.__digitalWindowSmoke().relighting.originalPhoto);
-  document.querySelector('.landscape-card[data-scene="cuhk"]').click();
-  check('returning to the captured scene restores actual day/night playback', await wait(() => window.__digitalWindowSmoke().sceneId === 'cuhk' && state().pairReady && window.__digitalWindowSmoke().ready));
+async function generatedBrowserChecks(){
+  const checks=[],check=(name,passed,details={})=>checks.push({name,passed:Boolean(passed),...details});
+  const byId=id=>document.getElementById(id),ui=()=>window.__digitalWindowSmoke();
+  const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  check('no window frame, office foreground or legacy rendering mode remains',!document.querySelector('.office-interior,#window-frame,#frame-toggle,#render-mode'));
+  byId('motion-toggle').checked=false;byId('motion-toggle').dispatchEvent(new Event('change',{bubbles:true}));
+  byId('realtime-toggle').checked=true;byId('realtime-toggle').dispatchEvent(new Event('change',{bubbles:true}));
+  const before=ui();await pause(1200);const after=ui();
+  check('time and rendering advance with video motion switched off',after.relighting.frameCount>before.relighting.frameCount+4&&after.relighting.utcMillis>before.relighting.utcMillis+800);
+  const now=Date.now();byId('realtime-toggle').checked=false;byId('realtime-toggle').dispatchEvent(new Event('change',{bubbles:true}));
+  check('preview preserves seconds instead of rounding to a minute',Math.abs(ui().lighting.utcMillis-now)<1000);
+  check('the six requested preset labels are present',JSON.stringify([...byId('phase-presets').querySelectorAll('[data-preview-phase]')].map(button=>button.dataset.previewPhase))===JSON.stringify(['dawn','morning','noon','afternoon','evening','night']));
   return checks;
 }
 
-async function prepareHour(hour) {
-  const slider = document.getElementById('time-slider');
-  const toggle = document.getElementById('realtime-toggle'); toggle.checked = false; toggle.dispatchEvent(new Event('change', { bubbles: true }));
-  slider.value = hour * 60; slider.dispatchEvent(new Event('input', { bubbles: true }));
-  for (let i = 0; i < 200; i++) {
-    const state = window.__digitalWindowSmoke().captured;
-    if (state.ready && state.pairReady && !state.transitioningTime && Math.abs(state.utcMillis - state.targetUtcMillis) < 2) break;
-    await new Promise(resolve => setTimeout(resolve, 50));
-  }
-  const canvas = document.createElement('canvas'); canvas.width = 160; canvas.height = 90;
-  const c = canvas.getContext('2d', { willReadFrequently: true }); c.drawImage(document.getElementById('captured-cycle-canvas'), 0, 0, 160, 90);
-  window.__capturedSamples ||= {};
-  window.__capturedSamples[hour] = c.getImageData(0, 0, 160, 90).data;
-  return window.__digitalWindowSmoke().captured;
+async function prepareGeneratedPhase(sceneId,phase){
+  const byId=id=>document.getElementById(id),ui=()=>window.__digitalWindowSmoke(),pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  if(ui().sceneId!==sceneId){document.querySelector('.landscape-card[data-scene="'+sceneId+'"]').click();}
+  for(let i=0;i<220;i++){if(ui().sceneId===sceneId&&ui().ready&&!ui().transitioning)break;await pause(60);}
+  if(ui().sceneId!==sceneId||!ui().ready)throw new Error('Generated scene failed to load: '+sceneId);
+  byId('scene-timezone-toggle').checked=true;byId('scene-timezone-toggle').dispatchEvent(new Event('change',{bubbles:true}));
+  document.querySelector('#phase-presets [data-preview-phase="'+phase+'"]').click();
+  for(let i=0;i<120;i++){if(!ui().transitioning&&ui().relighting.weights?.[phase]>.8)break;await pause(60);}
+  byId('close-panel').click();await pause(220);
+  const state=ui(),deck=[...document.querySelectorAll('.scene-deck')].at(-1);
+  return{ready:state.ready,generated:state.generated,layers:[...deck.querySelectorAll('[data-phase]')].map(image=>({phase:image.dataset.phase,loaded:image.complete&&image.naturalWidth>0,width:image.naturalWidth,height:image.naturalHeight})),phaseCount:state.relighting.phaseCount,lightModel:state.relighting.lightModel,selectedWeight:state.relighting.weights[phase],noFrames:!document.querySelector('.office-interior,#window-frame,#frame-toggle'),noOverlays:!state.atmosphere.sunDrawn&&!state.atmosphere.moonDrawn&&state.atmosphere.glintSources.length===0,renderer:state.relighting.renderer};
 }
 
-function compareNightAndDay() {
-  const night = window.__capturedSamples[0], day = window.__capturedSamples[12];
-  const luma = (pixels, offset) => pixels[offset] * .2126 + pixels[offset + 1] * .7152 + pixels[offset + 2] * .0722;
-  let darkBackground = 0, dayBackground = 0, count = 0, actualNightLights = 0;
-  for (let y = 0; y < 90; y++) for (let x = 0; x < 160; x++) {
-    const i = (y * 160 + x) * 4, n = luma(night, i), d = luma(day, i);
-    if (y < 22) { darkBackground += n; dayBackground += d; count++; }
-    if (n > d + 25 && night[i] > night[i + 2] * 1.25 && night[i + 1] > night[i + 2] * 1.15) actualNightLights++;
-  }
-  return [
-    { name: 'night has genuinely dark recorded background rather than the bright daytime background', passed: darkBackground < dayBackground * .55, nightBackground: darkBackground / count, dayBackground: dayBackground / count },
-    { name: 'night contains localized warm lamps and reflections brighter than those same locations by day, impossible with global dimming', passed: actualNightLights > 40, actualNightLightPixels: actualNightLights, measuredResolution: '160x90' },
-  ];
-}
-
-module.exports = { runNaturalTests };
+module.exports={runNaturalTests};

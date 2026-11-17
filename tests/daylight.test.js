@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DAYLIGHT_PHASES, getDaylightBlend } from '../src/daylight.js';
-import { getSolarState, getZonedDateParts } from '../src/solar.js';
+import { getSolarState, getZonedDateParts, zonedDateTimeToDate } from '../src/solar.js';
 
 // Independent place fixtures deliberately use the requested coordinates rather
 // than importing UI scene data: a mislabeled scene must not validate itself.
@@ -15,24 +15,25 @@ const HOUR = 3_600_000;
 const stateAt = (date, place) => getSolarState(new Date(date), place);
 const blendAt = (date, place) => getDaylightBlend(stateAt(date, place), new Date(date));
 const normalized = (blend) => {
-  assert.deepEqual(Object.keys(blend.weights), ['dawn', 'morning', 'noon', 'evening', 'night']);
+  assert.deepEqual(Object.keys(blend.weights), ['dawn', 'morning', 'noon', 'afternoon', 'evening', 'night']);
   for (const weight of Object.values(blend.weights)) assert.ok(Number.isFinite(weight) && weight >= 0 && weight <= 1);
   assert.ok(Math.abs(Object.values(blend.weights).reduce((a, b) => a + b, 0) - 1) < 1e-12);
 };
 
-test('phase vocabulary uses exactly the five requested labels', () => {
+test('phase vocabulary uses exactly the six requested labels', () => {
   assert.deepEqual(DAYLIGHT_PHASES.map(({ id, label }) => [id, label]), [
-    ['dawn', '黎明'], ['morning', '早晨'], ['noon', '中午'], ['evening', '傍晚'], ['night', '晚上'],
+    ['dawn', '黎明'], ['morning', '早晨'], ['noon', '中午'], ['afternoon', '下午'], ['evening', '傍晚'], ['night', '晚上'],
   ]);
 });
 
 for (const place of places) {
-  test(`${place.name}: all five light states dominate at corresponding astronomical times`, () => {
+  test(`${place.name}: all six image states dominate at corresponding astronomical times`, () => {
     const day = stateAt('2026-06-21T12:00:00Z', place);
     const times = {
       dawn: +day.sunrise,
       morning: +day.sunrise + (+day.solarNoon - day.sunrise) * 0.4,
       noon: +day.solarNoon,
+      afternoon: +day.solarNoon + (+day.sunset - day.solarNoon) * 0.5,
       evening: +day.sunset - 20 * 60_000,
       night: +day.solarNoon + 12 * HOUR,
     };
@@ -54,6 +55,20 @@ test('a low winter Sun still reaches the noon image in London and Prague', () =>
     assert.equal(blend.phase, 'noon');
     assert.ok(blend.weights.noon > 0.999);
     assert.equal(getDaylightBlend(state).phase, 'noon');
+  }
+});
+
+test('ordinary summer mornings, solar noon and mid-afternoons use distinct image states', () => {
+  const denver = { latitude: 39.748, longitude: -104.996, timeZone: 'America/Denver' };
+  const london = { latitude: 51.5074, longitude: -.1278, timeZone: 'Europe/London' };
+  for (const place of [places[0], denver, london]) {
+    const date = { year: 2026, month: 6, day: 21, minute: 0, second: 0 };
+    const morning = zonedDateTimeToDate({ ...date, hour: 8 }, place.timeZone);
+    const afternoon = zonedDateTimeToDate({ ...date, hour: 15 }, place.timeZone);
+    const events = stateAt(morning, place);
+    assert.equal(blendAt(morning, place).phase, 'morning', place.timeZone);
+    assert.equal(blendAt(events.solarNoon, place).phase, 'noon', place.timeZone);
+    assert.equal(blendAt(afternoon, place).phase, 'afternoon', place.timeZone);
   }
 });
 
@@ -127,6 +142,16 @@ test('polar-day direction changes and polar-night states remain finite', () => {
   const a = getDaylightBlend({ altitude: 3, hourAngle: 179.999 });
   const b = getDaylightBlend({ altitude: 3, hourAngle: -179.999 });
   for (const { id } of DAYLIGHT_PHASES) assert.ok(Math.abs(a.weights[id] - b.weights[id]) < 0.001);
+  for (const day of ['2026-06-21', '2026-12-21']) {
+    const start = +new Date(`${day}T00:00:00Z`);
+    let previous;
+    for (let seconds = 0; seconds <= 86_400; seconds += 30) {
+      const current = blendAt(start + seconds * 1000, tromso);
+      normalized(current);
+      if (previous) for (const { id } of DAYLIGHT_PHASES) assert.ok(Math.abs(current.weights[id] - previous.weights[id]) < .06, `polar ${day} jump in ${id} at ${seconds}`);
+      previous = current;
+    }
+  }
 });
 
 test('invalid states and explicit dates fail clearly', () => {

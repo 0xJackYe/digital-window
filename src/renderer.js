@@ -6,23 +6,19 @@ import { Atmosphere } from './atmosphere.js';
 import { getCelestialState } from './celestial.js';
 import { getLightingState } from './lighting.js';
 import { RelightingRenderer, cameraForScene } from './relighting.js';
-import { CapturedCycleRenderer } from './captured-cycle.js';
 
 const $ = (id) => document.getElementById(id);
 const STORAGE_KEY = 'digital-window.settings.v2';
 const scenes = [...SCENES];
-const defaults = { scene: 'cuhk', city: 'hong-kong', custom: null, renderMode: 'daylight', photoLightingVersion: 2, sceneTimezone: true, realtime: true, previewMinute: 720, bearings: {}, motion: !matchMedia('(prefers-reduced-motion: reduce)').matches, frame: false, brightness: 100 };
+const defaults = { scene: 'denver', city: 'denver', custom: null, generatedScenesVersion: 1, sceneTimezone: true, realtime: true, previewMinute: 720, bearings: {}, motion: !matchMedia('(prefers-reduced-motion: reduce)').matches, brightness: 100 };
 function loadSettings() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     const value = JSON.parse(stored || localStorage.getItem('digital-window.settings.v1') || '{}');
     const result = { ...defaults };
-    // Migrate previous 3D/raw-photo preferences to the photographic daylight
-    // renderer once. Subsequent explicit original-photo choices are retained.
-    if (value.photoLightingVersion === 2 && ['daylight', 'photo'].includes(value.renderMode)) result.renderMode = value.renderMode;
-    for (const key of ['motion', 'frame', 'realtime', 'sceneTimezone']) if (typeof value[key] === 'boolean') result[key] = value[key];
-    if (!stored || value.photoLightingVersion !== 2) result.realtime = true;
-    if (value.photoLightingVersion === 2 && [...scenes.map((scene) => scene.id), 'custom'].includes(value.scene)) result.scene = value.scene;
+    for (const key of ['motion', 'realtime', 'sceneTimezone']) if (typeof value[key] === 'boolean') result[key] = value[key];
+    if (!stored || value.generatedScenesVersion !== 1) result.realtime = true;
+    if (scenes.some(scene => scene.id === value.scene) || (value.generatedScenesVersion === 1 && value.scene === 'custom')) result.scene = value.scene;
     if (CITIES.some((city) => city.id === value.city) || value.city === 'custom') result.city = value.city;
     if (Number.isFinite(value.brightness)) result.brightness = Math.max(50, Math.min(130, value.brightness));
     if (Number.isFinite(value.previewMinute)) result.previewMinute = Math.max(0, Math.min(1439.999, value.previewMinute));
@@ -39,9 +35,8 @@ const settings = loadSettings();
 const sceneView = new SceneView($('scene-base'));
 const atmosphere = new Atmosphere($('atmosphere'));
 let activeScene = scenes.find((scene) => scene.id === settings.scene) || scenes[0];
-let solar, blend, celestial, lighting, camera, utcMillis, currentPanel = null, currentFullscreen = false, desktopVisible = true, capturedActive = false, idleTimer, toastTimer, closeTimer, previousFocus, customURL, sceneRequest = 0;
-const relighting = new RelightingRenderer(() => ({ lighting, camera, utcMillis, realtime: settings.realtime, place: currentCity(), weights: sceneView.displayWeights, originalPhoto: true, visible: desktopVisible && !capturedActive, motion: settings.motion && desktopVisible, animating: sceneView.transitioning }));
-const captured = new CapturedCycleRenderer(() => ({ utcMillis, realtime: settings.realtime, place: currentCity(), visible: desktopVisible, camera }));
+let solar, blend, celestial, lighting, camera, utcMillis, currentPanel = null, currentFullscreen = false, desktopVisible = true, idleTimer, toastTimer, closeTimer, previousFocus, customURL, sceneRequest = 0;
+const relighting = new RelightingRenderer(() => ({ lighting, camera, utcMillis, realtime: settings.realtime, place: currentCity(), weights: sceneView.displayWeights, originalPhoto: true, visible: desktopVisible, motion: settings.motion && desktopVisible, animating: sceneView.transitioning }));
 const presetCache = new Map();
 function currentCity() {
   if (settings.sceneTimezone) return CITIES.find((city) => city.id === activeScene.location) || CITIES[0];
@@ -118,32 +113,19 @@ async function selectScene(id, persist = true) {
   try {
     if (!await sceneView.show(scene) || request !== sceneRequest) return false;
     activeScene = scene; settings.scene = scene.id;
-    if (scene.cycle) settings.renderMode = 'daylight';
-    else if (scene.photoReal) settings.renderMode = 'photo';
     buildCities(); syncRenderMode(); updateSolar(); sceneView.setMotion(settings.motion && desktopVisible); renderSceneCards();
     if (persist) save();
     return true;
   } catch { if (request === sceneRequest) toast('这片景观未能加载，请重新选择。'); return false; }
 }
 function syncRenderMode() {
-  capturedActive = Boolean(activeScene.cycle && settings.renderMode === 'daylight');
-  captured.setActive(capturedActive);
-  relighting.canvas.style.display = capturedActive ? 'none' : '';
-  $('render-mode').querySelector('[value="daylight"]').disabled = !activeScene.cycle;
-  $('window-view').setAttribute('aria-label', `${activeScene.title}，${activeScene.id === 'procedural' ? '二维程序景观' : capturedActive ? '真实昼夜实拍，连续时间插值' : '单张实拍或视频，原始光影'}`);
-  $('render-mode').value = settings.renderMode;
-  $('render-mode-description').textContent = activeScene.cycle ? `同机位密集昼夜实拍，含真实夜景和灯光。${activeScene.resolution.join(' × ')}；摄影 See-ming Lee，CC BY 3.0。` : '此景观只有一个拍摄时刻，保留原始光影。请选「香港，一天的窗景」查看真实昼夜。';
-  $('preview-help').textContent = capturedActive ? '按当地日出日落映射实拍时间，相邻实拍帧逐帧插值。天气、灯光和月相来自拍摄当天。' : '当前景观为单张实拍，时间滑块只显示日照计算；不会把白天调暗冒充夜晚。';
-  $('time-preview').hidden = !activeScene.cycle;
-  $('realtime-toggle').closest('.setting-row').hidden = !activeScene.cycle;
-  $('view-azimuth').disabled = Boolean(activeScene.photoReal);
-  $('view-azimuth').closest('.brightness-setting').hidden = Boolean(activeScene.photoReal);
-  if (sceneView.current) {
-    if (capturedActive) {
-      if (captured.scene !== activeScene || captured.deck !== sceneView.current) void captured.setScene(activeScene, sceneView.current).catch(() => toast('全天实拍未能解码，请重新选择景观。'));
-      else captured.update();
-    } else relighting.setScene(activeScene, sceneView.current);
-  }
+  $('window-view').setAttribute('aria-label', `${activeScene.title}，${activeScene.generated ? 'AI 生成的六时段景观，无窗框' : '导入的本地景观'}`);
+  $('scene-source-description').textContent = activeScene.generated ? 'AI 生成景观 · 黎明、早晨、中午、下午、傍晚、晚上；只显示窗外景色。' : '导入的图片或视频保留原有画面。';
+  $('preview-help').textContent = activeScene.variants ? '六张时段图片根据当地日照平滑过渡，也可直接选择时段预览。' : '此导入素材只有原有画面，不会自动生成六个时段。';
+  $('time-preview').hidden = !activeScene.variants;
+  $('realtime-toggle').closest('.setting-row').hidden = !activeScene.variants;
+  $('view-azimuth').closest('.brightness-setting').hidden = true;
+  if (sceneView.current) relighting.setScene(activeScene, sceneView.current);
 }
 function previewDate() {
   const city = currentCity(), local = getZonedDateParts(new Date(), city.zone);
@@ -178,18 +160,14 @@ function updateSolar() {
   const warmth = solar.twilight * .17, night = (1 - solar.daylight) * .4;
   document.documentElement.style.setProperty('--light-overlay', warmth > .07 ? `rgba(199,136,104,${warmth})` : `rgba(38,63,112,${night})`);
   sceneView.setWeights(blend.weights);
-  atmosphere.update({ scene: activeScene.id, solar, celestial, lighting, photoReal: Boolean(activeScene.photoReal), motion: settings.motion && desktopVisible && activeScene.kind !== '静态' });
-  const frameLight = .30 + solar.daylight * .70 + lighting.moon.strength * .35;
-  document.documentElement.style.setProperty('--office-frame-light', String(frameLight));
-  document.documentElement.style.setProperty('--office-light-side', `${50 + lighting.sun.direction[0] * 30}%`);
+  atmosphere.update({ scene: activeScene.id, solar, celestial, lighting, photoReal: Boolean(activeScene.generated || activeScene.photoReal), motion: settings.motion && desktopVisible && activeScene.kind !== '静态' });
   relighting.update();
-  captured.update();
 }
 function presetMinutes() {
   const city = currentCity(), local = getZonedDateParts(new Date(), city.zone);
   const key = `${city.zone}|${city.latitude}|${city.longitude}|${local.dateKey}`;
   if (presetCache.has(key)) return presetCache.get(key);
-  const targets = {}, best = {}, typical = { dawn: 360, morning: 480, noon: 720, evening: 1080, night: 1320 };
+  const targets = {}, best = {}, typical = { dawn: 360, morning: 480, noon: 720, afternoon: 900, evening: 1080, night: 1320 };
   for (let minute = 0; minute < 1440; minute += 5) {
     let instant;
     try { instant = zonedDateTimeToDate({ ...local, hour: Math.floor(minute / 60), minute: minute % 60, second: 0 }, city.zone); } catch { continue; }
@@ -202,7 +180,7 @@ function presetMinutes() {
   if (presetCache.size > 24) presetCache.clear(); presetCache.set(key, targets); return targets;
 }
 function applyPreferences() {
-  $('motion-toggle').checked = settings.motion; $('frame-toggle').checked = settings.frame; $('window-frame').hidden = !settings.frame;
+  $('motion-toggle').checked = settings.motion;
   $('brightness-slider').value = settings.brightness; $('brightness-value').textContent = `${settings.brightness}%`;
   document.documentElement.style.setProperty('--user-brightness', String(settings.brightness / 100));
   sceneView.setMotion(settings.motion && desktopVisible); updateSolar(); wake();
@@ -304,12 +282,11 @@ $('realtime-toggle').addEventListener('change', (event) => {
 $('time-slider').addEventListener('input', (event) => { settings.realtime = false; settings.previewMinute = Number(event.target.value); document.body.classList.add('scrubbing'); updateSolar(); });
 $('time-slider').addEventListener('change', () => { save(); setTimeout(() => document.body.classList.remove('scrubbing'), 150); });
 $('phase-presets').querySelectorAll('button').forEach((button) => button.addEventListener('click', () => { settings.realtime = false; settings.previewMinute = presetMinutes()[button.dataset.previewPhase]; updateSolar(); save(); }));
-for (const [key, id] of [['motion', 'motion-toggle'], ['frame', 'frame-toggle']]) $(id).addEventListener('change', (event) => { settings[key] = event.target.checked; applyPreferences(); save(); });
+$('motion-toggle').addEventListener('change', (event) => { settings.motion = event.target.checked; applyPreferences(); save(); });
 $('brightness-slider').addEventListener('input', (event) => { settings.brightness = Number(event.target.value); applyPreferences(); }); $('brightness-slider').addEventListener('change', save);
 $('view-azimuth').addEventListener('input', (event) => { settings.bearings[activeScene.id] = Number(event.target.value); updateSolar(); }); $('view-azimuth').addEventListener('change', save);
 $('import-button').addEventListener('click', () => $('media-input').click()); $('media-input').addEventListener('change', (event) => { void importMedia(event.target.files[0]); });
 document.addEventListener('visibilitychange', () => sceneView.setMotion(settings.motion && desktopVisible));
-$('render-mode').addEventListener('change', () => { settings.renderMode = $('render-mode').value; syncRenderMode(); updateSolar(); save(); renderSceneCards(); });
 document.addEventListener('pointermove', wake, { passive: true }); document.addEventListener('pointerdown', wake, { passive: true });
 document.addEventListener('click', (event) => { if (!$('main-menu').hidden && !event.target.closest('#main-menu, #menu-button')) closeMenu(); });
 document.addEventListener('fullscreenchange', () => { if (!window.digitalWindow) setFullscreenState({ fullscreen: Boolean(document.fullscreenElement) }); });
@@ -354,5 +331,5 @@ if (window.digitalWindow) {
 window.addEventListener('resize', updateSolar);
 setInterval(() => { if (!document.hidden && desktopVisible) updateSolar(); }, 250);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) updateSolar(); });
-window.__digitalWindowSmoke = () => ({ ready: Boolean(sceneView.ready && solar && (capturedActive ? captured.ready : relighting.ready)), sceneId: activeScene.id, timeZone: currentCity().zone, sceneCount: scenes.length, renderMode: settings.renderMode, photoReal: Boolean(activeScene.photoReal), hasSolar: Number.isFinite(solar?.altitude), canvasReady: atmosphere.ready, phase: blend?.phase, weights: blend?.weights, lighting, celestial, relighting: capturedActive ? captured.diagnostics() : relighting.diagnostics(), captured: captured.diagnostics(), atmosphere: atmosphere.lastDraw, locationSource: settings.sceneTimezone ? 'scene' : 'override', visibleMainButtons: [...$('window-view').querySelectorAll('button')].filter((button) => button.getClientRects().length).map((button) => button.id), ...sceneView.diagnostics() });
+window.__digitalWindowSmoke = () => ({ ready: Boolean(sceneView.ready && solar && relighting.ready), sceneId: activeScene.id, timeZone: currentCity().zone, sceneCount: scenes.length, renderMode: activeScene.generated ? 'generated-six-phase' : 'imported', generated: Boolean(activeScene.generated), photoReal: Boolean(activeScene.photoReal), hasSolar: Number.isFinite(solar?.altitude), canvasReady: atmosphere.ready, phase: blend?.phase, weights: blend?.weights, lighting, celestial, relighting: relighting.diagnostics(), atmosphere: atmosphere.lastDraw, locationSource: settings.sceneTimezone ? 'scene' : 'override', visibleMainButtons: [...$('window-view').querySelectorAll('button')].filter((button) => button.getClientRects().length).map((button) => button.id), ...sceneView.diagnostics() });
 wake();
